@@ -1,8 +1,6 @@
 package com.wuyiccc.hellodfs;
 
 import java.util.LinkedList;
-import java.util.List;
-import java.util.function.DoubleBinaryOperator;
 
 /**
  * Responsible for managing the core components of editLog
@@ -21,6 +19,25 @@ public class FSEditLog {
     private DoubleBuffer editLogBuffer = new DoubleBuffer();
 
     /**
+     * mark the sync data into disk status
+     */
+    private volatile Boolean isSyncRunning = false;
+
+
+
+    private volatile Boolean isWaitSync = false;
+
+    /**
+     * sync to the disk max txId
+     */
+    private volatile Long syncMaxTxId = 0L;
+
+    /**
+     * thread local txId
+     */
+    private ThreadLocal<Long> localTxtId = new ThreadLocal<>();
+
+    /**
      * save edit log
      *
      * @param content
@@ -29,16 +46,65 @@ public class FSEditLog {
 
         synchronized (this) {
             // get the global unique increasing txId, represents the sequence number of edit log
-            txIdSeq++;
+            this.txIdSeq++;
             long txId = txIdSeq;
+            this.localTxtId.set(txId);
 
             EditLog editLog = new EditLog(txId, content);
 
             editLogBuffer.write(editLog);
 
         }
+
+        logSync();
     }
 
+    private void logSync() {
+        synchronized (this) {
+            // if a thread flush memory data into disk
+            if (isSyncRunning) {
+                long txId = localTxtId.get();
+
+                // if a thread want flush buffer, but txId < syncMaxId, the thread should return (another thread is flushing this data into disk)
+                if (txId <= syncMaxTxId) {
+                    return;
+                }
+
+                // if a thread is wait sync, current thread return
+                if (isWaitSync) {
+                    return;
+                }
+
+                // mark there is a thread is waiting
+                isWaitSync = true;
+                while (isSyncRunning) {
+                    try {
+                        wait(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                isWaitSync = false;
+
+            }
+            // swap buffer
+            editLogBuffer.setReadyToSync();
+            this.syncMaxTxId = editLogBuffer.getSyncMaxTxId();
+
+            this.isSyncRunning = true;
+
+        }
+
+        // begin flush memory data into disk
+        editLogBuffer.flush();
+
+        // reset mark bit
+        synchronized (this) {
+            isSyncRunning = false;
+            // notify other thread which is waiting sync
+            notifyAll();
+        }
+    }
 
     /**
      * a edit log object
@@ -63,12 +129,12 @@ public class FSEditLog {
         /**
          * thread write into edit log buffer
          */
-        List<EditLog> currentBuffer = new LinkedList<>();
+        LinkedList<EditLog> currentBuffer = new LinkedList<>();
 
         /**
          * a buffer that synchronizes data to disk
          */
-        List<EditLog> syncBuffer = new LinkedList<>();
+        LinkedList<EditLog> syncBuffer = new LinkedList<>();
 
         /**
          * write edit log into memory buffer
@@ -83,9 +149,18 @@ public class FSEditLog {
          * swap two buffers in preparation for synchronizing data to disk
          */
         public void setReadyToSync() {
-            List<EditLog> tmp = currentBuffer;
+            LinkedList<EditLog> tmp = currentBuffer;
             currentBuffer = syncBuffer;
             syncBuffer = tmp;
+        }
+
+        /**
+         * 获取sync buffer缓冲区里的最大一个txId
+         *
+         * @return
+         */
+        public Long getSyncMaxTxId() {
+            return syncBuffer.getLast().txId;
         }
 
         /**
