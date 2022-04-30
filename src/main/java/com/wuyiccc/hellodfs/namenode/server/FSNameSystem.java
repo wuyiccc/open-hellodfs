@@ -1,4 +1,4 @@
-package com.wuyiccc.hellodfs;
+package com.wuyiccc.hellodfs.namenode.server;
 
 /**
  *

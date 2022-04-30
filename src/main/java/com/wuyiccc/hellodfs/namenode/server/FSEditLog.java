@@ -1,4 +1,4 @@
-package com.wuyiccc.hellodfs;
+package com.wuyiccc.hellodfs.namenode.server;
 
 import java.util.LinkedList;
 
@@ -35,7 +35,7 @@ public class FSEditLog {
     /**
      * thread local txId
      */
-    private ThreadLocal<Long> localTxtId = new ThreadLocal<>();
+    private ThreadLocal<Long> localTxId = new ThreadLocal<>();
 
     /**
      * save edit log
@@ -48,7 +48,7 @@ public class FSEditLog {
             // get the global unique increasing txId, represents the sequence number of edit log
             this.txIdSeq++;
             long txId = txIdSeq;
-            this.localTxtId.set(txId);
+            this.localTxId.set(txId);
 
             EditLog editLog = new EditLog(txId, content);
 
@@ -63,7 +63,7 @@ public class FSEditLog {
         synchronized (this) {
             // if a thread flush memory data into disk
             if (isSyncRunning) {
-                long txId = localTxtId.get();
+                long txId = localTxId.get();
 
                 // if a thread want flush buffer, but txId < syncMaxId, the thread should return (another thread is flushing this data into disk)
                 if (txId <= syncMaxTxId) {

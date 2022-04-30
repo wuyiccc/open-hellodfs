@@ -1,4 +1,4 @@
-package com.wuyiccc.hellodfs;
+package com.wuyiccc.hellodfs.namenode.server;
 
 /**
  * rpc server, provide rpc service

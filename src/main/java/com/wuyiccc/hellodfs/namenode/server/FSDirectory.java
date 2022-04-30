@@ -1,4 +1,4 @@
-package com.wuyiccc.hellodfs;
+package com.wuyiccc.hellodfs.namenode.server;
 
 import java.util.LinkedList;
 import java.util.List;
