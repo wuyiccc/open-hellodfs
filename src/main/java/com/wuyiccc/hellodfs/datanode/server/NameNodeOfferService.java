@@ -1,5 +1,7 @@
 package com.wuyiccc.hellodfs.datanode.server;
 
+import java.util.Iterator;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -8,7 +10,7 @@ import java.util.concurrent.CountDownLatch;
  * @author wuyiccc
  * @date 2022/4/30 20:22
  */
-public class NameNodeGroupOfferService {
+public class NameNodeOfferService {
 
 
     /**
@@ -21,9 +23,18 @@ public class NameNodeGroupOfferService {
      */
     private NameNodeServiceActor standByServiceActor;
 
-    public NameNodeGroupOfferService() {
+    /**
+     * save service actor list
+     */
+    private CopyOnWriteArrayList<NameNodeServiceActor> serviceActors;
+
+    public NameNodeOfferService() {
         this.activeServiceActor = new NameNodeServiceActor();
         this.standByServiceActor = new NameNodeServiceActor();
+
+        this.serviceActors = new CopyOnWriteArrayList<>();
+        this.serviceActors.add(this.activeServiceActor);
+        this.serviceActors.add(this.standByServiceActor);
     }
 
     /**
@@ -49,4 +60,22 @@ public class NameNodeGroupOfferService {
         }
     }
 
+
+    /**
+     * close serviceActor
+     * @param serviceActor
+     */
+    public void shutdown(NameNodeServiceActor serviceActor) {
+        this.serviceActors.remove(serviceActor);
+    }
+
+    /**
+     * itr serviceActor
+     */
+    public void iteratorActors() {
+        Iterator<NameNodeServiceActor> iterator = this.serviceActors.iterator();
+        while (iterator.hasNext()) {
+            iterator.next();
+        }
+    }
 }

@@ -12,12 +12,12 @@ public class DataNode {
 
     private volatile Boolean shouldRun;
 
-    private NameNodeGroupOfferService offerService;
+    private NameNodeOfferService offerService;
 
 
     private void initialize() {
         this.shouldRun = true;
-        this.offerService = new NameNodeGroupOfferService();
+        this.offerService = new NameNodeOfferService();
         this.offerService.start();
     }
 
