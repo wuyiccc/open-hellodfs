@@ -19,6 +19,11 @@ public class NameNodeServiceActor {
         registerThread.start();
     }
 
+    public void startHeartBeat() {
+        HeartbeatThread heartbeatThread = new HeartbeatThread();
+        heartbeatThread.start();
+    }
+
     /**
      * register thread
      */
@@ -34,13 +39,37 @@ public class NameNodeServiceActor {
             // send rpc request to namenode for register
             System.out.println("send request to namenode for register...");
             try {
+
+                // TODO: read from settings.properties
+                String ip = "127.0.0.1";
+                String hostname = "dfs-data-01";
                 TimeUnit.SECONDS.sleep(5);
+                latch.countDown();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            latch.countDown();
         }
     }
 
+
+    class HeartbeatThread extends Thread {
+
+        @Override
+        public void run() {
+            try {
+                while (true) {
+                    System.out.println("send heartbeat request to namenode.......");
+
+                    String ip = "127.0.0.1";
+                    String hostname = "dfs-data-01";
+
+                    TimeUnit.SECONDS.sleep(30);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
 
 }

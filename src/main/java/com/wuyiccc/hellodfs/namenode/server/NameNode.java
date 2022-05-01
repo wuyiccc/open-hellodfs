@@ -25,6 +25,11 @@ public class NameNode {
      */
     private NameNodeRpcServer nameNodeRpcServer;
 
+    /**
+     * manager datanode cluster
+     */
+    private DataNodeManager dataNodeManager;
+
     public NameNode() {
         this.shouldRun = true;
     }
@@ -34,14 +39,15 @@ public class NameNode {
      */
     private void initialize() {
         this.fsNameSystem = new FSNameSystem();
-        this.nameNodeRpcServer = new NameNodeRpcServer(this.fsNameSystem);
+        this.dataNodeManager = new DataNodeManager();
+        this.nameNodeRpcServer = new NameNodeRpcServer(this.fsNameSystem, this.dataNodeManager);
         this.nameNodeRpcServer.start();
     }
 
     private void run() throws InterruptedException {
         try {
             while (shouldRun) {
-                TimeUnit.SECONDS.sleep(10);
+                TimeUnit.SECONDS.sleep(1);
             }
         } catch (Exception e) {
             e.printStackTrace();

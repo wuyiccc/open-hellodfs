@@ -43,6 +43,12 @@ public class NameNodeOfferService {
     public void start() {
         // start to register to namenode
         register();
+        startHeartBeat();
+    }
+
+    private void startHeartBeat() {
+
+        this.activeServiceActor.startHeartBeat();
     }
 
     /**
