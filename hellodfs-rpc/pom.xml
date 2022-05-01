@@ -2,19 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>hellodfs</artifactId>
+        <groupId>com.wuyiccc</groupId>
+        <version>beta-1.0</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.wuyiccc</groupId>
-    <artifactId>hellodfs</artifactId>
-    <packaging>pom</packaging>
-    <version>beta-1.0</version>
-
-    <modules>
-        <module>hellodfs-datanode</module>
-        <module>hellodfs-namenode</module>
-        <module>hellodfs-rpc</module>
-    </modules>
-
+    <artifactId>hellodfs-rpc</artifactId>
 
     <build>
         <plugins>
