@@ -28,7 +28,7 @@ public final class NameNodeServer {
       "roto2\376\001\n\017NameNodeService\022s\n\010register\0222.c" +
       "om.wuyiccc.hellodfs.namenode.rpc.Registe" +
       "rRequest\0323.com.wuyiccc.hellodfs.namenode" +
-      ".rpc.RegisterResponse\022v\n\theartbeat\0223.com" +
+      ".rpc.RegisterResponse\022v\n\theartBeat\0223.com" +
       ".wuyiccc.hellodfs.namenode.rpc.HeartBeat" +
       "Request\0324.com.wuyiccc.hellodfs.namenode." +
       "rpc.HeartBeatResponseB=\n)com.wuyiccc.hel" +
