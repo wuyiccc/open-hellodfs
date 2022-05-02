@@ -32,11 +32,11 @@ public class NameNodeServiceGrpc {
           io.grpc.protobuf.ProtoUtils.marshaller(com.wuyiccc.hellodfs.namenode.rpc.model.RegisterResponse.getDefaultInstance()));
   @io.grpc.ExperimentalApi
   public static final io.grpc.MethodDescriptor<com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatRequest,
-      com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse> METHOD_HEARTBEAT =
+      com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse> METHOD_HEART_BEAT =
       io.grpc.MethodDescriptor.create(
           io.grpc.MethodDescriptor.MethodType.UNARY,
           generateFullMethodName(
-              "com.wuyiccc.hellodfs.namenode.rpc.NameNodeService", "heartbeat"),
+              "com.wuyiccc.hellodfs.namenode.rpc.NameNodeService", "heartBeat"),
           io.grpc.protobuf.ProtoUtils.marshaller(com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatRequest.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse.getDefaultInstance()));
 
@@ -59,7 +59,7 @@ public class NameNodeServiceGrpc {
     public void register(com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest request,
         io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.RegisterResponse> responseObserver);
 
-    public void heartbeat(com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatRequest request,
+    public void heartBeat(com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatRequest request,
         io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse> responseObserver);
   }
 
@@ -67,7 +67,7 @@ public class NameNodeServiceGrpc {
 
     public com.wuyiccc.hellodfs.namenode.rpc.model.RegisterResponse register(com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest request);
 
-    public com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse heartbeat(com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatRequest request);
+    public com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse heartBeat(com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatRequest request);
   }
 
   public static interface NameNodeServiceFutureClient {
@@ -75,7 +75,7 @@ public class NameNodeServiceGrpc {
     public com.google.common.util.concurrent.ListenableFuture<com.wuyiccc.hellodfs.namenode.rpc.model.RegisterResponse> register(
         com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest request);
 
-    public com.google.common.util.concurrent.ListenableFuture<com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse> heartbeat(
+    public com.google.common.util.concurrent.ListenableFuture<com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse> heartBeat(
         com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatRequest request);
   }
 
@@ -104,10 +104,10 @@ public class NameNodeServiceGrpc {
     }
 
     @java.lang.Override
-    public void heartbeat(com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatRequest request,
+    public void heartBeat(com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatRequest request,
         io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse> responseObserver) {
       asyncUnaryCall(
-          getChannel().newCall(METHOD_HEARTBEAT, getCallOptions()), request, responseObserver);
+          getChannel().newCall(METHOD_HEART_BEAT, getCallOptions()), request, responseObserver);
     }
   }
 
@@ -135,9 +135,9 @@ public class NameNodeServiceGrpc {
     }
 
     @java.lang.Override
-    public com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse heartbeat(com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatRequest request) {
+    public com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse heartBeat(com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatRequest request) {
       return blockingUnaryCall(
-          getChannel(), METHOD_HEARTBEAT, getCallOptions(), request);
+          getChannel(), METHOD_HEART_BEAT, getCallOptions(), request);
     }
   }
 
@@ -166,15 +166,15 @@ public class NameNodeServiceGrpc {
     }
 
     @java.lang.Override
-    public com.google.common.util.concurrent.ListenableFuture<com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse> heartbeat(
+    public com.google.common.util.concurrent.ListenableFuture<com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse> heartBeat(
         com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatRequest request) {
       return futureUnaryCall(
-          getChannel().newCall(METHOD_HEARTBEAT, getCallOptions()), request);
+          getChannel().newCall(METHOD_HEART_BEAT, getCallOptions()), request);
     }
   }
 
   private static final int METHODID_REGISTER = 0;
-  private static final int METHODID_HEARTBEAT = 1;
+  private static final int METHODID_HEART_BEAT = 1;
 
   private static class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -196,8 +196,8 @@ public class NameNodeServiceGrpc {
           serviceImpl.register((com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest) request,
               (io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.RegisterResponse>) responseObserver);
           break;
-        case METHODID_HEARTBEAT:
-          serviceImpl.heartbeat((com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatRequest) request,
+        case METHODID_HEART_BEAT:
+          serviceImpl.heartBeat((com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatRequest) request,
               (io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse>) responseObserver);
           break;
         default:
@@ -226,12 +226,12 @@ public class NameNodeServiceGrpc {
               com.wuyiccc.hellodfs.namenode.rpc.model.RegisterResponse>(
                 serviceImpl, METHODID_REGISTER)))
         .addMethod(
-          METHOD_HEARTBEAT,
+          METHOD_HEART_BEAT,
           asyncUnaryCall(
             new MethodHandlers<
               com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatRequest,
               com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse>(
-                serviceImpl, METHODID_HEARTBEAT)))
+                serviceImpl, METHODID_HEART_BEAT)))
         .build();
   }
 }

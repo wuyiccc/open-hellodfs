@@ -12,6 +12,13 @@
     <artifactId>hellodfs-datanode</artifactId>
 
 
+    <dependencies>
+        <dependency>
+            <groupId>com.wuyiccc</groupId>
+            <artifactId>hellodfs-rpc</artifactId>
+            <version>beta-1.0</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>

@@ -1,5 +1,11 @@
 package com.wuyiccc.hellodfs.namenode.server;
 
+import com.wuyiccc.hellodfs.namenode.rpc.service.NameNodeServiceGrpc;
+import io.grpc.Server;
+import io.grpc.ServerBuilder;
+
+import java.io.IOException;
+
 /**
  * rpc server, provide rpc service
  *
@@ -8,8 +14,18 @@ package com.wuyiccc.hellodfs.namenode.server;
  */
 public class NameNodeRpcServer {
 
+    private static final int DEFAULT_PORT = 50070;
+
+    private Server server = null;
+
+    /**
+     * manage meta data
+     */
     private FSNameSystem fsNameSystem;
 
+    /**
+     * manage datanode cluster
+     */
     private DataNodeManager dataNodeManager;
 
     public NameNodeRpcServer(FSNameSystem fsNameSystem, DataNodeManager dataNodeManager) {
@@ -17,28 +33,33 @@ public class NameNodeRpcServer {
         this.dataNodeManager = dataNodeManager;
     }
 
-    /**
-     * take over datanode register
-     * @param ip
-     * @param hostname
-     * @return
-     */
-    public Boolean register(String ip, String hostname) {
-        return this.dataNodeManager.register(ip, hostname);
+    public void start() throws IOException {
+        // start rpc server to listen define port and bind interface
+        server = ServerBuilder
+                .forPort(DEFAULT_PORT)
+                .addService(NameNodeServiceGrpc.bindService(new NameNodeServiceImpl(fsNameSystem, dataNodeManager)))
+                .build()
+                .start();
+
+        System.out.println("NameNodeRpcServer start, listen port: " + DEFAULT_PORT);
+
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                NameNodeRpcServer.this.stop();
+            }
+        });
     }
 
-    public Boolean mkdir(String path) throws Exception {
-        return this.fsNameSystem.mkdir(path);
+    public void stop() {
+        if (server != null) {
+            server.shutdown();
+        }
     }
 
-    private Boolean heartBeat(String ip, String hostname) {
-        return this.dataNodeManager.heartBeat(ip, hostname);
-    }
-
-    /**
-     * start rpc service
-     */
-    public void start() {
-        System.out.println("start to listen rpc server port, receive data");
+    public void blockUntilShutdown() throws InterruptedException {
+        if (server != null) {
+            server.awaitTermination();
+        }
     }
 }

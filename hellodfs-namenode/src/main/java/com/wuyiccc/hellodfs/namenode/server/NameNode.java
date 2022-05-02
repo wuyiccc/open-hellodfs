@@ -1,7 +1,5 @@
 package com.wuyiccc.hellodfs.namenode.server;
 
-import java.util.concurrent.TimeUnit;
-
 /**
  * The bootstrap class to start NameNode
  *
@@ -11,28 +9,20 @@ import java.util.concurrent.TimeUnit;
 public class NameNode {
 
     /**
-     * mark the NameNode thread status
-     */
-    private volatile Boolean shouldRun;
-
-    /**
      * manage meta data
      */
     private FSNameSystem fsNameSystem;
-
-    /**
-     * provide rpc service
-     */
-    private NameNodeRpcServer nameNodeRpcServer;
 
     /**
      * manager datanode cluster
      */
     private DataNodeManager dataNodeManager;
 
-    public NameNode() {
-        this.shouldRun = true;
-    }
+    /**
+     * provide rpc service
+     */
+    private NameNodeRpcServer nameNodeRpcServer;
+
 
     /**
      * initialize namenode
@@ -41,23 +31,18 @@ public class NameNode {
         this.fsNameSystem = new FSNameSystem();
         this.dataNodeManager = new DataNodeManager();
         this.nameNodeRpcServer = new NameNodeRpcServer(this.fsNameSystem, this.dataNodeManager);
+    }
+
+    private void start() throws Exception {
         this.nameNodeRpcServer.start();
+        this.nameNodeRpcServer.blockUntilShutdown();
     }
 
-    private void run() throws InterruptedException {
-        try {
-            while (shouldRun) {
-                TimeUnit.SECONDS.sleep(1);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws Exception {
         NameNode nameNode = new NameNode();
         nameNode.initialize();
-        nameNode.run();
+        nameNode.start();
     }
 
 }

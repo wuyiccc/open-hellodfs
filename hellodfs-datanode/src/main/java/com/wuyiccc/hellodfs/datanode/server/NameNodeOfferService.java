@@ -16,12 +16,7 @@ public class NameNodeOfferService {
     /**
      * communicating with master namenode
      */
-    private NameNodeServiceActor activeServiceActor;
-
-    /**
-     * communicating with backup namenode
-     */
-    private NameNodeServiceActor standByServiceActor;
+    private NameNodeServiceActor serviceActor;
 
     /**
      * save service actor list
@@ -29,12 +24,7 @@ public class NameNodeOfferService {
     private CopyOnWriteArrayList<NameNodeServiceActor> serviceActors;
 
     public NameNodeOfferService() {
-        this.activeServiceActor = new NameNodeServiceActor();
-        this.standByServiceActor = new NameNodeServiceActor();
-
-        this.serviceActors = new CopyOnWriteArrayList<>();
-        this.serviceActors.add(this.activeServiceActor);
-        this.serviceActors.add(this.standByServiceActor);
+        this.serviceActor = new NameNodeServiceActor();
     }
 
     /**
@@ -43,12 +33,12 @@ public class NameNodeOfferService {
     public void start() {
         // start to register to namenode
         register();
+        // start to send heartbeat to namenode
         startHeartBeat();
     }
 
     private void startHeartBeat() {
-
-        this.activeServiceActor.startHeartBeat();
+        this.serviceActor.startHeartBeat();
     }
 
     /**
@@ -56,12 +46,8 @@ public class NameNodeOfferService {
      */
     private void register() {
         try {
-            CountDownLatch latch = new CountDownLatch(2);
-            activeServiceActor.register(latch);
-            standByServiceActor.register(latch);
-            latch.await();
-            System.out.println("active namenode and backup namenode register success...");
-        } catch (InterruptedException e) {
+            serviceActor.register();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -69,7 +55,6 @@ public class NameNodeOfferService {
 
     /**
      * close serviceActor
-     * @param serviceActor
      */
     public void shutdown(NameNodeServiceActor serviceActor) {
         this.serviceActors.remove(serviceActor);

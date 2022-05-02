@@ -25,6 +25,7 @@ public class DataNodeManager {
     public Boolean register(String ip, String hostname) {
         DataNodeInfo dataNodeInfo = new DataNodeInfo(ip, hostname);
         dataNodeMap.put(ip + "-" + hostname, dataNodeInfo);
+        System.out.println("DataNode register ip= " + ip + ", hostname= " + hostname);
         return true;
     }
 
@@ -32,8 +33,10 @@ public class DataNodeManager {
         DataNodeInfo dataNodeInfo = dataNodeMap.get(ip + "-" + hostname);
         if (dataNodeInfo != null) {
             dataNodeInfo.setLastHeartBeatTime(System.currentTimeMillis());
+            System.out.println("DataNode heartBeat ip= " + ip + ", hostname= " + hostname);
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
