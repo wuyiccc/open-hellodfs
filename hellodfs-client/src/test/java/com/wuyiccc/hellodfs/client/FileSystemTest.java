@@ -9,6 +9,9 @@ public class FileSystemTest {
 
     public static void main(String[] args) throws Exception {
         FileSystem fileSystem = new FileSystemImpl();
-        fileSystem.mkdir("/usr/local/kafka/data");
+        fileSystem.mkdir("/usr/warehouse/hive");
+        fileSystem.mkdir("/usr/warehouse/spark");
+        fileSystem.mkdir("/usr/log/access");
+        fileSystem.mkdir("/data/old");
     }
 }

@@ -11,10 +11,10 @@ import java.util.List;
  */
 public class FSDirectory {
 
-    private INodeDirectory dirTree;
+    private INodeDirectory rootDirTree;
 
     public FSDirectory() {
-        this.dirTree = new INodeDirectory("/");
+        this.rootDirTree = new INodeDirectory("/");
     }
 
     /**
@@ -24,9 +24,9 @@ public class FSDirectory {
      */
     public void mkdir(String path) {
 
-        synchronized (dirTree) {
+        synchronized (this.rootDirTree) {
             String[] pathArray = path.split("/");
-            INodeDirectory parent = dirTree;
+            INodeDirectory parent = this.rootDirTree;
 
             for (String splitPath : pathArray) {
 
@@ -49,7 +49,18 @@ public class FSDirectory {
             }
         }
 
+        printDirTree(this.rootDirTree, "-");
+    }
 
+    private void printDirTree(INodeDirectory dirTree, String blank) {
+        if (dirTree == null || dirTree.getChildrenList().size() == 0) {
+            return;
+        }
+
+        for (INode curDir : dirTree.getChildrenList()) {
+            System.out.println(blank + ((INodeDirectory) curDir).getPath());
+            printDirTree((INodeDirectory) curDir, blank + "-");
+        }
     }
 
     /**
@@ -114,6 +125,14 @@ public class FSDirectory {
         public void setChildrenList(List<INode> childrenList) {
             this.childrenList = childrenList;
         }
+
+        @Override
+        public String toString() {
+            return "INodeDirectory{" +
+                    "path='" + path + '\'' +
+                    ", childrenList=" + childrenList +
+                    '}';
+        }
     }
 
     /**
@@ -129,6 +148,13 @@ public class FSDirectory {
 
         public void setName(String name) {
             this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return "INodeFile{" +
+                    "name='" + name + '\'' +
+                    '}';
         }
     }
 }
