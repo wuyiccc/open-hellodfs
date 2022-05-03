@@ -65,17 +65,11 @@ public class FSDirectory {
             return null;
         }
 
-        //INodeDirectory resultDir = null;
-
         for (INode child : dir.getChildrenList()) {
             if (child instanceof INodeDirectory) {
                 if (((INodeDirectory) child).getPath().equals(path)) {
                     return (INodeDirectory) child;
                 }
-                //resultDir = findDirectory((INodeDirectory) child, path);
-                //if (resultDir != null) {
-                //    return resultDir;
-                //}
             }
         }
         return null;
