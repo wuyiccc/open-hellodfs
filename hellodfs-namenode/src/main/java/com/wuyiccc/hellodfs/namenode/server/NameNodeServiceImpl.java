@@ -1,9 +1,6 @@
 package com.wuyiccc.hellodfs.namenode.server;
 
-import com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatRequest;
-import com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse;
-import com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest;
-import com.wuyiccc.hellodfs.namenode.rpc.model.RegisterResponse;
+import com.wuyiccc.hellodfs.namenode.rpc.model.*;
 import com.wuyiccc.hellodfs.namenode.rpc.service.NameNodeServiceGrpc;
 import io.grpc.stub.StreamObserver;
 
@@ -25,10 +22,6 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
     public NameNodeServiceImpl(FSNameSystem fsNameSystem, DataNodeManager dataNodeManager) {
         this.fsNameSystem = fsNameSystem;
         this.dataNodeManager = dataNodeManager;
-    }
-
-    public Boolean mkdir(String path) throws Exception {
-        return this.fsNameSystem.mkdir(path);
     }
 
 
@@ -57,5 +50,22 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
 
         responseObserver.onNext(response);
         responseObserver.onCompleted();
+    }
+
+    @Override
+    public void mkdir(MkdirRequest request, StreamObserver<MkdirResponse> responseObserver) {
+        try {
+            this.fsNameSystem.mkdir(request.getPath());
+
+            System.out.println("mkdir: path = " + request.getPath());
+
+            MkdirResponse response = MkdirResponse.newBuilder()
+                    .setStatus(STATUS_SUCCESS)
+                    .build();
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -19,19 +19,19 @@ import java.util.concurrent.TimeUnit;
  */
 public class NameNodeServiceActor {
 
-    private static final String NAMENODE_HOSTNAME = "localhost";
-    private static final Integer NAMENODE_PORT = 50070;
+    private static final String NAME_NODE_HOSTNAME = "localhost";
+    private static final Integer NAME_NODE_PORT = 50070;
 
-    private NameNodeServiceGrpc.NameNodeServiceBlockingStub namenode;
+    private NameNodeServiceGrpc.NameNodeServiceBlockingStub nameNode;
 
 
     public NameNodeServiceActor() {
-        ManagedChannel channel = NettyChannelBuilder.forAddress(NAMENODE_HOSTNAME, NAMENODE_PORT).negotiationType(NegotiationType.PLAINTEXT).build();
-        this.namenode = NameNodeServiceGrpc.newBlockingStub(channel);
+        ManagedChannel channel = NettyChannelBuilder.forAddress(NAME_NODE_HOSTNAME, NAME_NODE_PORT).negotiationType(NegotiationType.PLAINTEXT).build();
+        this.nameNode = NameNodeServiceGrpc.newBlockingStub(channel);
     }
 
     /**
-     * send register request to namenode which bind
+     * send register request to NameNode which bind
      */
     public void register() throws Exception {
         Thread registerThread = new RegisterThread();
@@ -41,7 +41,7 @@ public class NameNodeServiceActor {
     }
 
     /**
-     * send heartbeat request to namenode per 30s
+     * send heartbeat request to NameNode per 30s
      */
     public void startHeartBeat() {
         new HeartBeatThread().start();
@@ -62,7 +62,7 @@ public class NameNodeServiceActor {
                 String hostname = "dfs-data-01";
 
                 RegisterRequest request = RegisterRequest.newBuilder().setIp(ip).setHostname(hostname).build();
-                RegisterResponse response = namenode.register(request);
+                RegisterResponse response = nameNode.register(request);
 
                 System.out.println("register thread accept namenode response data" + response.getStatus());
             } catch (Exception e) {
@@ -87,7 +87,7 @@ public class NameNodeServiceActor {
                     String hostname = "dfs-data-01";
 
                     HeartBeatRequest request = HeartBeatRequest.newBuilder().setIp(ip).setHostname(hostname).build();
-                    HeartBeatResponse response = namenode.heartBeat(request);
+                    HeartBeatResponse response = nameNode.heartBeat(request);
 
                     System.out.println("hearbeat thread accept namnode response data: " + response.getStatus());
 

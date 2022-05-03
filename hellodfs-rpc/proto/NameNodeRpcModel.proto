@@ -24,3 +24,11 @@ message HeartBeatResponse {
   int32 status = 1;
 }
 
+message MkdirRequest {
+  string path = 1;
+}
+
+message MkdirResponse {
+  int32 status = 1;
+}
+
