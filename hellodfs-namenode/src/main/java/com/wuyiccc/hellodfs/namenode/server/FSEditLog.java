@@ -35,7 +35,7 @@ public class FSEditLog {
     /**
      * thread local txId
      */
-    private ThreadLocal<Long> localTxId = new ThreadLocal<>();
+    private ThreadLocal<Long> myTransactionId = new ThreadLocal<>();
 
     /**
      * save edit log
@@ -48,7 +48,7 @@ public class FSEditLog {
             // get the global unique increasing txId, represents the sequence number of edit log
             this.txIdSeq++;
             long txId = txIdSeq;
-            this.localTxId.set(txId);
+            this.myTransactionId.set(txId);
 
             EditLog editLog = new EditLog(txId, content);
 
@@ -63,7 +63,7 @@ public class FSEditLog {
         synchronized (this) {
             // if a thread flush memory data into disk
             if (isSyncRunning) {
-                long txId = localTxId.get();
+                long txId = myTransactionId.get();
 
                 // if a thread want flush buffer, but txId < syncMaxId, the thread should return (another thread is flushing this data into disk)
                 if (txId <= syncMaxTxId) {
