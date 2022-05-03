@@ -53,7 +53,7 @@ public class FSDirectory {
     }
 
     /**
-     * recursive search
+     * find child directory
      *
      * @param dir  current directory
      * @param path target path
