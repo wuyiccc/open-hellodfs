@@ -97,7 +97,7 @@ public class DoubleBuffer {
             this.maxTxId = editLog.getTxId();
             buffer.write(editLog.getContent().getBytes());
             buffer.write("\n".getBytes());
-            System.out.println("current buffer size is : " + this.size());
+            System.out.println("write a editslog: " + editLog.getContent() + ", current buffer size is : " + this.size());
         }
 
         /**

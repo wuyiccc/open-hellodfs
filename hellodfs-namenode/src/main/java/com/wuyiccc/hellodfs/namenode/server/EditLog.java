@@ -18,6 +18,10 @@ public class EditLog {
     public EditLog(long txId, String content) {
         this.txId = txId;
         this.content = content;
+        // add txId into content jsonString
+        JSONObject jsonObject = JSONObject.parseObject(content);
+        jsonObject.put("txId", txId);
+        this.content = jsonObject.toJSONString();
     }
 
     public long getTxId() {
@@ -26,10 +30,6 @@ public class EditLog {
 
     public void setTxId(long txId) {
         this.txId = txId;
-        // add txId into content jsonString
-        JSONObject jsonObject = JSONObject.parseObject(content);
-        jsonObject.put("txId", txId);
-        this.content = jsonObject.toJSONString();
     }
 
     public String getContent() {
