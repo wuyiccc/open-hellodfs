@@ -1,7 +1,5 @@
 package com.wuyiccc.hellodfs.namenode.server;
 
-import java.util.LinkedList;
-
 /**
  * Responsible for managing the core components of editLog
  *
@@ -14,9 +12,12 @@ public class FSEditLog {
     /**
      * current txId sequence
      */
-    private long txIdSeq = 0;
+    private long txIdSeq = 0L;
 
-    private DoubleBuffer editLogBuffer = new DoubleBuffer();
+    /**
+     * memory double buffer
+     */
+    private DoubleBuffer doubleBuffer = new DoubleBuffer();
 
     /**
      * mark the sync data into disk status
@@ -24,13 +25,15 @@ public class FSEditLog {
     private volatile Boolean isSyncRunning = false;
 
 
-
-    private volatile Boolean isWaitSync = false;
-
     /**
      * sync to the disk max txId
      */
-    private volatile Long syncMaxTxId = 0L;
+    private volatile Long syncTxId = 0L;
+
+    /**
+     * whether is scheduling a sync to disk operator
+     */
+    private volatile Boolean isSchedulingSync = false;
 
     /**
      * thread local txId
@@ -45,6 +48,8 @@ public class FSEditLog {
     public void logEdit(String content) {
 
         synchronized (this) {
+
+            waitSchedulingSync();
             // get the global unique increasing txId, represents the sequence number of edit log
             this.txIdSeq++;
             long txId = txIdSeq;
@@ -52,8 +57,14 @@ public class FSEditLog {
 
             EditLog editLog = new EditLog(txId, content);
 
-            editLogBuffer.write(editLog);
+            doubleBuffer.write(editLog);
 
+            // check buffer capacity
+            if (!doubleBuffer.shouldSyncToDisk()) {
+                return;
+            }
+
+            isSchedulingSync = true;
         }
 
         logSync();
@@ -61,42 +72,37 @@ public class FSEditLog {
 
     private void logSync() {
         synchronized (this) {
+
+            long txId = myTransactionId.get();
+
             // if a thread flush memory data into disk
             if (isSyncRunning) {
-                long txId = myTransactionId.get();
 
                 // if a thread want flush buffer, but txId < syncMaxId, the thread should return (another thread is flushing this data into disk)
-                if (txId <= syncMaxTxId) {
+                if (txId <= syncTxId) {
                     return;
                 }
 
-                // if a thread is wait sync, current thread return
-                if (isWaitSync) {
-                    return;
-                }
-
-                // mark there is a thread is waiting
-                isWaitSync = true;
-                while (isSyncRunning) {
-                    try {
-                        wait(2000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                try {
+                    while (isSyncRunning) {
+                        wait(1000);
                     }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
-                isWaitSync = false;
-
             }
             // swap buffer
-            editLogBuffer.setReadyToSync();
-            this.syncMaxTxId = editLogBuffer.getSyncMaxTxId();
+            this.doubleBuffer.setReadyToSync();
+            this.syncTxId = txId;
 
+            this.isSchedulingSync = false;
+            // notify waitSchedulingSync thread
+            notifyAll();
             this.isSyncRunning = true;
-
         }
 
         // begin flush memory data into disk
-        editLogBuffer.flush();
+        doubleBuffer.flush();
 
         // reset mark bit
         synchronized (this) {
@@ -107,70 +113,17 @@ public class FSEditLog {
     }
 
     /**
-     * a edit log object
+     * wait scheduling sync to disk operator
      */
-    class EditLog {
-
-        long txId;
-
-        String content;
-
-        public EditLog(long txId, String content) {
-            this.txId = txId;
-            this.content = content;
-        }
-    }
-
-    /**
-     * memory double buffer
-     */
-    class DoubleBuffer {
-
-        /**
-         * thread write into edit log buffer
-         */
-        LinkedList<EditLog> currentBuffer = new LinkedList<>();
-
-        /**
-         * a buffer that synchronizes data to disk
-         */
-        LinkedList<EditLog> syncBuffer = new LinkedList<>();
-
-        /**
-         * write edit log into memory buffer
-         *
-         * @param editLog
-         */
-        public void write(EditLog editLog) {
-            currentBuffer.add(editLog);
-        }
-
-        /**
-         * swap two buffers in preparation for synchronizing data to disk
-         */
-        public void setReadyToSync() {
-            LinkedList<EditLog> tmp = currentBuffer;
-            currentBuffer = syncBuffer;
-            syncBuffer = tmp;
-        }
-
-        /**
-         * 获取sync buffer缓冲区里的最大一个txId
-         *
-         * @return
-         */
-        public Long getSyncMaxTxId() {
-            return syncBuffer.getLast().txId;
-        }
-
-        /**
-         * flush syncBuffer data into disk
-         */
-        public void flush() {
-            for (EditLog editLog : syncBuffer) {
-                System.out.println("write edit log into disk");
+    private void waitSchedulingSync() {
+        try {
+            while (isSchedulingSync) {
+                wait(1000);
             }
-            syncBuffer.clear();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
+
 }

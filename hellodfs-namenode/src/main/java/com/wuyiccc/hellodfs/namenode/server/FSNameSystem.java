@@ -27,7 +27,7 @@ public class FSNameSystem {
      */
     public Boolean mkdir(String path) throws Exception {
         this.fsDirectory.mkdir(path);
-        this.fsEditLog.logEdit("create a directory: " + path);
+        this.fsEditLog.logEdit("{'OP':'MKDIR','PATH':'"+ path +"'}");
         return true;
     }
 
