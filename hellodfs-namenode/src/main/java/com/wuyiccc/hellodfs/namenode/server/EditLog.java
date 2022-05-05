@@ -1,5 +1,7 @@
 package com.wuyiccc.hellodfs.namenode.server;
 
+import com.alibaba.fastjson.JSONObject;
+
 /**
  * Edit Log
  *
@@ -24,6 +26,10 @@ public class EditLog {
 
     public void setTxId(long txId) {
         this.txId = txId;
+        // add txId into content jsonString
+        JSONObject jsonObject = JSONObject.parseObject(content);
+        jsonObject.put("txId", txId);
+        this.content = jsonObject.toJSONString();
     }
 
     public String getContent() {

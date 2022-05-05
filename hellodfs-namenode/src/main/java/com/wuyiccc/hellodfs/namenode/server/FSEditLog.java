@@ -1,5 +1,7 @@
 package com.wuyiccc.hellodfs.namenode.server;
 
+import java.io.IOException;
+
 /**
  * Responsible for managing the core components of editLog
  *
@@ -57,7 +59,11 @@ public class FSEditLog {
 
             EditLog editLog = new EditLog(txId, content);
 
-            doubleBuffer.write(editLog);
+            try {
+                doubleBuffer.write(editLog);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
             // check buffer capacity
             if (!doubleBuffer.shouldSyncToDisk()) {

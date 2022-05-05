@@ -1,5 +1,8 @@
 package com.wuyiccc.hellodfs.namenode.server;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 /**
  * double write buffer
  *
@@ -11,7 +14,8 @@ public class DoubleBuffer {
     /**
      * single edit log buffer max size 512k
      */
-    public static final Long EDIT_LOG_BUFFER_LIMIT = 512 * 1024L;
+    public static final Integer EDIT_LOG_BUFFER_LIMIT = 512 * 1024;
+
 
     /**
      * thread write into edit log buffer
@@ -27,7 +31,7 @@ public class DoubleBuffer {
     /**
      * write edit log into memory buffer
      */
-    public void write(EditLog editLog) {
+    public void write(EditLog editLog) throws IOException {
         currentBuffer.write(editLog);
     }
 
@@ -65,11 +69,19 @@ public class DoubleBuffer {
 
 
         /**
+         * SIZE = 1M
+         */
+        ByteArrayOutputStream out = new ByteArrayOutputStream(EDIT_LOG_BUFFER_LIMIT * 2);
+
+
+        /**
          * write editLog to buffer
          *
          * @param editLog
          */
-        public void write(EditLog editLog) {
+        public void write(EditLog editLog) throws IOException {
+            out.write(editLog.getContent().getBytes());
+            System.out.println("current buffer size is : " + this.size());
         }
 
         /**
@@ -77,8 +89,8 @@ public class DoubleBuffer {
          *
          * @return
          */
-        public Long size() {
-            return 0L;
+        public Integer size() {
+            return out.size();
         }
 
         public void flush() {
