@@ -1,7 +1,11 @@
 package com.wuyiccc.hellodfs.namenode.server;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 
 /**
  * double write buffer
@@ -12,9 +16,9 @@ import java.io.IOException;
 public class DoubleBuffer {
 
     /**
-     * single edit log buffer max size 512k
+     * single edit log buffer max size 25k
      */
-    public static final Integer EDIT_LOG_BUFFER_LIMIT = 512 * 1024;
+    public static final Integer EDIT_LOG_BUFFER_LIMIT = 25 * 1024;
 
 
     /**
@@ -60,7 +64,7 @@ public class DoubleBuffer {
     /**
      * flush syncBuffer data into disk
      */
-    public void flush() {
+    public void flush() throws IOException {
         this.syncBuffer.flush();
         this.syncBuffer.clear();
     }
@@ -69,10 +73,20 @@ public class DoubleBuffer {
 
 
         /**
-         * SIZE = 1M
+         * SIZE = 50K
          */
-        ByteArrayOutputStream out = new ByteArrayOutputStream(EDIT_LOG_BUFFER_LIMIT * 2);
+        ByteArrayOutputStream buffer;
 
+
+        long lastMaxTxId = 0;
+
+        long maxTxId;
+
+        public EditLogBuffer() {
+            this.buffer = new ByteArrayOutputStream(EDIT_LOG_BUFFER_LIMIT * 2);
+
+
+        }
 
         /**
          * write editLog to buffer
@@ -80,7 +94,9 @@ public class DoubleBuffer {
          * @param editLog
          */
         public void write(EditLog editLog) throws IOException {
-            out.write(editLog.getContent().getBytes());
+            this.maxTxId = editLog.getTxId();
+            buffer.write(editLog.getContent().getBytes());
+            buffer.write("\n".getBytes());
             System.out.println("current buffer size is : " + this.size());
         }
 
@@ -90,15 +106,49 @@ public class DoubleBuffer {
          * @return
          */
         public Integer size() {
-            return out.size();
+            return buffer.size();
         }
 
-        public void flush() {
+        public void flush() throws IOException {
 
+            String editLogFilePath = "e:\\tmp\\editslog\\edits-" + (lastMaxTxId + 1) + "-" + maxTxId + ".log";
+
+
+            RandomAccessFile file = null;
+            FileOutputStream out = null;
+            FileChannel editsLogFileChannel = null;
+
+            try {
+                file = new RandomAccessFile(editLogFilePath, "rw");
+                out = new FileOutputStream(file.getFD());
+                editsLogFileChannel = out.getChannel();
+
+
+                byte[] data = buffer.toByteArray();
+                ByteBuffer dataBuffer = ByteBuffer.wrap(data);
+                editsLogFileChannel.write(dataBuffer);
+                // force flush data from os cache into disk
+                editsLogFileChannel.force(false);
+            } finally {
+                if (out != null) {
+                    out.close();
+                }
+                if (file != null) {
+                    file.close();
+                }
+                if (editsLogFileChannel != null) {
+                    editsLogFileChannel.close();
+                }
+            }
+
+            this.lastMaxTxId = maxTxId;
         }
 
+        /**
+         * clear buffer cache data
+         */
         public void clear() {
-
+            buffer.reset();
         }
     }
 

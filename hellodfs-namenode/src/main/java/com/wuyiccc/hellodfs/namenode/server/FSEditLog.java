@@ -108,7 +108,11 @@ public class FSEditLog {
         }
 
         // begin flush memory data into disk
-        doubleBuffer.flush();
+        try {
+            doubleBuffer.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         // reset mark bit
         synchronized (this) {
