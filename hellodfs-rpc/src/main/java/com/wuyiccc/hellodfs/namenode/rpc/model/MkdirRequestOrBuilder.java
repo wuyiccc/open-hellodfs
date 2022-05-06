@@ -10,7 +10,7 @@ public interface MkdirRequestOrBuilder extends
   /**
    * <code>optional string path = 1;</code>
    */
-  java.lang.String getPath();
+  String getPath();
   /**
    * <code>optional string path = 1;</code>
    */

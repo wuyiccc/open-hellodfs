@@ -31,5 +31,9 @@ public class FSNameSystem {
         return true;
     }
 
+    public void flush() {
+        this.fsEditLog.flush();
+    }
+
 
 }

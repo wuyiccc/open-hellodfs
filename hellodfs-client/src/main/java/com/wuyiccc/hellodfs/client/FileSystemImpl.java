@@ -2,6 +2,7 @@ package com.wuyiccc.hellodfs.client;
 
 import com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest;
 import com.wuyiccc.hellodfs.namenode.rpc.model.MkdirResponse;
+import com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest;
 import com.wuyiccc.hellodfs.namenode.rpc.service.NameNodeServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NegotiationType;
@@ -32,5 +33,14 @@ public class FileSystemImpl implements FileSystem {
         MkdirResponse response = this.nameNode.mkdir(request);
 
         System.out.println("mkdir response: " + response.getStatus());
+    }
+
+    @Override
+    public void shutdown() throws Exception {
+
+        ShutdownRequest request = ShutdownRequest.newBuilder()
+                .setCode(1)
+                .build();
+        this.nameNode.shutdown(request);
     }
 }

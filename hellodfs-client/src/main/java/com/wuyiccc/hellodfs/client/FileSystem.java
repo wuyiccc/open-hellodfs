@@ -9,4 +9,10 @@ public interface FileSystem {
     public void mkdir(String path) throws Exception;
 
 
+    /**
+     * graceful close
+     * @throws Exception
+     */
+    public void shutdown() throws Exception;
+
 }

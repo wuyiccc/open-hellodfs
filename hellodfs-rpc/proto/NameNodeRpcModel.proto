@@ -32,3 +32,10 @@ message MkdirResponse {
   int32 status = 1;
 }
 
+message ShutdownRequest {
+  int32 code = 1;
+}
+
+message ShutdownResponse {
+  int32 status = 1;
+}

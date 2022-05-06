@@ -10,7 +10,7 @@ public interface RegisterRequestOrBuilder extends
   /**
    * <code>optional string ip = 1;</code>
    */
-  java.lang.String getIp();
+  String getIp();
   /**
    * <code>optional string ip = 1;</code>
    */
@@ -20,7 +20,7 @@ public interface RegisterRequestOrBuilder extends
   /**
    * <code>optional string hostname = 2;</code>
    */
-  java.lang.String getHostname();
+  String getHostname();
   /**
    * <code>optional string hostname = 2;</code>
    */

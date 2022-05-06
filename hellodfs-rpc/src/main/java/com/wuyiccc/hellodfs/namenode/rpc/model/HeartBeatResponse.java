@@ -18,7 +18,7 @@ public  final class HeartBeatResponse extends
     status_ = 0;
   }
 
-  @java.lang.Override
+  @Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
     return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
@@ -61,14 +61,14 @@ public  final class HeartBeatResponse extends
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_HeartBeatResponse_descriptor;
+    return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_HeartBeatResponse_descriptor;
   }
 
-  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+  protected FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_HeartBeatResponse_fieldAccessorTable
+    return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_HeartBeatResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse.class, com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse.Builder.class);
+            HeartBeatResponse.class, Builder.class);
   }
 
   public static final int STATUS_FIELD_NUMBER = 1;
@@ -111,15 +111,15 @@ public  final class HeartBeatResponse extends
   }
 
   private static final long serialVersionUID = 0L;
-  @java.lang.Override
-  public boolean equals(final java.lang.Object obj) {
+  @Override
+  public boolean equals(final Object obj) {
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse)) {
+    if (!(obj instanceof HeartBeatResponse)) {
       return super.equals(obj);
     }
-    com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse other = (com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse) obj;
+    HeartBeatResponse other = (HeartBeatResponse) obj;
 
     boolean result = true;
     result = result && (getStatus()
@@ -127,7 +127,7 @@ public  final class HeartBeatResponse extends
     return result;
   }
 
-  @java.lang.Override
+  @Override
   public int hashCode() {
     if (memoizedHashCode != 0) {
       return memoizedHashCode;
@@ -141,58 +141,58 @@ public  final class HeartBeatResponse extends
     return hash;
   }
 
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse parseFrom(
+  public static HeartBeatResponse parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse parseFrom(
+  public static HeartBeatResponse parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse parseFrom(byte[] data)
+  public static HeartBeatResponse parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse parseFrom(
+  public static HeartBeatResponse parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse parseFrom(java.io.InputStream input)
+  public static HeartBeatResponse parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse parseFrom(
+  public static HeartBeatResponse parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse parseDelimitedFrom(java.io.InputStream input)
+  public static HeartBeatResponse parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse parseDelimitedFrom(
+  public static HeartBeatResponse parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse parseFrom(
+  public static HeartBeatResponse parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse parseFrom(
+  public static HeartBeatResponse parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -204,7 +204,7 @@ public  final class HeartBeatResponse extends
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse prototype) {
+  public static Builder newBuilder(HeartBeatResponse prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   public Builder toBuilder() {
@@ -212,9 +212,9 @@ public  final class HeartBeatResponse extends
         ? new Builder() : new Builder().mergeFrom(this);
   }
 
-  @java.lang.Override
+  @Override
   protected Builder newBuilderForType(
-      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      BuilderParent parent) {
     Builder builder = new Builder(parent);
     return builder;
   }
@@ -224,17 +224,17 @@ public  final class HeartBeatResponse extends
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:com.wuyiccc.hellodfs.namenode.rpc.HeartBeatResponse)
-      com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponseOrBuilder {
+      HeartBeatResponseOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_HeartBeatResponse_descriptor;
+      return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_HeartBeatResponse_descriptor;
     }
 
-    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+    protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_HeartBeatResponse_fieldAccessorTable
+      return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_HeartBeatResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse.class, com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse.Builder.class);
+              HeartBeatResponse.class, Builder.class);
     }
 
     // Construct using com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse.newBuilder()
@@ -243,7 +243,7 @@ public  final class HeartBeatResponse extends
     }
 
     private Builder(
-        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        BuilderParent parent) {
       super(parent);
       maybeForceBuilderInitialization();
     }
@@ -261,23 +261,23 @@ public  final class HeartBeatResponse extends
 
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_HeartBeatResponse_descriptor;
+      return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_HeartBeatResponse_descriptor;
     }
 
-    public com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse getDefaultInstanceForType() {
-      return com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse.getDefaultInstance();
+    public HeartBeatResponse getDefaultInstanceForType() {
+      return HeartBeatResponse.getDefaultInstance();
     }
 
-    public com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse build() {
-      com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse result = buildPartial();
+    public HeartBeatResponse build() {
+      HeartBeatResponse result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
       return result;
     }
 
-    public com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse buildPartial() {
-      com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse result = new com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse(this);
+    public HeartBeatResponse buildPartial() {
+      HeartBeatResponse result = new HeartBeatResponse(this);
       result.status_ = status_;
       onBuilt();
       return result;
@@ -310,16 +310,16 @@ public  final class HeartBeatResponse extends
       return (Builder) super.addRepeatedField(field, value);
     }
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse) {
-        return mergeFrom((com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse)other);
+      if (other instanceof HeartBeatResponse) {
+        return mergeFrom((HeartBeatResponse)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse other) {
-      if (other == com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse.getDefaultInstance()) return this;
+    public Builder mergeFrom(HeartBeatResponse other) {
+      if (other == HeartBeatResponse.getDefaultInstance()) return this;
       if (other.getStatus() != 0) {
         setStatus(other.getStatus());
       }
@@ -335,11 +335,11 @@ public  final class HeartBeatResponse extends
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse parsedMessage = null;
+      HeartBeatResponse parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse) e.getUnfinishedMessage();
+        parsedMessage = (HeartBeatResponse) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -389,12 +389,12 @@ public  final class HeartBeatResponse extends
   }
 
   // @@protoc_insertion_point(class_scope:com.wuyiccc.hellodfs.namenode.rpc.HeartBeatResponse)
-  private static final com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse DEFAULT_INSTANCE;
+  private static final HeartBeatResponse DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse();
+    DEFAULT_INSTANCE = new HeartBeatResponse();
   }
 
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse getDefaultInstance() {
+  public static HeartBeatResponse getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -412,12 +412,12 @@ public  final class HeartBeatResponse extends
     return PARSER;
   }
 
-  @java.lang.Override
+  @Override
   public com.google.protobuf.Parser<HeartBeatResponse> getParserForType() {
     return PARSER;
   }
 
-  public com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse getDefaultInstanceForType() {
+  public HeartBeatResponse getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

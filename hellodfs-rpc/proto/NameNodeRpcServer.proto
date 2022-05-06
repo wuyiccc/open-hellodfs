@@ -12,4 +12,5 @@ service NameNodeService {
   rpc register(RegisterRequest) returns (RegisterResponse);
   rpc heartBeat(HeartBeatRequest) returns (HeartBeatResponse);
   rpc mkdir(MkdirRequest) returns (MkdirResponse);
+  rpc shutdown(ShutdownRequest) returns (ShutdownResponse);
 }

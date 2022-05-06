@@ -4,17 +4,17 @@
 package com.wuyiccc.hellodfs.namenode.rpc.model;
 
 /**
- * Protobuf type {@code com.wuyiccc.hellodfs.namenode.rpc.RegisterResponse}
+ * Protobuf type {@code com.wuyiccc.hellodfs.namenode.rpc.ShutdownResponse}
  */
-public  final class RegisterResponse extends
+public  final class ShutdownResponse extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:com.wuyiccc.hellodfs.namenode.rpc.RegisterResponse)
-    RegisterResponseOrBuilder {
-  // Use RegisterResponse.newBuilder() to construct.
-  private RegisterResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // @@protoc_insertion_point(message_implements:com.wuyiccc.hellodfs.namenode.rpc.ShutdownResponse)
+    ShutdownResponseOrBuilder {
+  // Use ShutdownResponse.newBuilder() to construct.
+  private ShutdownResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private RegisterResponse() {
+  private ShutdownResponse() {
     status_ = 0;
   }
 
@@ -23,7 +23,7 @@ public  final class RegisterResponse extends
   getUnknownFields() {
     return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
   }
-  private RegisterResponse(
+  private ShutdownResponse(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -61,14 +61,14 @@ public  final class RegisterResponse extends
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_RegisterResponse_descriptor;
+    return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_ShutdownResponse_descriptor;
   }
 
   protected FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_RegisterResponse_fieldAccessorTable
+    return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_ShutdownResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            RegisterResponse.class, Builder.class);
+            ShutdownResponse.class, Builder.class);
   }
 
   public static final int STATUS_FIELD_NUMBER = 1;
@@ -116,10 +116,10 @@ public  final class RegisterResponse extends
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof RegisterResponse)) {
+    if (!(obj instanceof ShutdownResponse)) {
       return super.equals(obj);
     }
-    RegisterResponse other = (RegisterResponse) obj;
+    ShutdownResponse other = (ShutdownResponse) obj;
 
     boolean result = true;
     result = result && (getStatus()
@@ -141,58 +141,58 @@ public  final class RegisterResponse extends
     return hash;
   }
 
-  public static RegisterResponse parseFrom(
+  public static ShutdownResponse parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static RegisterResponse parseFrom(
+  public static ShutdownResponse parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static RegisterResponse parseFrom(byte[] data)
+  public static ShutdownResponse parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static RegisterResponse parseFrom(
+  public static ShutdownResponse parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static RegisterResponse parseFrom(java.io.InputStream input)
+  public static ShutdownResponse parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static RegisterResponse parseFrom(
+  public static ShutdownResponse parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static RegisterResponse parseDelimitedFrom(java.io.InputStream input)
+  public static ShutdownResponse parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static RegisterResponse parseDelimitedFrom(
+  public static ShutdownResponse parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static RegisterResponse parseFrom(
+  public static ShutdownResponse parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static RegisterResponse parseFrom(
+  public static ShutdownResponse parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -204,7 +204,7 @@ public  final class RegisterResponse extends
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(RegisterResponse prototype) {
+  public static Builder newBuilder(ShutdownResponse prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   public Builder toBuilder() {
@@ -219,25 +219,25 @@ public  final class RegisterResponse extends
     return builder;
   }
   /**
-   * Protobuf type {@code com.wuyiccc.hellodfs.namenode.rpc.RegisterResponse}
+   * Protobuf type {@code com.wuyiccc.hellodfs.namenode.rpc.ShutdownResponse}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:com.wuyiccc.hellodfs.namenode.rpc.RegisterResponse)
-      RegisterResponseOrBuilder {
+      // @@protoc_insertion_point(builder_implements:com.wuyiccc.hellodfs.namenode.rpc.ShutdownResponse)
+      ShutdownResponseOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_RegisterResponse_descriptor;
+      return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_ShutdownResponse_descriptor;
     }
 
     protected FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_RegisterResponse_fieldAccessorTable
+      return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_ShutdownResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              RegisterResponse.class, Builder.class);
+              ShutdownResponse.class, Builder.class);
     }
 
-    // Construct using com.wuyiccc.hellodfs.namenode.rpc.model.RegisterResponse.newBuilder()
+    // Construct using com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownResponse.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -261,23 +261,23 @@ public  final class RegisterResponse extends
 
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_RegisterResponse_descriptor;
+      return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_ShutdownResponse_descriptor;
     }
 
-    public RegisterResponse getDefaultInstanceForType() {
-      return RegisterResponse.getDefaultInstance();
+    public ShutdownResponse getDefaultInstanceForType() {
+      return ShutdownResponse.getDefaultInstance();
     }
 
-    public RegisterResponse build() {
-      RegisterResponse result = buildPartial();
+    public ShutdownResponse build() {
+      ShutdownResponse result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
       return result;
     }
 
-    public RegisterResponse buildPartial() {
-      RegisterResponse result = new RegisterResponse(this);
+    public ShutdownResponse buildPartial() {
+      ShutdownResponse result = new ShutdownResponse(this);
       result.status_ = status_;
       onBuilt();
       return result;
@@ -310,16 +310,16 @@ public  final class RegisterResponse extends
       return (Builder) super.addRepeatedField(field, value);
     }
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof RegisterResponse) {
-        return mergeFrom((RegisterResponse)other);
+      if (other instanceof ShutdownResponse) {
+        return mergeFrom((ShutdownResponse)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(RegisterResponse other) {
-      if (other == RegisterResponse.getDefaultInstance()) return this;
+    public Builder mergeFrom(ShutdownResponse other) {
+      if (other == ShutdownResponse.getDefaultInstance()) return this;
       if (other.getStatus() != 0) {
         setStatus(other.getStatus());
       }
@@ -335,11 +335,11 @@ public  final class RegisterResponse extends
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      RegisterResponse parsedMessage = null;
+      ShutdownResponse parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (RegisterResponse) e.getUnfinishedMessage();
+        parsedMessage = (ShutdownResponse) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -385,39 +385,39 @@ public  final class RegisterResponse extends
     }
 
 
-    // @@protoc_insertion_point(builder_scope:com.wuyiccc.hellodfs.namenode.rpc.RegisterResponse)
+    // @@protoc_insertion_point(builder_scope:com.wuyiccc.hellodfs.namenode.rpc.ShutdownResponse)
   }
 
-  // @@protoc_insertion_point(class_scope:com.wuyiccc.hellodfs.namenode.rpc.RegisterResponse)
-  private static final RegisterResponse DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:com.wuyiccc.hellodfs.namenode.rpc.ShutdownResponse)
+  private static final ShutdownResponse DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new RegisterResponse();
+    DEFAULT_INSTANCE = new ShutdownResponse();
   }
 
-  public static RegisterResponse getDefaultInstance() {
+  public static ShutdownResponse getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<RegisterResponse>
-      PARSER = new com.google.protobuf.AbstractParser<RegisterResponse>() {
-    public RegisterResponse parsePartialFrom(
+  private static final com.google.protobuf.Parser<ShutdownResponse>
+      PARSER = new com.google.protobuf.AbstractParser<ShutdownResponse>() {
+    public ShutdownResponse parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-        return new RegisterResponse(input, extensionRegistry);
+        return new ShutdownResponse(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<RegisterResponse> parser() {
+  public static com.google.protobuf.Parser<ShutdownResponse> parser() {
     return PARSER;
   }
 
   @Override
-  public com.google.protobuf.Parser<RegisterResponse> getParserForType() {
+  public com.google.protobuf.Parser<ShutdownResponse> getParserForType() {
     return PARSER;
   }
 
-  public RegisterResponse getDefaultInstanceForType() {
+  public ShutdownResponse getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 
