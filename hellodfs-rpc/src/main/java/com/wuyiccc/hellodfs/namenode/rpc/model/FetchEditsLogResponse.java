@@ -4,19 +4,18 @@
 package com.wuyiccc.hellodfs.namenode.rpc.model;
 
 /**
- * Protobuf type {@code com.wuyiccc.hellodfs.namenode.rpc.RegisterRequest}
+ * Protobuf type {@code com.wuyiccc.hellodfs.namenode.rpc.FetchEditsLogResponse}
  */
-public  final class RegisterRequest extends
+public  final class FetchEditsLogResponse extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:com.wuyiccc.hellodfs.namenode.rpc.RegisterRequest)
-    RegisterRequestOrBuilder {
-  // Use RegisterRequest.newBuilder() to construct.
-  private RegisterRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // @@protoc_insertion_point(message_implements:com.wuyiccc.hellodfs.namenode.rpc.FetchEditsLogResponse)
+    FetchEditsLogResponseOrBuilder {
+  // Use FetchEditsLogResponse.newBuilder() to construct.
+  private FetchEditsLogResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private RegisterRequest() {
-    ip_ = "";
-    hostname_ = "";
+  private FetchEditsLogResponse() {
+    editsLog_ = "";
   }
 
   @java.lang.Override
@@ -24,7 +23,7 @@ public  final class RegisterRequest extends
   getUnknownFields() {
     return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
   }
-  private RegisterRequest(
+  private FetchEditsLogResponse(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -47,13 +46,7 @@ public  final class RegisterRequest extends
           case 10: {
             java.lang.String s = input.readStringRequireUtf8();
 
-            ip_ = s;
-            break;
-          }
-          case 18: {
-            java.lang.String s = input.readStringRequireUtf8();
-
-            hostname_ = s;
+            editsLog_ = s;
             break;
           }
         }
@@ -69,78 +62,44 @@ public  final class RegisterRequest extends
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_RegisterRequest_descriptor;
+    return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_FetchEditsLogResponse_descriptor;
   }
 
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_RegisterRequest_fieldAccessorTable
+    return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_FetchEditsLogResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest.class, com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest.Builder.class);
+            com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse.class, com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse.Builder.class);
   }
 
-  public static final int IP_FIELD_NUMBER = 1;
-  private volatile java.lang.Object ip_;
+  public static final int EDITSLOG_FIELD_NUMBER = 1;
+  private volatile java.lang.Object editsLog_;
   /**
-   * <code>optional string ip = 1;</code>
+   * <code>optional string editsLog = 1;</code>
    */
-  public java.lang.String getIp() {
-    java.lang.Object ref = ip_;
+  public java.lang.String getEditsLog() {
+    java.lang.Object ref = editsLog_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      ip_ = s;
+      editsLog_ = s;
       return s;
     }
   }
   /**
-   * <code>optional string ip = 1;</code>
+   * <code>optional string editsLog = 1;</code>
    */
   public com.google.protobuf.ByteString
-      getIpBytes() {
-    java.lang.Object ref = ip_;
+      getEditsLogBytes() {
+    java.lang.Object ref = editsLog_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      ip_ = b;
-      return b;
-    } else {
-      return (com.google.protobuf.ByteString) ref;
-    }
-  }
-
-  public static final int HOSTNAME_FIELD_NUMBER = 2;
-  private volatile java.lang.Object hostname_;
-  /**
-   * <code>optional string hostname = 2;</code>
-   */
-  public java.lang.String getHostname() {
-    java.lang.Object ref = hostname_;
-    if (ref instanceof java.lang.String) {
-      return (java.lang.String) ref;
-    } else {
-      com.google.protobuf.ByteString bs = 
-          (com.google.protobuf.ByteString) ref;
-      java.lang.String s = bs.toStringUtf8();
-      hostname_ = s;
-      return s;
-    }
-  }
-  /**
-   * <code>optional string hostname = 2;</code>
-   */
-  public com.google.protobuf.ByteString
-      getHostnameBytes() {
-    java.lang.Object ref = hostname_;
-    if (ref instanceof java.lang.String) {
-      com.google.protobuf.ByteString b = 
-          com.google.protobuf.ByteString.copyFromUtf8(
-              (java.lang.String) ref);
-      hostname_ = b;
+      editsLog_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
@@ -159,11 +118,8 @@ public  final class RegisterRequest extends
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (!getIpBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, ip_);
-    }
-    if (!getHostnameBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, hostname_);
+    if (!getEditsLogBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, editsLog_);
     }
   }
 
@@ -172,11 +128,8 @@ public  final class RegisterRequest extends
     if (size != -1) return size;
 
     size = 0;
-    if (!getIpBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, ip_);
-    }
-    if (!getHostnameBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, hostname_);
+    if (!getEditsLogBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, editsLog_);
     }
     memoizedSize = size;
     return size;
@@ -188,16 +141,14 @@ public  final class RegisterRequest extends
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest)) {
+    if (!(obj instanceof com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse)) {
       return super.equals(obj);
     }
-    com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest other = (com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest) obj;
+    com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse other = (com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse) obj;
 
     boolean result = true;
-    result = result && getIp()
-        .equals(other.getIp());
-    result = result && getHostname()
-        .equals(other.getHostname());
+    result = result && getEditsLog()
+        .equals(other.getEditsLog());
     return result;
   }
 
@@ -208,67 +159,65 @@ public  final class RegisterRequest extends
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptorForType().hashCode();
-    hash = (37 * hash) + IP_FIELD_NUMBER;
-    hash = (53 * hash) + getIp().hashCode();
-    hash = (37 * hash) + HOSTNAME_FIELD_NUMBER;
-    hash = (53 * hash) + getHostname().hashCode();
+    hash = (37 * hash) + EDITSLOG_FIELD_NUMBER;
+    hash = (53 * hash) + getEditsLog().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
   }
 
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest parseFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest parseFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest parseFrom(byte[] data)
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest parseFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest parseFrom(java.io.InputStream input)
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest parseFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest parseDelimitedFrom(java.io.InputStream input)
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest parseDelimitedFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest parseFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest parseFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -280,7 +229,7 @@ public  final class RegisterRequest extends
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest prototype) {
+  public static Builder newBuilder(com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   public Builder toBuilder() {
@@ -295,25 +244,25 @@ public  final class RegisterRequest extends
     return builder;
   }
   /**
-   * Protobuf type {@code com.wuyiccc.hellodfs.namenode.rpc.RegisterRequest}
+   * Protobuf type {@code com.wuyiccc.hellodfs.namenode.rpc.FetchEditsLogResponse}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:com.wuyiccc.hellodfs.namenode.rpc.RegisterRequest)
-      com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequestOrBuilder {
+      // @@protoc_insertion_point(builder_implements:com.wuyiccc.hellodfs.namenode.rpc.FetchEditsLogResponse)
+      com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponseOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_RegisterRequest_descriptor;
+      return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_FetchEditsLogResponse_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_RegisterRequest_fieldAccessorTable
+      return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_FetchEditsLogResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest.class, com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest.Builder.class);
+              com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse.class, com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse.Builder.class);
     }
 
-    // Construct using com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest.newBuilder()
+    // Construct using com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -330,34 +279,31 @@ public  final class RegisterRequest extends
     }
     public Builder clear() {
       super.clear();
-      ip_ = "";
-
-      hostname_ = "";
+      editsLog_ = "";
 
       return this;
     }
 
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_RegisterRequest_descriptor;
+      return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_FetchEditsLogResponse_descriptor;
     }
 
-    public com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest getDefaultInstanceForType() {
-      return com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest.getDefaultInstance();
+    public com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse getDefaultInstanceForType() {
+      return com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse.getDefaultInstance();
     }
 
-    public com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest build() {
-      com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest result = buildPartial();
+    public com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse build() {
+      com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
       return result;
     }
 
-    public com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest buildPartial() {
-      com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest result = new com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest(this);
-      result.ip_ = ip_;
-      result.hostname_ = hostname_;
+    public com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse buildPartial() {
+      com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse result = new com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse(this);
+      result.editsLog_ = editsLog_;
       onBuilt();
       return result;
     }
@@ -389,22 +335,18 @@ public  final class RegisterRequest extends
       return (Builder) super.addRepeatedField(field, value);
     }
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest) {
-        return mergeFrom((com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest)other);
+      if (other instanceof com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse) {
+        return mergeFrom((com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest other) {
-      if (other == com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest.getDefaultInstance()) return this;
-      if (!other.getIp().isEmpty()) {
-        ip_ = other.ip_;
-        onChanged();
-      }
-      if (!other.getHostname().isEmpty()) {
-        hostname_ = other.hostname_;
+    public Builder mergeFrom(com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse other) {
+      if (other == com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse.getDefaultInstance()) return this;
+      if (!other.getEditsLog().isEmpty()) {
+        editsLog_ = other.editsLog_;
         onChanged();
       }
       onChanged();
@@ -419,11 +361,11 @@ public  final class RegisterRequest extends
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest parsedMessage = null;
+      com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest) e.getUnfinishedMessage();
+        parsedMessage = (com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -433,140 +375,71 @@ public  final class RegisterRequest extends
       return this;
     }
 
-    private java.lang.Object ip_ = "";
+    private java.lang.Object editsLog_ = "";
     /**
-     * <code>optional string ip = 1;</code>
+     * <code>optional string editsLog = 1;</code>
      */
-    public java.lang.String getIp() {
-      java.lang.Object ref = ip_;
+    public java.lang.String getEditsLog() {
+      java.lang.Object ref = editsLog_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        ip_ = s;
+        editsLog_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
       }
     }
     /**
-     * <code>optional string ip = 1;</code>
+     * <code>optional string editsLog = 1;</code>
      */
     public com.google.protobuf.ByteString
-        getIpBytes() {
-      java.lang.Object ref = ip_;
+        getEditsLogBytes() {
+      java.lang.Object ref = editsLog_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        ip_ = b;
+        editsLog_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <code>optional string ip = 1;</code>
+     * <code>optional string editsLog = 1;</code>
      */
-    public Builder setIp(
+    public Builder setEditsLog(
         java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      ip_ = value;
+      editsLog_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional string ip = 1;</code>
+     * <code>optional string editsLog = 1;</code>
      */
-    public Builder clearIp() {
+    public Builder clearEditsLog() {
       
-      ip_ = getDefaultInstance().getIp();
+      editsLog_ = getDefaultInstance().getEditsLog();
       onChanged();
       return this;
     }
     /**
-     * <code>optional string ip = 1;</code>
+     * <code>optional string editsLog = 1;</code>
      */
-    public Builder setIpBytes(
+    public Builder setEditsLogBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      ip_ = value;
-      onChanged();
-      return this;
-    }
-
-    private java.lang.Object hostname_ = "";
-    /**
-     * <code>optional string hostname = 2;</code>
-     */
-    public java.lang.String getHostname() {
-      java.lang.Object ref = hostname_;
-      if (!(ref instanceof java.lang.String)) {
-        com.google.protobuf.ByteString bs =
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        hostname_ = s;
-        return s;
-      } else {
-        return (java.lang.String) ref;
-      }
-    }
-    /**
-     * <code>optional string hostname = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getHostnameBytes() {
-      java.lang.Object ref = hostname_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        hostname_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    /**
-     * <code>optional string hostname = 2;</code>
-     */
-    public Builder setHostname(
-        java.lang.String value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  
-      hostname_ = value;
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>optional string hostname = 2;</code>
-     */
-    public Builder clearHostname() {
-      
-      hostname_ = getDefaultInstance().getHostname();
-      onChanged();
-      return this;
-    }
-    /**
-     * <code>optional string hostname = 2;</code>
-     */
-    public Builder setHostnameBytes(
-        com.google.protobuf.ByteString value) {
-      if (value == null) {
-    throw new NullPointerException();
-  }
-  checkByteStringIsUtf8(value);
-      
-      hostname_ = value;
+      editsLog_ = value;
       onChanged();
       return this;
     }
@@ -581,39 +454,39 @@ public  final class RegisterRequest extends
     }
 
 
-    // @@protoc_insertion_point(builder_scope:com.wuyiccc.hellodfs.namenode.rpc.RegisterRequest)
+    // @@protoc_insertion_point(builder_scope:com.wuyiccc.hellodfs.namenode.rpc.FetchEditsLogResponse)
   }
 
-  // @@protoc_insertion_point(class_scope:com.wuyiccc.hellodfs.namenode.rpc.RegisterRequest)
-  private static final com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:com.wuyiccc.hellodfs.namenode.rpc.FetchEditsLogResponse)
+  private static final com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest();
+    DEFAULT_INSTANCE = new com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse();
   }
 
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest getDefaultInstance() {
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<RegisterRequest>
-      PARSER = new com.google.protobuf.AbstractParser<RegisterRequest>() {
-    public RegisterRequest parsePartialFrom(
+  private static final com.google.protobuf.Parser<FetchEditsLogResponse>
+      PARSER = new com.google.protobuf.AbstractParser<FetchEditsLogResponse>() {
+    public FetchEditsLogResponse parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-        return new RegisterRequest(input, extensionRegistry);
+        return new FetchEditsLogResponse(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<RegisterRequest> parser() {
+  public static com.google.protobuf.Parser<FetchEditsLogResponse> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<RegisterRequest> getParserForType() {
+  public com.google.protobuf.Parser<FetchEditsLogResponse> getParserForType() {
     return PARSER;
   }
 
-  public com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest getDefaultInstanceForType() {
+  public com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

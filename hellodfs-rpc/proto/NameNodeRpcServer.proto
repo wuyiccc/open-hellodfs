@@ -13,4 +13,5 @@ service NameNodeService {
   rpc heartBeat(HeartBeatRequest) returns (HeartBeatResponse);
   rpc mkdir(MkdirRequest) returns (MkdirResponse);
   rpc shutdown(ShutdownRequest) returns (ShutdownResponse);
+  rpc fetchEditsLog(FetchEditsLogRequest) returns (FetchEditsLogResponse);
 }

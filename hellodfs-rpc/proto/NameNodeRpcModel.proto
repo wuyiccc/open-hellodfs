@@ -39,3 +39,11 @@ message ShutdownRequest {
 message ShutdownResponse {
   int32 status = 1;
 }
+
+message FetchEditsLogRequest {
+  int32 code = 1;
+}
+
+message FetchEditsLogResponse {
+  string editsLog = 1;
+}

@@ -2,21 +2,28 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>hellodfs</artifactId>
+        <groupId>com.wuyiccc</groupId>
+        <version>beta-1.0</version>
+    </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.wuyiccc</groupId>
-    <artifactId>hellodfs</artifactId>
-    <packaging>pom</packaging>
-    <version>beta-1.0</version>
+    <artifactId>hellodfs-backupnode</artifactId>
 
-    <modules>
-        <module>hellodfs-datanode</module>
-        <module>hellodfs-namenode</module>
-        <module>hellodfs-rpc</module>
-        <module>hellodfs-client</module>
-        <module>hellodfs-backupnode</module>
-    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>com.wuyiccc</groupId>
+            <artifactId>hellodfs-rpc</artifactId>
+            <version>beta-1.0</version>
+        </dependency>
 
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.56</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>

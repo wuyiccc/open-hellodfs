@@ -18,7 +18,7 @@ public  final class MkdirRequest extends
     path_ = "";
   }
 
-  @Override
+  @java.lang.Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
     return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
@@ -44,7 +44,7 @@ public  final class MkdirRequest extends
             break;
           }
           case 10: {
-            String s = input.readStringRequireUtf8();
+            java.lang.String s = input.readStringRequireUtf8();
 
             path_ = s;
             break;
@@ -62,29 +62,29 @@ public  final class MkdirRequest extends
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_MkdirRequest_descriptor;
+    return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_MkdirRequest_descriptor;
   }
 
-  protected FieldAccessorTable
+  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_MkdirRequest_fieldAccessorTable
+    return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_MkdirRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            MkdirRequest.class, Builder.class);
+            com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest.class, com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest.Builder.class);
   }
 
   public static final int PATH_FIELD_NUMBER = 1;
-  private volatile Object path_;
+  private volatile java.lang.Object path_;
   /**
    * <code>optional string path = 1;</code>
    */
-  public String getPath() {
-    Object ref = path_;
-    if (ref instanceof String) {
-      return (String) ref;
+  public java.lang.String getPath() {
+    java.lang.Object ref = path_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
-      String s = bs.toStringUtf8();
+      java.lang.String s = bs.toStringUtf8();
       path_ = s;
       return s;
     }
@@ -94,11 +94,11 @@ public  final class MkdirRequest extends
    */
   public com.google.protobuf.ByteString
       getPathBytes() {
-    Object ref = path_;
-    if (ref instanceof String) {
+    java.lang.Object ref = path_;
+    if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
-              (String) ref);
+              (java.lang.String) ref);
       path_ = b;
       return b;
     } else {
@@ -136,15 +136,15 @@ public  final class MkdirRequest extends
   }
 
   private static final long serialVersionUID = 0L;
-  @Override
-  public boolean equals(final Object obj) {
+  @java.lang.Override
+  public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof MkdirRequest)) {
+    if (!(obj instanceof com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest)) {
       return super.equals(obj);
     }
-    MkdirRequest other = (MkdirRequest) obj;
+    com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest other = (com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest) obj;
 
     boolean result = true;
     result = result && getPath()
@@ -152,7 +152,7 @@ public  final class MkdirRequest extends
     return result;
   }
 
-  @Override
+  @java.lang.Override
   public int hashCode() {
     if (memoizedHashCode != 0) {
       return memoizedHashCode;
@@ -166,58 +166,58 @@ public  final class MkdirRequest extends
     return hash;
   }
 
-  public static MkdirRequest parseFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static MkdirRequest parseFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static MkdirRequest parseFrom(byte[] data)
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static MkdirRequest parseFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static MkdirRequest parseFrom(java.io.InputStream input)
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static MkdirRequest parseFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static MkdirRequest parseDelimitedFrom(java.io.InputStream input)
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static MkdirRequest parseDelimitedFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static MkdirRequest parseFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static MkdirRequest parseFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -229,7 +229,7 @@ public  final class MkdirRequest extends
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(MkdirRequest prototype) {
+  public static Builder newBuilder(com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   public Builder toBuilder() {
@@ -237,9 +237,9 @@ public  final class MkdirRequest extends
         ? new Builder() : new Builder().mergeFrom(this);
   }
 
-  @Override
+  @java.lang.Override
   protected Builder newBuilderForType(
-      BuilderParent parent) {
+      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
     Builder builder = new Builder(parent);
     return builder;
   }
@@ -249,17 +249,17 @@ public  final class MkdirRequest extends
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:com.wuyiccc.hellodfs.namenode.rpc.MkdirRequest)
-      MkdirRequestOrBuilder {
+      com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_MkdirRequest_descriptor;
+      return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_MkdirRequest_descriptor;
     }
 
-    protected FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_MkdirRequest_fieldAccessorTable
+      return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_MkdirRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              MkdirRequest.class, Builder.class);
+              com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest.class, com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest.Builder.class);
     }
 
     // Construct using com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest.newBuilder()
@@ -268,7 +268,7 @@ public  final class MkdirRequest extends
     }
 
     private Builder(
-        BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
       maybeForceBuilderInitialization();
     }
@@ -286,23 +286,23 @@ public  final class MkdirRequest extends
 
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_MkdirRequest_descriptor;
+      return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_MkdirRequest_descriptor;
     }
 
-    public MkdirRequest getDefaultInstanceForType() {
-      return MkdirRequest.getDefaultInstance();
+    public com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest getDefaultInstanceForType() {
+      return com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest.getDefaultInstance();
     }
 
-    public MkdirRequest build() {
-      MkdirRequest result = buildPartial();
+    public com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest build() {
+      com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
       return result;
     }
 
-    public MkdirRequest buildPartial() {
-      MkdirRequest result = new MkdirRequest(this);
+    public com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest buildPartial() {
+      com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest result = new com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest(this);
       result.path_ = path_;
       onBuilt();
       return result;
@@ -335,16 +335,16 @@ public  final class MkdirRequest extends
       return (Builder) super.addRepeatedField(field, value);
     }
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof MkdirRequest) {
-        return mergeFrom((MkdirRequest)other);
+      if (other instanceof com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest) {
+        return mergeFrom((com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(MkdirRequest other) {
-      if (other == MkdirRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest other) {
+      if (other == com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest.getDefaultInstance()) return this;
       if (!other.getPath().isEmpty()) {
         path_ = other.path_;
         onChanged();
@@ -361,11 +361,11 @@ public  final class MkdirRequest extends
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      MkdirRequest parsedMessage = null;
+      com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (MkdirRequest) e.getUnfinishedMessage();
+        parsedMessage = (com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -375,20 +375,20 @@ public  final class MkdirRequest extends
       return this;
     }
 
-    private Object path_ = "";
+    private java.lang.Object path_ = "";
     /**
      * <code>optional string path = 1;</code>
      */
-    public String getPath() {
-      Object ref = path_;
-      if (!(ref instanceof String)) {
+    public java.lang.String getPath() {
+      java.lang.Object ref = path_;
+      if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
+        java.lang.String s = bs.toStringUtf8();
         path_ = s;
         return s;
       } else {
-        return (String) ref;
+        return (java.lang.String) ref;
       }
     }
     /**
@@ -396,11 +396,11 @@ public  final class MkdirRequest extends
      */
     public com.google.protobuf.ByteString
         getPathBytes() {
-      Object ref = path_;
+      java.lang.Object ref = path_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
-                (String) ref);
+                (java.lang.String) ref);
         path_ = b;
         return b;
       } else {
@@ -411,7 +411,7 @@ public  final class MkdirRequest extends
      * <code>optional string path = 1;</code>
      */
     public Builder setPath(
-        String value) {
+        java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
@@ -458,12 +458,12 @@ public  final class MkdirRequest extends
   }
 
   // @@protoc_insertion_point(class_scope:com.wuyiccc.hellodfs.namenode.rpc.MkdirRequest)
-  private static final MkdirRequest DEFAULT_INSTANCE;
+  private static final com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new MkdirRequest();
+    DEFAULT_INSTANCE = new com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest();
   }
 
-  public static MkdirRequest getDefaultInstance() {
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -481,12 +481,12 @@ public  final class MkdirRequest extends
     return PARSER;
   }
 
-  @Override
+  @java.lang.Override
   public com.google.protobuf.Parser<MkdirRequest> getParserForType() {
     return PARSER;
   }
 
-  public MkdirRequest getDefaultInstanceForType() {
+  public com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

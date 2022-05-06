@@ -18,7 +18,7 @@ public  final class ShutdownRequest extends
     code_ = 0;
   }
 
-  @Override
+  @java.lang.Override
   public final com.google.protobuf.UnknownFieldSet
   getUnknownFields() {
     return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
@@ -61,14 +61,14 @@ public  final class ShutdownRequest extends
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_ShutdownRequest_descriptor;
+    return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_ShutdownRequest_descriptor;
   }
 
-  protected FieldAccessorTable
+  protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_ShutdownRequest_fieldAccessorTable
+    return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_ShutdownRequest_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            ShutdownRequest.class, Builder.class);
+            com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest.class, com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest.Builder.class);
   }
 
   public static final int CODE_FIELD_NUMBER = 1;
@@ -111,15 +111,15 @@ public  final class ShutdownRequest extends
   }
 
   private static final long serialVersionUID = 0L;
-  @Override
-  public boolean equals(final Object obj) {
+  @java.lang.Override
+  public boolean equals(final java.lang.Object obj) {
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof ShutdownRequest)) {
+    if (!(obj instanceof com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest)) {
       return super.equals(obj);
     }
-    ShutdownRequest other = (ShutdownRequest) obj;
+    com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest other = (com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest) obj;
 
     boolean result = true;
     result = result && (getCode()
@@ -127,7 +127,7 @@ public  final class ShutdownRequest extends
     return result;
   }
 
-  @Override
+  @java.lang.Override
   public int hashCode() {
     if (memoizedHashCode != 0) {
       return memoizedHashCode;
@@ -141,58 +141,58 @@ public  final class ShutdownRequest extends
     return hash;
   }
 
-  public static ShutdownRequest parseFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static ShutdownRequest parseFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static ShutdownRequest parseFrom(byte[] data)
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static ShutdownRequest parseFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static ShutdownRequest parseFrom(java.io.InputStream input)
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static ShutdownRequest parseFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static ShutdownRequest parseDelimitedFrom(java.io.InputStream input)
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static ShutdownRequest parseDelimitedFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static ShutdownRequest parseFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static ShutdownRequest parseFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -204,7 +204,7 @@ public  final class ShutdownRequest extends
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(ShutdownRequest prototype) {
+  public static Builder newBuilder(com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   public Builder toBuilder() {
@@ -212,9 +212,9 @@ public  final class ShutdownRequest extends
         ? new Builder() : new Builder().mergeFrom(this);
   }
 
-  @Override
+  @java.lang.Override
   protected Builder newBuilderForType(
-      BuilderParent parent) {
+      com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
     Builder builder = new Builder(parent);
     return builder;
   }
@@ -224,17 +224,17 @@ public  final class ShutdownRequest extends
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
       // @@protoc_insertion_point(builder_implements:com.wuyiccc.hellodfs.namenode.rpc.ShutdownRequest)
-      ShutdownRequestOrBuilder {
+      com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequestOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_ShutdownRequest_descriptor;
+      return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_ShutdownRequest_descriptor;
     }
 
-    protected FieldAccessorTable
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_ShutdownRequest_fieldAccessorTable
+      return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_ShutdownRequest_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              ShutdownRequest.class, Builder.class);
+              com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest.class, com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest.Builder.class);
     }
 
     // Construct using com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest.newBuilder()
@@ -243,7 +243,7 @@ public  final class ShutdownRequest extends
     }
 
     private Builder(
-        BuilderParent parent) {
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
       super(parent);
       maybeForceBuilderInitialization();
     }
@@ -261,23 +261,23 @@ public  final class ShutdownRequest extends
 
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_ShutdownRequest_descriptor;
+      return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_ShutdownRequest_descriptor;
     }
 
-    public ShutdownRequest getDefaultInstanceForType() {
-      return ShutdownRequest.getDefaultInstance();
+    public com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest getDefaultInstanceForType() {
+      return com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest.getDefaultInstance();
     }
 
-    public ShutdownRequest build() {
-      ShutdownRequest result = buildPartial();
+    public com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest build() {
+      com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
       return result;
     }
 
-    public ShutdownRequest buildPartial() {
-      ShutdownRequest result = new ShutdownRequest(this);
+    public com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest buildPartial() {
+      com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest result = new com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest(this);
       result.code_ = code_;
       onBuilt();
       return result;
@@ -310,16 +310,16 @@ public  final class ShutdownRequest extends
       return (Builder) super.addRepeatedField(field, value);
     }
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof ShutdownRequest) {
-        return mergeFrom((ShutdownRequest)other);
+      if (other instanceof com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest) {
+        return mergeFrom((com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(ShutdownRequest other) {
-      if (other == ShutdownRequest.getDefaultInstance()) return this;
+    public Builder mergeFrom(com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest other) {
+      if (other == com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest.getDefaultInstance()) return this;
       if (other.getCode() != 0) {
         setCode(other.getCode());
       }
@@ -335,11 +335,11 @@ public  final class ShutdownRequest extends
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      ShutdownRequest parsedMessage = null;
+      com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (ShutdownRequest) e.getUnfinishedMessage();
+        parsedMessage = (com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -389,12 +389,12 @@ public  final class ShutdownRequest extends
   }
 
   // @@protoc_insertion_point(class_scope:com.wuyiccc.hellodfs.namenode.rpc.ShutdownRequest)
-  private static final ShutdownRequest DEFAULT_INSTANCE;
+  private static final com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new ShutdownRequest();
+    DEFAULT_INSTANCE = new com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest();
   }
 
-  public static ShutdownRequest getDefaultInstance() {
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
@@ -412,12 +412,12 @@ public  final class ShutdownRequest extends
     return PARSER;
   }
 
-  @Override
+  @java.lang.Override
   public com.google.protobuf.Parser<ShutdownRequest> getParserForType() {
     return PARSER;
   }
 
-  public ShutdownRequest getDefaultInstanceForType() {
+  public com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

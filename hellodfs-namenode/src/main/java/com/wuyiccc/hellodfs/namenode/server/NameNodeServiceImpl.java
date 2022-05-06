@@ -83,4 +83,9 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
         this.isRunning = false;
         this.fsNameSystem.flush();
     }
+
+    @Override
+    public void fetchEditsLog(FetchEditsLogRequest request, StreamObserver<FetchEditsLogResponse> responseObserver) {
+
+    }
 }

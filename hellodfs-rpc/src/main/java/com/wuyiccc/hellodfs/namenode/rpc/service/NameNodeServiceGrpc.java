@@ -57,6 +57,15 @@ public class NameNodeServiceGrpc {
               "com.wuyiccc.hellodfs.namenode.rpc.NameNodeService", "shutdown"),
           io.grpc.protobuf.ProtoUtils.marshaller(com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownResponse.getDefaultInstance()));
+  @io.grpc.ExperimentalApi
+  public static final io.grpc.MethodDescriptor<com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogRequest,
+      com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse> METHOD_FETCH_EDITS_LOG =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.UNARY,
+          generateFullMethodName(
+              "com.wuyiccc.hellodfs.namenode.rpc.NameNodeService", "fetchEditsLog"),
+          io.grpc.protobuf.ProtoUtils.marshaller(com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogRequest.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse.getDefaultInstance()));
 
   public static NameNodeServiceStub newStub(io.grpc.Channel channel) {
     return new NameNodeServiceStub(channel);
@@ -85,6 +94,9 @@ public class NameNodeServiceGrpc {
 
     public void shutdown(com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest request,
         io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownResponse> responseObserver);
+
+    public void fetchEditsLog(com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogRequest request,
+        io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse> responseObserver);
   }
 
   public static interface NameNodeServiceBlockingClient {
@@ -96,6 +108,8 @@ public class NameNodeServiceGrpc {
     public com.wuyiccc.hellodfs.namenode.rpc.model.MkdirResponse mkdir(com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest request);
 
     public com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownResponse shutdown(com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest request);
+
+    public com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse fetchEditsLog(com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogRequest request);
   }
 
   public static interface NameNodeServiceFutureClient {
@@ -111,6 +125,9 @@ public class NameNodeServiceGrpc {
 
     public com.google.common.util.concurrent.ListenableFuture<com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownResponse> shutdown(
         com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest request);
+
+    public com.google.common.util.concurrent.ListenableFuture<com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse> fetchEditsLog(
+        com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogRequest request);
   }
 
   public static class NameNodeServiceStub extends io.grpc.stub.AbstractStub<NameNodeServiceStub>
@@ -124,38 +141,45 @@ public class NameNodeServiceGrpc {
       super(channel, callOptions);
     }
 
-    @Override
+    @java.lang.Override
     protected NameNodeServiceStub build(io.grpc.Channel channel,
         io.grpc.CallOptions callOptions) {
       return new NameNodeServiceStub(channel, callOptions);
     }
 
-    @Override
+    @java.lang.Override
     public void register(com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest request,
         io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.RegisterResponse> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_REGISTER, getCallOptions()), request, responseObserver);
     }
 
-    @Override
+    @java.lang.Override
     public void heartBeat(com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatRequest request,
         io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_HEART_BEAT, getCallOptions()), request, responseObserver);
     }
 
-    @Override
+    @java.lang.Override
     public void mkdir(com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest request,
         io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.MkdirResponse> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_MKDIR, getCallOptions()), request, responseObserver);
     }
 
-    @Override
+    @java.lang.Override
     public void shutdown(com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest request,
         io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownResponse> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_SHUTDOWN, getCallOptions()), request, responseObserver);
+    }
+
+    @java.lang.Override
+    public void fetchEditsLog(com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogRequest request,
+        io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_FETCH_EDITS_LOG, getCallOptions()), request, responseObserver);
     }
   }
 
@@ -170,34 +194,40 @@ public class NameNodeServiceGrpc {
       super(channel, callOptions);
     }
 
-    @Override
+    @java.lang.Override
     protected NameNodeServiceBlockingStub build(io.grpc.Channel channel,
         io.grpc.CallOptions callOptions) {
       return new NameNodeServiceBlockingStub(channel, callOptions);
     }
 
-    @Override
+    @java.lang.Override
     public com.wuyiccc.hellodfs.namenode.rpc.model.RegisterResponse register(com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest request) {
       return blockingUnaryCall(
           getChannel(), METHOD_REGISTER, getCallOptions(), request);
     }
 
-    @Override
+    @java.lang.Override
     public com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse heartBeat(com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatRequest request) {
       return blockingUnaryCall(
           getChannel(), METHOD_HEART_BEAT, getCallOptions(), request);
     }
 
-    @Override
+    @java.lang.Override
     public com.wuyiccc.hellodfs.namenode.rpc.model.MkdirResponse mkdir(com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest request) {
       return blockingUnaryCall(
           getChannel(), METHOD_MKDIR, getCallOptions(), request);
     }
 
-    @Override
+    @java.lang.Override
     public com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownResponse shutdown(com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest request) {
       return blockingUnaryCall(
           getChannel(), METHOD_SHUTDOWN, getCallOptions(), request);
+    }
+
+    @java.lang.Override
+    public com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse fetchEditsLog(com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogRequest request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_FETCH_EDITS_LOG, getCallOptions(), request);
     }
   }
 
@@ -212,38 +242,45 @@ public class NameNodeServiceGrpc {
       super(channel, callOptions);
     }
 
-    @Override
+    @java.lang.Override
     protected NameNodeServiceFutureStub build(io.grpc.Channel channel,
         io.grpc.CallOptions callOptions) {
       return new NameNodeServiceFutureStub(channel, callOptions);
     }
 
-    @Override
+    @java.lang.Override
     public com.google.common.util.concurrent.ListenableFuture<com.wuyiccc.hellodfs.namenode.rpc.model.RegisterResponse> register(
         com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_REGISTER, getCallOptions()), request);
     }
 
-    @Override
+    @java.lang.Override
     public com.google.common.util.concurrent.ListenableFuture<com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse> heartBeat(
         com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatRequest request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_HEART_BEAT, getCallOptions()), request);
     }
 
-    @Override
+    @java.lang.Override
     public com.google.common.util.concurrent.ListenableFuture<com.wuyiccc.hellodfs.namenode.rpc.model.MkdirResponse> mkdir(
         com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_MKDIR, getCallOptions()), request);
     }
 
-    @Override
+    @java.lang.Override
     public com.google.common.util.concurrent.ListenableFuture<com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownResponse> shutdown(
         com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_SHUTDOWN, getCallOptions()), request);
+    }
+
+    @java.lang.Override
+    public com.google.common.util.concurrent.ListenableFuture<com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse> fetchEditsLog(
+        com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_FETCH_EDITS_LOG, getCallOptions()), request);
     }
   }
 
@@ -251,6 +288,7 @@ public class NameNodeServiceGrpc {
   private static final int METHODID_HEART_BEAT = 1;
   private static final int METHODID_MKDIR = 2;
   private static final int METHODID_SHUTDOWN = 3;
+  private static final int METHODID_FETCH_EDITS_LOG = 4;
 
   private static class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -265,7 +303,7 @@ public class NameNodeServiceGrpc {
       this.methodId = methodId;
     }
 
-    @SuppressWarnings("unchecked")
+    @java.lang.SuppressWarnings("unchecked")
     public void invoke(Req request, io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
         case METHODID_REGISTER:
@@ -284,12 +322,16 @@ public class NameNodeServiceGrpc {
           serviceImpl.shutdown((com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest) request,
               (io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownResponse>) responseObserver);
           break;
+        case METHODID_FETCH_EDITS_LOG:
+          serviceImpl.fetchEditsLog((com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogRequest) request,
+              (io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse>) responseObserver);
+          break;
         default:
           throw new AssertionError();
       }
     }
 
-    @SuppressWarnings("unchecked")
+    @java.lang.SuppressWarnings("unchecked")
     public io.grpc.stub.StreamObserver<Req> invoke(
         io.grpc.stub.StreamObserver<Resp> responseObserver) {
       switch (methodId) {
@@ -330,6 +372,13 @@ public class NameNodeServiceGrpc {
               com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest,
               com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownResponse>(
                 serviceImpl, METHODID_SHUTDOWN)))
+        .addMethod(
+          METHOD_FETCH_EDITS_LOG,
+          asyncUnaryCall(
+            new MethodHandlers<
+              com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogRequest,
+              com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse>(
+                serviceImpl, METHODID_FETCH_EDITS_LOG)))
         .build();
   }
 }
