@@ -49,7 +49,7 @@ public class FSDirectory {
             }
         }
 
-        printDirTree(this.rootDirTree, "-");
+        //printDirTree(this.rootDirTree, "-");
     }
 
     private void printDirTree(INodeDirectory dirTree, String blank) {

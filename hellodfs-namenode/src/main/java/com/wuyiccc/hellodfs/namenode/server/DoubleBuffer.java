@@ -32,6 +32,9 @@ public class DoubleBuffer {
     private EditLogBuffer syncBuffer = new EditLogBuffer();
 
 
+    long startTxId = 1L;
+
+
     /**
      * write edit log into memory buffer
      */
@@ -72,20 +75,16 @@ public class DoubleBuffer {
     class EditLogBuffer {
 
 
+        private long endTxId = 0L;
+
         /**
          * SIZE = 50K
          */
         ByteArrayOutputStream buffer;
 
 
-        long lastMaxTxId = 0;
-
-        long maxTxId;
-
         public EditLogBuffer() {
             this.buffer = new ByteArrayOutputStream(EDIT_LOG_BUFFER_LIMIT * 2);
-
-
         }
 
         /**
@@ -94,7 +93,7 @@ public class DoubleBuffer {
          * @param editLog
          */
         public void write(EditLog editLog) throws IOException {
-            this.maxTxId = editLog.getTxId();
+            endTxId = editLog.getTxId();
             buffer.write(editLog.getContent().getBytes());
             buffer.write("\n".getBytes());
             System.out.println("write a editslog: " + editLog.getContent() + ", current buffer size is : " + this.size());
@@ -111,7 +110,8 @@ public class DoubleBuffer {
 
         public void flush() throws IOException {
 
-            String editLogFilePath = "e:\\tmp\\editslog\\edits-" + (lastMaxTxId + 1) + "-" + maxTxId + ".log";
+            System.out.println("begin flush disk");
+            String editLogFilePath = "E:\\code_learn\\031-opensource\\06-hellodfs\\hellodfs\\editslog\\edits-" + (startTxId) + "-" + endTxId + ".log";
 
 
             RandomAccessFile file = null;
@@ -141,7 +141,7 @@ public class DoubleBuffer {
                 }
             }
 
-            this.lastMaxTxId = maxTxId;
+            startTxId = endTxId + 1;
         }
 
         /**
