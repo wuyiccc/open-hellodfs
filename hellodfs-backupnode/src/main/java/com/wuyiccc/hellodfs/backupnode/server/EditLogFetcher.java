@@ -13,6 +13,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class EditLogFetcher extends Thread {
 
+    public static final Integer BACKUP_NODE_FETCH_SIZE = 10;
+
     private BackupNode backupNode;
 
     private NameNodeRpcClient nameNodeRpcClient;
@@ -37,6 +39,11 @@ public class EditLogFetcher extends Thread {
                     System.out.println("hasn't fetch editLog, wait 1 second");
                     TimeUnit.SECONDS.sleep(1);
                     continue;
+                }
+
+                if (editsLog.size() < BACKUP_NODE_FETCH_SIZE) {
+                    TimeUnit.SECONDS.sleep(1);
+                    System.out.println("pull editsLog size <= 10, wait 1 second");
                 }
 
                 for (int i = 0; i < editsLog.size(); i++) {

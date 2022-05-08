@@ -47,6 +47,8 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
      */
     private JSONArray currentBufferedEditsLog = new JSONArray();
 
+    private long currentBufferedTxId = 0L;
+
     public NameNodeServiceImpl(FSNameSystem fsNameSystem, DataNodeManager dataNodeManager) {
         this.fsNameSystem = fsNameSystem;
         this.dataNodeManager = dataNodeManager;
@@ -210,6 +212,7 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
             this.currentBufferedEditsLog.clear();
             for (String editLog : editsLog) {
                 this.currentBufferedEditsLog.add(JSONObject.parseObject(editLog));
+                this.currentBufferedTxId = JSONObject.parseObject(editLog).getLongValue("txId");
             }
 
             // cached flushed into disk file startTxId_endTxtId which transfer to currentBufferedEditsLog
@@ -226,12 +229,24 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
      * transfer doubleBuffer's current buffer into currentBufferedEditsLog
      */
     private void fetchFromBufferedEditsLog(JSONArray fetchedEditsLog) {
+
+        // if you want fetched editsLog txId already exist in currentBufferedEditsLog, direct execute fetchFromCurrentBuffer
+        long fetchTxId = this.syncedTxId + 1;
+        if (fetchTxId <= this.currentBufferedTxId) {
+            System.out.println("fetch from bufferedEditsLog, already exist in currentBufferedEditsLog");
+            fetchFromCurrentBuffer(fetchedEditsLog);
+            return;
+        }
+
+        // else transfer editsLog from doubleBuffer to currentBufferedEditsLog, and execute
         this.currentBufferedEditsLog.clear();
         String[] bufferedEditsLog = this.fsNameSystem.getFsEditLog().getBufferedEditsLog();
 
         if (bufferedEditsLog != null) {
+            this.currentBufferedTxId = 0L;
             for (String editLog : bufferedEditsLog) {
                 this.currentBufferedEditsLog.add(JSONObject.parseObject(editLog));
+                this.currentBufferedTxId = JSONObject.parseObject(editLog).getLongValue("txId");
             }
             this.bufferedFlushedTxId = null;
             fetchFromCurrentBuffer(fetchedEditsLog);
