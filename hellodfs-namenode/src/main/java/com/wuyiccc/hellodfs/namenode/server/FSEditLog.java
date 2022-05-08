@@ -147,9 +147,7 @@ public class FSEditLog {
     }
 
     public List<String> getFlushedTxIds() {
-        synchronized (this) {
-            return doubleBuffer.getFlushedTxIds();
-        }
+        return doubleBuffer.getFlushedTxIds();
     }
 
     public String[] getBufferedEditsLog() {
@@ -157,7 +155,6 @@ public class FSEditLog {
             return this.doubleBuffer.getBufferedEditsLog();
         }
     }
-
 
 
 }

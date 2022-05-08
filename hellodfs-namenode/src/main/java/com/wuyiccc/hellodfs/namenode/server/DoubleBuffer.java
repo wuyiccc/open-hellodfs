@@ -9,6 +9,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * double write buffer
@@ -40,7 +41,7 @@ public class DoubleBuffer {
     /**
      * already flushed into disk txid
      */
-    private List<String> flushedTxIds = new ArrayList<>();
+    private List<String> flushedTxIds = new CopyOnWriteArrayList<>();
 
 
     /**
