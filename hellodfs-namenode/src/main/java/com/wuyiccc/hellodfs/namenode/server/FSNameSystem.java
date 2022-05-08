@@ -35,5 +35,9 @@ public class FSNameSystem {
         this.fsEditLog.flush();
     }
 
+    public FSEditLog getFsEditLog() {
+        return fsEditLog;
+    }
+
 
 }

@@ -1,11 +1,14 @@
 package com.wuyiccc.hellodfs.namenode.server;
 
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * double write buffer
@@ -33,6 +36,11 @@ public class DoubleBuffer {
 
 
     long startTxId = 1L;
+
+    /**
+     * already flushed into disk txid
+     */
+    private List<String> flushedTxIds = new ArrayList<>();
 
 
     /**
@@ -70,6 +78,16 @@ public class DoubleBuffer {
     public void flush() throws IOException {
         this.syncBuffer.flush();
         this.syncBuffer.clear();
+    }
+
+    public List<String> getFlushedTxIds() {
+        return flushedTxIds;
+    }
+
+
+    public String[] getBufferedEditsLog() {
+        String editsLogRawData = new java.lang.String(currentBuffer.getBufferData());
+        return editsLogRawData.split("\n");
     }
 
     class EditLogBuffer {
@@ -114,6 +132,8 @@ public class DoubleBuffer {
             String editLogFilePath = "E:\\code_learn\\031-opensource\\06-hellodfs\\hellodfs\\editslog\\edits-" + (startTxId) + "-" + endTxId + ".log";
 
 
+            flushedTxIds.add(startTxId + "_" + endTxId);
+
             RandomAccessFile file = null;
             FileOutputStream out = null;
             FileChannel editsLogFileChannel = null;
@@ -149,6 +169,14 @@ public class DoubleBuffer {
          */
         public void clear() {
             buffer.reset();
+        }
+
+
+        /**
+         * get current buffer data
+         */
+        public byte[] getBufferData() {
+            return buffer.toByteArray();
         }
     }
 

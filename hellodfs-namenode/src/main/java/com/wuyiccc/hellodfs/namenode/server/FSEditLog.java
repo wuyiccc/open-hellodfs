@@ -1,6 +1,7 @@
 package com.wuyiccc.hellodfs.namenode.server;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Responsible for managing the core components of editLog
@@ -142,6 +143,18 @@ public class FSEditLog {
             doubleBuffer.flush();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public List<String> getFlushedTxIds() {
+        synchronized (this) {
+            return doubleBuffer.getFlushedTxIds();
+        }
+    }
+
+    public String[] getBufferedEditsLog() {
+        synchronized (this) {
+            return this.doubleBuffer.getBufferedEditsLog();
         }
     }
 
