@@ -3,8 +3,9 @@ package com.wuyiccc.hellodfs.backupnode.server;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import java.util.concurrent.TimeUnit;
+
 /**
- *
  * sync from namenode
  *
  * @author wuyiccc
@@ -26,21 +27,32 @@ public class EditLogFetcher extends Thread {
 
     @Override
     public void run() {
-        while(backupNode.isRunning()) {
-            JSONArray editsLogs = this.nameNodeRpcClient.fetchEditsLog();
-            for(int i = 0; i < editsLogs.size(); i++) {
-                JSONObject editLog = editsLogs.getJSONObject(i);
-                String op = editLog.getString("OP");
+        while (backupNode.isRunning()) {
 
-                if("MKDIR".equals(op)) {
-                    String path = editLog.getString("PATH");
-                    try {
-                        this.fsNameSystem.mkdir(path);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+            try {
+                JSONArray editsLogs = this.nameNodeRpcClient.fetchEditsLog();
+                if (editsLogs.size() == 0) {
+                    TimeUnit.SECONDS.sleep(1);
+                    continue;
+                }
+
+                for (int i = 0; i < editsLogs.size(); i++) {
+                    JSONObject editLog = editsLogs.getJSONObject(i);
+                    String op = editLog.getString("OP");
+
+                    if ("MKDIR".equals(op)) {
+                        String path = editLog.getString("PATH");
+                        try {
+                            this.fsNameSystem.mkdir(path);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+
         }
     }
 }
