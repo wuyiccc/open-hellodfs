@@ -27,17 +27,21 @@ public class EditLogFetcher extends Thread {
 
     @Override
     public void run() {
-        while (backupNode.isRunning()) {
 
+        System.out.println("BackUpNode fetch editsLog starting...");
+
+        while (backupNode.isRunning()) {
             try {
-                JSONArray editsLogs = this.nameNodeRpcClient.fetchEditsLog();
-                if (editsLogs.size() == 0) {
+                JSONArray editsLog = this.nameNodeRpcClient.fetchEditsLog();
+                if (editsLog.size() == 0) {
+                    System.out.println("hasn't fetch editLog, wait 1 second");
                     TimeUnit.SECONDS.sleep(1);
                     continue;
                 }
 
-                for (int i = 0; i < editsLogs.size(); i++) {
-                    JSONObject editLog = editsLogs.getJSONObject(i);
+                for (int i = 0; i < editsLog.size(); i++) {
+                    JSONObject editLog = editsLog.getJSONObject(i);
+                    System.out.println("fetched one editLog" + editLog.toJSONString());
                     String op = editLog.getString("OP");
 
                     if ("MKDIR".equals(op)) {

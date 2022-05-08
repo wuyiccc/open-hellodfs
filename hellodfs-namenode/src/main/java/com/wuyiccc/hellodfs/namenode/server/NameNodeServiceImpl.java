@@ -228,11 +228,14 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
     private void fetchFromBufferedEditsLog(JSONArray fetchedEditsLog) {
         this.currentBufferedEditsLog.clear();
         String[] bufferedEditsLog = this.fsNameSystem.getFsEditLog().getBufferedEditsLog();
-        for (String editLog : bufferedEditsLog) {
-            this.currentBufferedEditsLog.add(JSONObject.parseObject(editLog));
+
+        if (bufferedEditsLog != null) {
+            for (String editLog : bufferedEditsLog) {
+                this.currentBufferedEditsLog.add(JSONObject.parseObject(editLog));
+            }
+            this.bufferedFlushedTxId = null;
+            fetchFromCurrentBuffer(fetchedEditsLog);
         }
-        this.bufferedFlushedTxId = null;
-        fetchFromCurrentBuffer(fetchedEditsLog);
     }
 
 
