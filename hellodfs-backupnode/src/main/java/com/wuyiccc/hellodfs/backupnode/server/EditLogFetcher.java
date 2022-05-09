@@ -54,7 +54,7 @@ public class EditLogFetcher extends Thread {
                     if ("MKDIR".equals(op)) {
                         String path = editLog.getString("PATH");
                         try {
-                            this.fsNameSystem.mkdir(path);
+                            this.fsNameSystem.mkdir(editLog.getLongValue("txId"), path);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

@@ -1,7 +1,10 @@
 package com.wuyiccc.hellodfs.backupnode.server;
 
+import com.alibaba.fastjson.JSONObject;
+
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * The core component responsible for managing the file directory tree in memory
@@ -13,8 +16,46 @@ public class FSDirectory {
 
     private INodeDirectory rootDirTree;
 
+    private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
+
+    /**
+     * current fsDirTree max sync txId
+     */
+    private long maxTxId;
+
+
+    public void writeLock() {
+        lock.writeLock().lock();
+    }
+
+    public void writeUnLock() {
+        lock.writeLock().unlock();
+    }
+
+    public void readLock() {
+        lock.readLock().lock();
+    }
+
+    public void readUnLock() {
+        lock.readLock().unlock();
+    }
+
+
     public FSDirectory() {
         this.rootDirTree = new INodeDirectory("/");
+    }
+
+
+    public FSImage getFSImage() {
+        FSImage fsImage = null;
+        try {
+            readLock();
+            String fsImageJson = JSONObject.toJSONString(this.rootDirTree);
+            fsImage = new FSImage(maxTxId, fsImageJson);
+        } finally {
+            readUnLock();
+        }
+        return fsImage;
     }
 
     /**
@@ -22,9 +63,12 @@ public class FSDirectory {
      *
      * @param path /usr/warehouse/hive
      */
-    public void mkdir(String path) {
+    public void mkdir(long txId, String path) {
 
-        synchronized (this.rootDirTree) {
+        try {
+            writeLock();
+
+            this.maxTxId = txId;
             String[] pathArray = path.split("/");
             INodeDirectory parent = this.rootDirTree;
 
@@ -47,7 +91,10 @@ public class FSDirectory {
                 parent.addChild(child);
                 parent = child;
             }
+        } finally {
+            writeUnLock();
         }
+
 
         //printDirTree(this.rootDirTree, "-");
     }

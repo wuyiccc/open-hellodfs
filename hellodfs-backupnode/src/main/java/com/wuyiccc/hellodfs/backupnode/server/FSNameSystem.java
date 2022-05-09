@@ -23,9 +23,14 @@ public class FSNameSystem {
      * @param path the directory path
      * @return create success or fail
      */
-    public Boolean mkdir(String path) throws Exception {
-        this.fsDirectory.mkdir(path);
+    public Boolean mkdir(long txId, String path) throws Exception {
+        this.fsDirectory.mkdir(txId, path);
         return true;
+    }
+
+
+    public FSImage getFSImageJson() throws Exception {
+        return this.fsDirectory.getFSImage();
     }
 
 }

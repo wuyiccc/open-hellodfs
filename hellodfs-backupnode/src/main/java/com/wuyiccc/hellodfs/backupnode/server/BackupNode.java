@@ -25,6 +25,8 @@ public class BackupNode {
     public void start() throws InterruptedException {
         EditLogFetcher editLogFetcher = new EditLogFetcher(this, this.fsNameSystem);
         editLogFetcher.start();
+        FSImageCheckpointer fsImageCheckpointer = new FSImageCheckpointer(this, this.fsNameSystem);
+        fsImageCheckpointer.start();
     }
 
     public void run() throws InterruptedException {
