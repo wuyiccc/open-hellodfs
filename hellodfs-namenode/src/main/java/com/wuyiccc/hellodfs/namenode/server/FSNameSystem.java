@@ -14,11 +14,25 @@ public class FSNameSystem {
 
     private FSEditLog fsEditLog;
 
+
+    /**
+     * last checkpoint max TxId;
+     */
+    private long checkpointTxId;
+
     public FSNameSystem() {
         this.fsDirectory = new FSDirectory();
         this.fsEditLog = new FSEditLog();
     }
 
+    public long getCheckpointTxId() {
+        return checkpointTxId;
+    }
+
+    public void setCheckpointTxId(long checkpointTxId) {
+        System.out.println("receive checkpoint txId");
+        this.checkpointTxId = checkpointTxId;
+    }
 
     /**
      * create a directory

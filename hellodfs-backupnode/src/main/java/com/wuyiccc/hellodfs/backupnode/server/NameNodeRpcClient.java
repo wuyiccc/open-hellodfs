@@ -3,6 +3,8 @@ package com.wuyiccc.hellodfs.backupnode.server;
 import com.alibaba.fastjson.JSONArray;
 import com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogRequest;
 import com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse;
+import com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdRequest;
+import com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdResponse;
 import com.wuyiccc.hellodfs.namenode.rpc.service.NameNodeServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NegotiationType;
@@ -32,6 +34,12 @@ public class NameNodeRpcClient {
 
         String editsLogJson = response.getEditsLog();
         return JSONArray.parseArray(editsLogJson);
+    }
+
+    public void updateCheckpointTxId(long txId) {
+        UpdateCheckpointTxIdRequest request = UpdateCheckpointTxIdRequest.newBuilder().setTxId(txId).build();
+
+        this.nameNode.updateCheckpointTxId(request);
     }
 
 }

@@ -1,5 +1,9 @@
 package com.wuyiccc.hellodfs.backupnode.server;
 
+import com.sun.org.apache.xpath.internal.operations.Or;
+import com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdResponse;
+
+import javax.naming.NamingEnumeration;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.RandomAccessFile;
@@ -22,11 +26,14 @@ public class FSImageCheckpointer extends Thread {
 
     private FSNameSystem fsNameSystem;
 
+    private NameNodeRpcClient nameNodeRpcClient;
+
     private String lastFSImageFilePath = "";
 
-    public FSImageCheckpointer(BackupNode backupNode, FSNameSystem fsNameSystem) {
+    public FSImageCheckpointer(BackupNode backupNode, FSNameSystem fsNameSystem, NameNodeRpcClient nameNodeRpcClient) {
         this.backupNode = backupNode;
         this.fsNameSystem = fsNameSystem;
+        this.nameNodeRpcClient = nameNodeRpcClient;
     }
 
 
@@ -53,6 +60,11 @@ public class FSImageCheckpointer extends Thread {
         removeLastFSImageFile();
         writeFSImageFile(fsImage);
         uploadFSImageFile(fsImage);
+        updateCheckpointTxId(fsImage);
+    }
+
+    private void updateCheckpointTxId(FSImage fsImage) {
+        this.nameNodeRpcClient.updateCheckpointTxId(fsImage.getMaxTxId());
     }
 
 

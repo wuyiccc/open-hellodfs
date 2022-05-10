@@ -21,9 +21,9 @@ public class EditLogFetcher extends Thread {
 
     private FSNameSystem fsNameSystem;
 
-    public EditLogFetcher(BackupNode backupNode, FSNameSystem fsNameSystem) {
+    public EditLogFetcher(BackupNode backupNode, FSNameSystem fsNameSystem, NameNodeRpcClient nameNodeRpcClient) {
         this.backupNode = backupNode;
-        this.nameNodeRpcClient = new NameNodeRpcClient();
+        this.nameNodeRpcClient = nameNodeRpcClient;
         this.fsNameSystem = fsNameSystem;
     }
 

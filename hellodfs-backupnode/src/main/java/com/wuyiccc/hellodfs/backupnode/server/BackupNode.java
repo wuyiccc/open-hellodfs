@@ -12,6 +12,8 @@ public class BackupNode {
 
     private FSNameSystem fsNameSystem;
 
+    private NameNodeRpcClient nameNodeRpcClient;
+
     public static void main(String[] args) throws InterruptedException {
         BackupNode backupNode = new BackupNode();
         backupNode.init();
@@ -20,12 +22,13 @@ public class BackupNode {
 
     public void init() {
         this.fsNameSystem = new FSNameSystem();
+        this.nameNodeRpcClient = new NameNodeRpcClient();
     }
 
     public void start() throws InterruptedException {
-        EditLogFetcher editLogFetcher = new EditLogFetcher(this, this.fsNameSystem);
+        EditLogFetcher editLogFetcher = new EditLogFetcher(this, this.fsNameSystem, this.nameNodeRpcClient);
         editLogFetcher.start();
-        FSImageCheckpointer fsImageCheckpointer = new FSImageCheckpointer(this, this.fsNameSystem);
+        FSImageCheckpointer fsImageCheckpointer = new FSImageCheckpointer(this, this.fsNameSystem, this.nameNodeRpcClient);
         fsImageCheckpointer.start();
     }
 
