@@ -97,50 +97,65 @@ public class FSImageUploadServer extends Thread {
         SocketChannel channel = null;
 
         try {
-
             String fsImageFilePath = "E:\\code_learn\\031-opensource\\06-hellodfs\\hellodfs\\editslog\\fsimage.meta";
-            File fsImageFile = new File(fsImageFilePath);
-            if (fsImageFile.exists()) {
-                fsImageFile.delete();
-            }
 
-            RandomAccessFile fsImageImageRAF = null;
+            RandomAccessFile fsImageRAF = null;
             FileOutputStream fsImageOut = null;
             FileChannel fsImageFileChannel = null;
 
             try {
-                fsImageImageRAF = new RandomAccessFile(fsImageFilePath, "rw");
-                fsImageOut = new FileOutputStream(fsImageImageRAF.getFD());
-                fsImageFileChannel = fsImageOut.getChannel();
-
                 channel = (SocketChannel) key.channel();
-                // 1M
-                ByteBuffer buffer = ByteBuffer.allocate(1024 * 1024);
+                ByteBuffer buffer = ByteBuffer.allocate(1024);
+
+                int total = 0;
                 int count = -1;
 
-                while ((count = channel.read(buffer)) > 0) {
+                if((count = channel.read(buffer)) > 0){
+                    File file = new File(fsImageFilePath);
+                    if(file.exists()) {
+                        file.delete();
+                    }
+
+                    fsImageRAF = new RandomAccessFile(fsImageFilePath, "rw");
+                    fsImageOut = new FileOutputStream(fsImageRAF.getFD());
+                    fsImageFileChannel = fsImageOut.getChannel();
+
+                    total += count;
+
+                    buffer.flip();
+                    fsImageFileChannel.write(buffer);
+                    buffer.clear();
+                } else {
+                    // if channel.read() <= 0, close channel
+                    channel.close();
+                }
+
+                while((count = channel.read(buffer)) > 0){
+                    total += count;
                     buffer.flip();
                     fsImageFileChannel.write(buffer);
                     buffer.clear();
                 }
 
-                fsImageFileChannel.force(false);
+                if(total > 0) {
+                    System.out.println("write fsimage to disk success......");
+                    fsImageFileChannel.force(false);
+                    channel.register(selector, SelectionKey.OP_WRITE);
+                }
             } finally {
-                if (fsImageOut != null) {
+                if(fsImageOut != null) {
                     fsImageOut.close();
                 }
-                if (fsImageImageRAF != null) {
-                    fsImageImageRAF.close();
+                if(fsImageRAF != null) {
+                    fsImageRAF.close();
                 }
-                if (fsImageFileChannel != null) {
+                if(fsImageFileChannel != null) {
                     fsImageFileChannel.close();
                 }
             }
-
-            channel.register(selector, SelectionKey.OP_WRITE);
         } catch (Exception e) {
             e.printStackTrace();
-            if (channel != null) {
+            if(channel != null) {
                 channel.close();
             }
         }
