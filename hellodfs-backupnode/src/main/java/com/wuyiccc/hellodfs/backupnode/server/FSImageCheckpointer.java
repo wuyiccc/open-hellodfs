@@ -1,7 +1,6 @@
 package com.wuyiccc.hellodfs.backupnode.server;
 
 import java.io.File;
-import java.io.FileFilter;
 import java.io.FileOutputStream;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
@@ -39,24 +38,35 @@ public class FSImageCheckpointer extends Thread {
             try {
                 TimeUnit.SECONDS.sleep(CHECKPOINT_INTERVAL);
 
-
                 System.out.println("begin to execute checkpoint");
-                FSImage fsImage = this.fsNameSystem.getFSImageJson();
                 // maybe you should doCheckPoint and then removeFile?
-                removeLastFSImageFile();
-                doCheckPoint(fsImage);
+                doCheckPoint();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
+
+    private void doCheckPoint() throws Exception {
+        FSImage fsImage = this.fsNameSystem.getFSImageJson();
+        removeLastFSImageFile();
+        writeFSImageFile(fsImage);
+        uploadFSImageFile(fsImage);
+    }
+
+
+    private void removeLastFSImageFile() {
+        File file = new File(this.lastFSImageFilePath);
+        if (file.exists()) {
+            file.delete();
+        }
+    }
+
     /**
      * flush fsImage into disk
      */
-    private void doCheckPoint(FSImage fsImage) throws Exception {
-
-
+    private void writeFSImageFile(FSImage fsImage) throws Exception {
         ByteBuffer buffer = ByteBuffer.wrap(fsImage.getFsImageJson().getBytes());
 
         String fsImageFilePath = "E:\\code_learn\\031-opensource\\06-hellodfs\\hellodfs\\backupnode\\fsimage-" + fsImage.getMaxTxId() + ".meta";
@@ -90,11 +100,14 @@ public class FSImageCheckpointer extends Thread {
     }
 
 
-    private void removeLastFSImageFile() {
-        File file = new File(this.lastFSImageFilePath);
-        if (file.exists()) {
-            file.delete();
-        }
+    /**
+     * upload fsImage File
+     * @param fsImage
+     * @throws Exception
+     */
+    private void uploadFSImageFile(FSImage fsImage) throws Exception{
+        FSImageUploader fsImageUploader = new FSImageUploader(fsImage);
+        fsImageUploader.start();
     }
 
 

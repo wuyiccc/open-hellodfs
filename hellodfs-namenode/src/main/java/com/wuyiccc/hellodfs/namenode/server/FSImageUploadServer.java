@@ -36,6 +36,8 @@ public class FSImageUploadServer extends Thread {
 
     @Override
     public void run() {
+        System.out.println("FSImageUploadServer starting, listen port: 9000 ...");
+
         while (true) {
             try {
                 selector.select();
@@ -157,6 +159,8 @@ public class FSImageUploadServer extends Thread {
 
             channel = (SocketChannel) key.channel();
             channel.write(buffer);
+
+            System.out.println("FSImage upload success, return data to backupnode...");
 
             channel.register(selector, SelectionKey.OP_READ);
         } catch (Exception e) {
