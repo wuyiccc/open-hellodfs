@@ -66,6 +66,15 @@ public class NameNodeServiceGrpc {
               "com.wuyiccc.hellodfs.namenode.rpc.NameNodeService", "fetchEditsLog"),
           io.grpc.protobuf.ProtoUtils.marshaller(com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogRequest.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse.getDefaultInstance()));
+  @io.grpc.ExperimentalApi
+  public static final io.grpc.MethodDescriptor<com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdRequest,
+      com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdResponse> METHOD_UPDATE_CHECKPOINT_TX_ID =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.UNARY,
+          generateFullMethodName(
+              "com.wuyiccc.hellodfs.namenode.rpc.NameNodeService", "updateCheckpointTxId"),
+          io.grpc.protobuf.ProtoUtils.marshaller(com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdRequest.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdResponse.getDefaultInstance()));
 
   public static NameNodeServiceStub newStub(io.grpc.Channel channel) {
     return new NameNodeServiceStub(channel);
@@ -97,6 +106,9 @@ public class NameNodeServiceGrpc {
 
     public void fetchEditsLog(com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogRequest request,
         io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse> responseObserver);
+
+    public void updateCheckpointTxId(com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdRequest request,
+        io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdResponse> responseObserver);
   }
 
   public static interface NameNodeServiceBlockingClient {
@@ -110,6 +122,8 @@ public class NameNodeServiceGrpc {
     public com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownResponse shutdown(com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest request);
 
     public com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse fetchEditsLog(com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogRequest request);
+
+    public com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdResponse updateCheckpointTxId(com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdRequest request);
   }
 
   public static interface NameNodeServiceFutureClient {
@@ -128,6 +142,9 @@ public class NameNodeServiceGrpc {
 
     public com.google.common.util.concurrent.ListenableFuture<com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse> fetchEditsLog(
         com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogRequest request);
+
+    public com.google.common.util.concurrent.ListenableFuture<com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdResponse> updateCheckpointTxId(
+        com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdRequest request);
   }
 
   public static class NameNodeServiceStub extends io.grpc.stub.AbstractStub<NameNodeServiceStub>
@@ -181,6 +198,13 @@ public class NameNodeServiceGrpc {
       asyncUnaryCall(
           getChannel().newCall(METHOD_FETCH_EDITS_LOG, getCallOptions()), request, responseObserver);
     }
+
+    @java.lang.Override
+    public void updateCheckpointTxId(com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdRequest request,
+        io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_UPDATE_CHECKPOINT_TX_ID, getCallOptions()), request, responseObserver);
+    }
   }
 
   public static class NameNodeServiceBlockingStub extends io.grpc.stub.AbstractStub<NameNodeServiceBlockingStub>
@@ -228,6 +252,12 @@ public class NameNodeServiceGrpc {
     public com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse fetchEditsLog(com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogRequest request) {
       return blockingUnaryCall(
           getChannel(), METHOD_FETCH_EDITS_LOG, getCallOptions(), request);
+    }
+
+    @java.lang.Override
+    public com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdResponse updateCheckpointTxId(com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdRequest request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_UPDATE_CHECKPOINT_TX_ID, getCallOptions(), request);
     }
   }
 
@@ -282,6 +312,13 @@ public class NameNodeServiceGrpc {
       return futureUnaryCall(
           getChannel().newCall(METHOD_FETCH_EDITS_LOG, getCallOptions()), request);
     }
+
+    @java.lang.Override
+    public com.google.common.util.concurrent.ListenableFuture<com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdResponse> updateCheckpointTxId(
+        com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_UPDATE_CHECKPOINT_TX_ID, getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_REGISTER = 0;
@@ -289,6 +326,7 @@ public class NameNodeServiceGrpc {
   private static final int METHODID_MKDIR = 2;
   private static final int METHODID_SHUTDOWN = 3;
   private static final int METHODID_FETCH_EDITS_LOG = 4;
+  private static final int METHODID_UPDATE_CHECKPOINT_TX_ID = 5;
 
   private static class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -325,6 +363,10 @@ public class NameNodeServiceGrpc {
         case METHODID_FETCH_EDITS_LOG:
           serviceImpl.fetchEditsLog((com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogRequest) request,
               (io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse>) responseObserver);
+          break;
+        case METHODID_UPDATE_CHECKPOINT_TX_ID:
+          serviceImpl.updateCheckpointTxId((com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdRequest) request,
+              (io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -379,6 +421,13 @@ public class NameNodeServiceGrpc {
               com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogRequest,
               com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse>(
                 serviceImpl, METHODID_FETCH_EDITS_LOG)))
+        .addMethod(
+          METHOD_UPDATE_CHECKPOINT_TX_ID,
+          asyncUnaryCall(
+            new MethodHandlers<
+              com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdRequest,
+              com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdResponse>(
+                serviceImpl, METHODID_UPDATE_CHECKPOINT_TX_ID)))
         .build();
   }
 }
