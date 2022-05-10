@@ -23,6 +23,7 @@ public class NameNode {
      */
     private NameNodeRpcServer nameNodeRpcServer;
 
+    private FSImageUploadServer fsImageUploadServer;
 
     /**
      * initialize namenode
@@ -31,9 +32,11 @@ public class NameNode {
         this.fsNameSystem = new FSNameSystem();
         this.dataNodeManager = new DataNodeManager();
         this.nameNodeRpcServer = new NameNodeRpcServer(this.fsNameSystem, this.dataNodeManager);
+        this.fsImageUploadServer = new FSImageUploadServer();
     }
 
     private void start() throws Exception {
+        this.fsImageUploadServer.start();
         this.nameNodeRpcServer.start();
         this.nameNodeRpcServer.blockUntilShutdown();
     }
