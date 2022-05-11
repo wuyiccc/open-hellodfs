@@ -18,11 +18,11 @@ public class FSNameSystem {
     /**
      * last checkpoint max TxId;
      */
-    private long checkpointTxId;
+    private long checkpointTxId = 0;
 
     public FSNameSystem() {
         this.fsDirectory = new FSDirectory();
-        this.fsEditLog = new FSEditLog();
+        this.fsEditLog = new FSEditLog(this);
     }
 
     public long getCheckpointTxId() {
