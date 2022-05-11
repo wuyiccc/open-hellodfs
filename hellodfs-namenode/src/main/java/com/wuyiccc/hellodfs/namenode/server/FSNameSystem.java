@@ -30,7 +30,7 @@ public class FSNameSystem {
     }
 
     public void setCheckpointTxId(long checkpointTxId) {
-        System.out.println("receive checkpoint txId");
+        System.out.println("receive checkpoint txId:" + checkpointTxId);
         this.checkpointTxId = checkpointTxId;
     }
 
