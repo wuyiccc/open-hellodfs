@@ -99,7 +99,9 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
     @Override
     public void shutdown(ShutdownRequest request, StreamObserver<ShutdownResponse> responseObserver) {
         this.isRunning = false;
+        // flush editslog into disk
         this.fsNameSystem.flush();
+        this.fsNameSystem.saveCheckpointTxId();
     }
 
     /**
@@ -107,6 +109,14 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
      */
     @Override
     public void fetchEditsLog(FetchEditsLogRequest request, StreamObserver<FetchEditsLogResponse> responseObserver) {
+
+        if (!isRunning) {
+            FetchEditsLogResponse response = FetchEditsLogResponse.newBuilder()
+                    .setEditsLog(new JSONArray().toJSONString()).build();
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+            return;
+        }
 
         FetchEditsLogResponse response = null;
         JSONArray fetchedEditsLog = new JSONArray();
