@@ -1,9 +1,6 @@
 package com.wuyiccc.hellodfs.namenode.server;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
@@ -29,6 +26,7 @@ public class FSNameSystem {
     public FSNameSystem() {
         this.fsDirectory = new FSDirectory();
         this.fsEditLog = new FSEditLog(this);
+        recoverNamespace();
     }
 
     public long getCheckpointTxId() {
@@ -103,6 +101,41 @@ public class FSNameSystem {
 
     public FSEditLog getFsEditLog() {
         return fsEditLog;
+    }
+
+    /**
+     * recover metadata
+     */
+    public void recoverNamespace() {
+        try {
+            loadFSImage();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * load fsimage into memory
+     */
+    private void loadFSImage() throws Exception{
+        FileInputStream in = null;
+        FileChannel channel = null;
+
+        try {
+            in = new FileInputStream("E:\\code_learn\\031-opensource\\06-hellodfs\\hellodfs\\editslog\\fsimage.meta");
+            channel = in.getChannel();
+            ByteBuffer buffer = ByteBuffer.allocate(1024 * 1024);
+            int count = channel.read(buffer);
+            buffer.flip();
+            String fsImageJson = new String(buffer.array(), 0, count);
+        } finally {
+            if (in != null) {
+                in.close();
+            }
+            if (channel != null) {
+                channel.close();
+            }
+        }
     }
 
 
