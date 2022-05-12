@@ -1,6 +1,11 @@
 package com.wuyiccc.hellodfs.namenode.server;
 
-import java.io.*;
+import com.alibaba.fastjson.JSONObject;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
@@ -117,7 +122,7 @@ public class FSNameSystem {
     /**
      * load fsimage into memory
      */
-    private void loadFSImage() throws Exception{
+    private void loadFSImage() throws Exception {
         FileInputStream in = null;
         FileChannel channel = null;
 
@@ -128,6 +133,9 @@ public class FSNameSystem {
             int count = channel.read(buffer);
             buffer.flip();
             String fsImageJson = new String(buffer.array(), 0, count);
+
+            FSDirectory.INode rootDirTree = JSONObject.parseObject(fsImageJson, FSDirectory.INode.class);
+            this.fsDirectory.setRootDirTree(rootDirTree);
         } finally {
             if (in != null) {
                 in.close();

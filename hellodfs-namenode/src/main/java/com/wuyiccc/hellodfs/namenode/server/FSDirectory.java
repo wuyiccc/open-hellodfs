@@ -11,10 +11,10 @@ import java.util.List;
  */
 public class FSDirectory {
 
-    private INodeDirectory rootDirTree;
+    private INode rootDirTree;
 
     public FSDirectory() {
-        this.rootDirTree = new INodeDirectory("/");
+        this.rootDirTree = new INode("/");
     }
 
     /**
@@ -26,7 +26,7 @@ public class FSDirectory {
 
         synchronized (this.rootDirTree) {
             String[] pathArray = path.split("/");
-            INodeDirectory parent = this.rootDirTree;
+            INode parent = this.rootDirTree;
 
             for (String splitPath : pathArray) {
 
@@ -34,7 +34,7 @@ public class FSDirectory {
                     continue;
                 }
 
-                INodeDirectory dir = findDirectory(parent, splitPath);
+                INode dir = findDirectory(parent, splitPath);
 
                 // if we find the target directory, then continue to recursive find
                 if (dir != null) {
@@ -43,7 +43,7 @@ public class FSDirectory {
                 }
 
                 // if not found the target directory, we create a directory and then add into the parentDirectory
-                INodeDirectory child = new INodeDirectory(splitPath);
+                INode child = new INode(splitPath);
                 parent.addChild(child);
                 parent = child;
             }
@@ -52,14 +52,14 @@ public class FSDirectory {
         //printDirTree(this.rootDirTree, "-");
     }
 
-    private void printDirTree(INodeDirectory dirTree, String blank) {
+    private void printDirTree(INode dirTree, String blank) {
         if (dirTree == null || dirTree.getChildrenList().size() == 0) {
             return;
         }
 
         for (INode curDir : dirTree.getChildrenList()) {
-            System.out.println(blank + ((INodeDirectory) curDir).getPath());
-            printDirTree((INodeDirectory) curDir, blank + "-");
+            System.out.println(blank + ((INode) curDir).getPath());
+            printDirTree((INode) curDir, blank + "-");
         }
     }
 
@@ -70,16 +70,16 @@ public class FSDirectory {
      * @param path target path
      * @return null (cannot find the target directory) || INodeDirectory Object (the target directory)
      */
-    private INodeDirectory findDirectory(INodeDirectory dir, String path) {
+    private INode findDirectory(INode dir, String path) {
 
         if (dir.getChildrenList().size() == 0) {
             return null;
         }
 
         for (INode child : dir.getChildrenList()) {
-            if (child instanceof INodeDirectory) {
-                if (((INodeDirectory) child).getPath().equals(path)) {
-                    return (INodeDirectory) child;
+            if (child instanceof INode) {
+                if (((INode) child).getPath().equals(path)) {
+                    return (INode) child;
                 }
             }
         }
@@ -88,20 +88,13 @@ public class FSDirectory {
 
 
     /**
-     * a node in filesystem tree
-     */
-    public static interface INode {
-
-    }
-
-    /**
      * a directory node in filesystem tree
      */
-    public static class INodeDirectory implements INode {
+    public static class INode {
         String path;
         List<INode> childrenList;
 
-        public INodeDirectory(String path) {
+        public INode(String path) {
             this.path = path;
             this.childrenList = new LinkedList<>();
         }
@@ -135,26 +128,11 @@ public class FSDirectory {
         }
     }
 
-    /**
-     * a file node in filesystem tree
-     */
-    public static class INodeFile implements INode {
+    public INode getRootDirTree() {
+        return rootDirTree;
+    }
 
-        String name;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String toString() {
-            return "INodeFile{" +
-                    "name='" + name + '\'' +
-                    '}';
-        }
+    public void setRootDirTree(INode rootDirTree) {
+        this.rootDirTree = rootDirTree;
     }
 }
