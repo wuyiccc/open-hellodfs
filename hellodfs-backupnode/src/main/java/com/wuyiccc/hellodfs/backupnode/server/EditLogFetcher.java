@@ -34,7 +34,9 @@ public class EditLogFetcher extends Thread {
 
         while (backupNode.isRunning()) {
             try {
-                JSONArray editsLog = this.nameNodeRpcClient.fetchEditsLog();
+
+                long syncedTxId = this.fsNameSystem.getSyncedTxId();
+                JSONArray editsLog = this.nameNodeRpcClient.fetchEditsLog(syncedTxId);
                 if (editsLog.size() == 0) {
                     System.out.println("hasn't fetch editLog, wait 1 second");
                     TimeUnit.SECONDS.sleep(1);

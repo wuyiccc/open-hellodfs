@@ -41,7 +41,7 @@ message ShutdownResponse {
 }
 
 message FetchEditsLogRequest {
-  int32 code = 1;
+  int64 syncTxId = 1;
 }
 
 message FetchEditsLogResponse {

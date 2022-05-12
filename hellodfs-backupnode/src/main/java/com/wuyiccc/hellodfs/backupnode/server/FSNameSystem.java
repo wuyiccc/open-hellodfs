@@ -1,7 +1,6 @@
 package com.wuyiccc.hellodfs.backupnode.server;
 
 /**
- *
  * The core components responsible for managing metadata
  *
  * @author wuyiccc
@@ -20,6 +19,7 @@ public class FSNameSystem {
 
     /**
      * create a directory
+     *
      * @param path the directory path
      * @return create success or fail
      */
@@ -31,6 +31,13 @@ public class FSNameSystem {
 
     public FSImage getFSImageJson() throws Exception {
         return this.fsDirectory.getFSImage();
+    }
+
+    /**
+     * get synced maxTxId
+     */
+    public long getSyncedTxId() {
+        return this.fsDirectory.getFSImage().getMaxTxId();
     }
 
 }

@@ -32,10 +32,6 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
 
     private volatile Boolean isRunning = true;
 
-    /**
-     * backupNode already sync max TxId
-     */
-    private long syncedTxId = 0L;
 
     /**
      * current memory cache already flushed into disk txId startTxId-endTxId scope
@@ -118,6 +114,7 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
             return;
         }
 
+        long syncedTxId = request.getSyncTxId();
         FetchEditsLogResponse response = null;
         JSONArray fetchedEditsLog = new JSONArray();
 
@@ -126,7 +123,7 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
 
         // data all in memory cache
         if (flushedTxIds.size() == 0) {
-            this.fetchFromBufferedEditsLog(fetchedEditsLog);
+            this.fetchFromBufferedEditsLog(fetchedEditsLog, syncedTxId);
 
             // if already has editLog flush into disk:
             // you want fetch txId scope has three condition -> two conditions
@@ -142,16 +139,16 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
             // if currentBufferedEditsLog already cached some editsLog flushed into disk file
             if (this.bufferedFlushedTxId != null) {
                 // if you want fetched editsLog already flushed into disk file, and cached into currentBufferedEditsLog -> 1.1 + 1.2
-                if (existInFlushedFile(bufferedFlushedTxId)) {
-                    fetchFromCurrentBuffer(fetchedEditsLog);
+                if (existInFlushedFile(bufferedFlushedTxId, syncedTxId)) {
+                    fetchFromCurrentBuffer(fetchedEditsLog, syncedTxId);
                 } else {
                     String nextFlushedTxId = getNextFlushedTxId(flushedTxIds, bufferedFlushedTxId);
                     // if you want fetched editsLog already flushed into disk file, and not cached into currentBufferedEditsLog -> 1.1 + 1.2
                     if (nextFlushedTxId != null) {
-                        fetchFromFlushedFile(nextFlushedTxId, fetchedEditsLog);
+                        fetchFromFlushedFile(nextFlushedTxId, fetchedEditsLog, syncedTxId);
                         // if you want fetched editsLog is in doubleBuffer's currentBuffer -> 1.3
                     } else {
-                        fetchFromBufferedEditsLog(fetchedEditsLog);
+                        fetchFromBufferedEditsLog(fetchedEditsLog, syncedTxId);
                     }
                 }
 
@@ -161,8 +158,8 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
 
                 for (String flushedTxId : flushedTxIds) {
                     // if you want fetched editsLog file already flushed into disk -> 2.1 + 2.2
-                    if (existInFlushedFile(flushedTxId)) {
-                        fetchFromFlushedFile(flushedTxId, fetchedEditsLog);
+                    if (existInFlushedFile(flushedTxId, syncedTxId)) {
+                        fetchFromFlushedFile(flushedTxId, fetchedEditsLog, syncedTxId);
                         fetchedFromFlushedFile = true;
                         break;
                     }
@@ -170,7 +167,7 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
 
                 // 2.3
                 if (!fetchedFromFlushedFile) {
-                    fetchFromBufferedEditsLog(fetchedEditsLog);
+                    fetchFromBufferedEditsLog(fetchedEditsLog, syncedTxId);
                 }
             }
         }
@@ -196,11 +193,11 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
     /**
      * @param flushedTxId startTxId_endTxId
      */
-    private Boolean existInFlushedFile(String flushedTxId) {
+    private Boolean existInFlushedFile(String flushedTxId, long syncedTxId) {
         String[] flushedTxIdSplit = flushedTxId.split("_");
         long startTxId = Long.parseLong(flushedTxIdSplit[0]);
         long endTxId = Long.parseLong(flushedTxIdSplit[1]);
-        long fetchTxId = this.syncedTxId + 1;
+        long fetchTxId = syncedTxId + 1;
 
         if (fetchTxId >= startTxId && fetchTxId <= endTxId) {
             return true;
@@ -222,7 +219,7 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
     /**
      * transfer editsLog file data into currentBufferedEditsLog
      */
-    private void fetchFromFlushedFile(String flushedTxId, JSONArray fetchedEditsLog) {
+    private void fetchFromFlushedFile(String flushedTxId, JSONArray fetchedEditsLog, long syncedTxId) {
         try {
             String[] flushedTxIdSplit = flushedTxId.split("_");
             long startTxId = Long.parseLong(flushedTxIdSplit[0]);
@@ -240,7 +237,7 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
             // cached flushed into disk file startTxId_endTxtId which transfer to currentBufferedEditsLog
             this.bufferedFlushedTxId = flushedTxId;
 
-            fetchFromCurrentBuffer(fetchedEditsLog);
+            fetchFromCurrentBuffer(fetchedEditsLog, syncedTxId);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -250,13 +247,14 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
     /**
      * transfer doubleBuffer's current buffer into currentBufferedEditsLog
      */
-    private void fetchFromBufferedEditsLog(JSONArray fetchedEditsLog) {
+    private void fetchFromBufferedEditsLog(JSONArray fetchedEditsLog, long syncedTxId) {
 
         // if you want fetched editsLog txId already exist in currentBufferedEditsLog, direct execute fetchFromCurrentBuffer
-        long fetchTxId = this.syncedTxId + 1;
+
+        long fetchTxId = syncedTxId + 1;
         if (fetchTxId <= this.currentBufferedTxId) {
             System.out.println("fetch from bufferedEditsLog, already exist in currentBufferedEditsLog");
-            fetchFromCurrentBuffer(fetchedEditsLog);
+            fetchFromCurrentBuffer(fetchedEditsLog, syncedTxId);
             return;
         }
 
@@ -271,7 +269,7 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
                 this.currentBufferedTxId = JSONObject.parseObject(editLog).getLongValue("txId");
             }
             this.bufferedFlushedTxId = null;
-            fetchFromCurrentBuffer(fetchedEditsLog);
+            fetchFromCurrentBuffer(fetchedEditsLog, syncedTxId);
         }
     }
 
@@ -279,12 +277,13 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
     /**
      * fetch editsLog data from currentBufferedEditsLog
      */
-    private void fetchFromCurrentBuffer(JSONArray fetchedEditsLog) {
+    private void fetchFromCurrentBuffer(JSONArray fetchedEditsLog, long syncedTxId) {
         int fetchCount = 0;
+        long fetchTxId = syncedTxId + 1;
         for (int i = 0; i < this.currentBufferedEditsLog.size(); i++) {
-            if (this.currentBufferedEditsLog.getJSONObject(i).getLong("txId") == this.syncedTxId + 1) {
+            if (this.currentBufferedEditsLog.getJSONObject(i).getLong("txId") == fetchTxId) {
                 fetchedEditsLog.add(this.currentBufferedEditsLog.getJSONObject(i));
-                this.syncedTxId = this.currentBufferedEditsLog.getJSONObject(i).getLong("txId");
+                fetchTxId = this.currentBufferedEditsLog.getJSONObject(i).getLongValue("txId") + 1;
                 fetchCount++;
             }
             if (fetchCount == BACKUP_NODE_FETCH_SIZE) {
