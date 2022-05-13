@@ -98,6 +98,7 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
         // flush editslog into disk
         this.fsNameSystem.flush();
         this.fsNameSystem.saveCheckpointTxId();
+        System.out.println("gracefully shutdown...");
     }
 
     /**

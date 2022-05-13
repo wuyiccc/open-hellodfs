@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogRequest;
 import com.wuyiccc.hellodfs.namenode.rpc.model.FetchEditsLogResponse;
 import com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdRequest;
-import com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdResponse;
 import com.wuyiccc.hellodfs.namenode.rpc.service.NameNodeServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NegotiationType;
@@ -20,6 +19,8 @@ public class NameNodeRpcClient {
     private static final Integer NAME_NODE_PORT = 50070;
 
     private NameNodeServiceGrpc.NameNodeServiceBlockingStub nameNode;
+
+    private Boolean isNameNodeRunning = true;
 
 
     public NameNodeRpcClient() {
@@ -42,4 +43,11 @@ public class NameNodeRpcClient {
         this.nameNode.updateCheckpointTxId(request);
     }
 
+    public Boolean isNameNodeRunning() {
+        return isNameNodeRunning;
+    }
+
+    public void setIsNameNodeRunning(Boolean nameNodeRunning) {
+        isNameNodeRunning = nameNodeRunning;
+    }
 }

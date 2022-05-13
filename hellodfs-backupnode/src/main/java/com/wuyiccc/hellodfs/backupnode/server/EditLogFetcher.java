@@ -62,8 +62,10 @@ public class EditLogFetcher extends Thread {
                         }
                     }
                 }
+                this.nameNodeRpcClient.setIsNameNodeRunning(true);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+                this.nameNodeRpcClient.setIsNameNodeRunning(false);
             }
 
         }

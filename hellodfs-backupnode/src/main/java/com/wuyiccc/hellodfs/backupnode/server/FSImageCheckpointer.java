@@ -20,7 +20,7 @@ public class FSImageCheckpointer extends Thread {
 
     //public static final Integer CHECKPOINT_INTERVAL = 1 * 60 * 60;
 
-    public static final Integer CHECKPOINT_INTERVAL = 30;
+    public static final Integer CHECKPOINT_INTERVAL = 60;
 
     private BackupNode backupNode;
 
@@ -44,6 +44,12 @@ public class FSImageCheckpointer extends Thread {
         while (this.backupNode.isRunning()) {
             try {
                 TimeUnit.SECONDS.sleep(CHECKPOINT_INTERVAL);
+
+                // if namenode is down, don't execute checkpoint
+                if (!this.nameNodeRpcClient.isNameNodeRunning()) {
+                    System.out.println("nameNode cannot access, don't execute checkpoint");
+                    continue;
+                }
 
                 System.out.println("begin to execute checkpoint");
                 // maybe you should doCheckPoint and then removeFile?

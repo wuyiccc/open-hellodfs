@@ -12,7 +12,7 @@ import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
+import java.util.*;
 
 /**
  * The core components responsible for managing metadata
@@ -135,12 +135,20 @@ public class FSNameSystem {
         FileChannel channel = null;
 
         try {
-            in = new FileInputStream("E:\\code_learn\\031-opensource\\06-hellodfs\\hellodfs\\editslog\\fsimage.meta");
+
+            String path = "E:\\code_learn\\031-opensource\\06-hellodfs\\hellodfs\\editslog\\fsimage.meta";
+            File file = new File(path);
+            if (!file.exists()) {
+                System.out.println("fsimage file cannot found, jump over");
+                return;
+            }
+            in = new FileInputStream(path);
             channel = in.getChannel();
             ByteBuffer buffer = ByteBuffer.allocate(1024 * 1024);
             int count = channel.read(buffer);
             buffer.flip();
             String fsImageJson = new String(buffer.array(), 0, count);
+            System.out.println("recover fsImage data into memory: " + fsImageJson);
 
             FSDirectory.INode rootDirTree = JSONObject.parseObject(fsImageJson, FSDirectory.INode.class);
             this.fsDirectory.setRootDirTree(rootDirTree);
@@ -160,15 +168,37 @@ public class FSNameSystem {
     private void loadEditsLog() throws Exception {
 
         File dir = new File("E:\\code_learn\\031-opensource\\06-hellodfs\\hellodfs\\editslog\\");
-        File[] fileList = dir.listFiles();
+
+        List<File> fileList = new ArrayList<>();
+
+        for (File file : dir.listFiles()) {
+            fileList.add(file);
+        }
+
+        fileList.removeIf(file -> !file.getName().contains("edits"));
+
+
+        Collections.sort(fileList, (o1, o2) -> {
+            Integer o1StartTxId = Integer.parseInt(o1.getName().split("-")[1]);
+            Integer o2StartTxId = Integer.parseInt(o2.getName().split("-")[1]);
+            return o1StartTxId - o2StartTxId;
+        });
+
+        if (fileList == null || fileList.size() == 0) {
+            System.out.println("cannot found editslog");
+            return;
+        }
+
         for (File file : fileList) {
             if (file.getName().contains("edits")) {
                 String[] splitName = file.getName().split("-");
                 long startTxId = Long.parseLong(splitName[1]);
-                long endTxId = Long.parseLong(splitName[2]);
+                long endTxId = Long.parseLong(splitName[2].split("\\.")[0]);
 
                 // load editslog which txId scope include checkpointTxId or more than txId
                 if (endTxId > checkpointTxId) {
+
+
                     String currentEditsLogFilePath = "E:\\code_learn\\031-opensource\\06-hellodfs\\hellodfs\\editslog\\edits-" + (startTxId) + "-" + endTxId + ".log";
                     List<String> editsLog = Files.readAllLines(Paths.get(currentEditsLogFilePath), StandardCharsets.UTF_8);
 
@@ -177,6 +207,7 @@ public class FSNameSystem {
                         long txId = editLog.getLongValue("txId");
 
                         if (txId > checkpointTxId) {
+                            System.out.println("begin to recover editslog: " + editLogJson);
                             // redo to memory
                             String op = editLog.getString("OP");
 
@@ -200,12 +231,20 @@ public class FSNameSystem {
         FileChannel channel = null;
 
         try {
-            in = new FileInputStream("E:\\code_learn\\031-opensource\\06-hellodfs\\hellodfs\\editslog\\checkpoint-txId.meta");
+            String path = "E:\\code_learn\\031-opensource\\06-hellodfs\\hellodfs\\editslog\\checkpoint-txId.meta";
+            File file = new File(path);
+            if (!file.exists()) {
+                System.out.println("cannot found checkpoint-txId.meta");
+                return;
+            }
+
+            in = new FileInputStream(path);
             channel = in.getChannel();
             ByteBuffer buffer = ByteBuffer.allocate(1024 * 1024);
             int count = channel.read(buffer);
             buffer.flip();
             long checkpointTxId = Long.parseLong(new String(buffer.array(), 0, count));
+            System.out.println("recover checkpoint txId: " + checkpointTxId);
             this.checkpointTxId = checkpointTxId;
         } finally {
             if (in != null) {
