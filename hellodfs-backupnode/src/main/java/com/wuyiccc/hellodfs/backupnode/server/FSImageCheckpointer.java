@@ -26,7 +26,7 @@ public class FSImageCheckpointer extends Thread {
 
     private String lastFSImageFilePath = "";
 
-    private long checkpointTime = -1;
+    private long checkpointTime = System.currentTimeMillis();
 
     public FSImageCheckpointer(BackupNode backupNode, FSNameSystem fsNameSystem, NameNodeRpcClient nameNodeRpcClient) {
         this.backupNode = backupNode;
@@ -42,16 +42,6 @@ public class FSImageCheckpointer extends Thread {
         while (this.backupNode.isRunning()) {
             try {
 
-
-                if (!this.fsNameSystem.isFinishedRecovered()) {
-                    System.out.println("hasn't finished metadata recover, jump execute checkpoint");
-                    TimeUnit.SECONDS.sleep(1);
-                    continue;
-                }
-
-                if (this.checkpointTime < 0) {
-                    this.checkpointTime = this.fsNameSystem.getCheckpointTime();
-                }
                 long now = System.currentTimeMillis();
 
                 if ((now - checkpointTime) / 1000 > CHECKPOINT_INTERVAL) {
