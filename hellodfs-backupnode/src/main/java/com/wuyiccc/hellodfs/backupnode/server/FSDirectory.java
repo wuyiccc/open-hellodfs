@@ -23,6 +23,21 @@ public class FSDirectory {
      */
     private long maxTxId;
 
+    public INode getRootDirTree() {
+        return rootDirTree;
+    }
+
+    public void setRootDirTree(INode rootDirTree) {
+        this.rootDirTree = rootDirTree;
+    }
+
+    public long getMaxTxId() {
+        return maxTxId;
+    }
+
+    public void setMaxTxId(long maxTxId) {
+        this.maxTxId = maxTxId;
+    }
 
     public void writeLock() {
         lock.writeLock().lock();

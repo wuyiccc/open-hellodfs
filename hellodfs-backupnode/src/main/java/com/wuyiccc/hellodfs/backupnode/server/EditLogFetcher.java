@@ -3,6 +3,7 @@ package com.wuyiccc.hellodfs.backupnode.server;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import java.sql.Timestamp;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -35,6 +36,11 @@ public class EditLogFetcher extends Thread {
         while (backupNode.isRunning()) {
             try {
 
+                if (!this.fsNameSystem.isFinishedRecovered()) {
+                    System.out.println("hasn't finished metadata recover, jump fetch editslog");
+                    TimeUnit.SECONDS.sleep(1);
+                    continue;
+                }
                 long syncedTxId = this.fsNameSystem.getSyncedTxId();
                 JSONArray editsLog = this.nameNodeRpcClient.fetchEditsLog(syncedTxId);
                 if (editsLog.size() == 0) {

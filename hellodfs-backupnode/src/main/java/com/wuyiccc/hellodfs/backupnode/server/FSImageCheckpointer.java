@@ -26,6 +26,8 @@ public class FSImageCheckpointer extends Thread {
 
     private String lastFSImageFilePath = "";
 
+    private long checkpointTime = -1;
+
     public FSImageCheckpointer(BackupNode backupNode, FSNameSystem fsNameSystem, NameNodeRpcClient nameNodeRpcClient) {
         this.backupNode = backupNode;
         this.fsNameSystem = fsNameSystem;
@@ -39,18 +41,35 @@ public class FSImageCheckpointer extends Thread {
 
         while (this.backupNode.isRunning()) {
             try {
-                TimeUnit.SECONDS.sleep(CHECKPOINT_INTERVAL);
 
-                // if namenode is down, don't execute checkpoint
-                if (!this.nameNodeRpcClient.isNameNodeRunning()) {
-                    System.out.println("nameNode cannot access, don't execute checkpoint");
+
+                if (!this.fsNameSystem.isFinishedRecovered()) {
+                    System.out.println("hasn't finished metadata recover, jump execute checkpoint");
+                    TimeUnit.SECONDS.sleep(1);
                     continue;
                 }
 
-                System.out.println("begin to execute checkpoint");
-                // maybe you should doCheckPoint and then removeFile?
-                doCheckPoint();
-                System.out.println("complete checkpoint");
+                if (this.checkpointTime < 0) {
+                    this.checkpointTime = this.fsNameSystem.getCheckpointTime();
+                }
+                long now = System.currentTimeMillis();
+
+                if ((now - checkpointTime) / 1000 > CHECKPOINT_INTERVAL) {
+
+                    TimeUnit.SECONDS.sleep(CHECKPOINT_INTERVAL);
+                    // if namenode is down, don't execute checkpoint
+                    if (!this.nameNodeRpcClient.isNameNodeRunning()) {
+                        System.out.println("nameNode cannot access, don't execute checkpoint");
+                        continue;
+                    }
+
+                    System.out.println("begin to execute checkpoint");
+                    // maybe you should doCheckPoint and then removeFile?
+                    doCheckPoint();
+                    System.out.println("complete checkpoint");
+                } else {
+                    TimeUnit.SECONDS.sleep(1);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -87,6 +106,7 @@ public class FSImageCheckpointer extends Thread {
 
 
             long now = System.currentTimeMillis();
+            this.checkpointTime = now;
             long checkpointTxId = fsImage.getMaxTxId();
             ByteBuffer dataBuffer = ByteBuffer.wrap((now + "_" + checkpointTxId).getBytes());
             channel.write(dataBuffer);
