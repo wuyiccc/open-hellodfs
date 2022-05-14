@@ -1,9 +1,5 @@
 package com.wuyiccc.hellodfs.backupnode.server;
 
-import com.sun.org.apache.xpath.internal.operations.Or;
-import com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdResponse;
-
-import javax.naming.NamingEnumeration;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.RandomAccessFile;
@@ -54,6 +50,7 @@ public class FSImageCheckpointer extends Thread {
                 System.out.println("begin to execute checkpoint");
                 // maybe you should doCheckPoint and then removeFile?
                 doCheckPoint();
+                System.out.println("complete checkpoint");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -67,6 +64,54 @@ public class FSImageCheckpointer extends Thread {
         writeFSImageFile(fsImage);
         uploadFSImageFile(fsImage);
         updateCheckpointTxId(fsImage);
+        saveCheckpointInfo(fsImage);
+    }
+
+
+    private void saveCheckpointInfo(FSImage fsImage) {
+        String path = "E:\\code_learn\\031-opensource\\06-hellodfs\\hellodfs\\backupnode\\checkpoint-info.meta";
+
+        RandomAccessFile raf = null;
+        FileOutputStream out = null;
+        FileChannel channel = null;
+
+        try {
+            File file = new File(path);
+            if (file.exists()) {
+                file.delete();
+            }
+
+            raf = new RandomAccessFile(path, "rw");
+            out = new FileOutputStream(raf.getFD());
+            channel = out.getChannel();
+
+
+            long now = System.currentTimeMillis();
+            long checkpointTxId = fsImage.getMaxTxId();
+            ByteBuffer dataBuffer = ByteBuffer.wrap((now + "_" + checkpointTxId).getBytes());
+            channel.write(dataBuffer);
+            // force flush data from os cache into disk
+            channel.force(false);
+
+            System.out.println("checkpoint info flushed into disk");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+                if (raf != null) {
+                    raf.close();
+                }
+                if (channel != null) {
+                    channel.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 
     private void updateCheckpointTxId(FSImage fsImage) {
@@ -120,10 +165,11 @@ public class FSImageCheckpointer extends Thread {
 
     /**
      * upload fsImage File
+     *
      * @param fsImage
      * @throws Exception
      */
-    private void uploadFSImageFile(FSImage fsImage) throws Exception{
+    private void uploadFSImageFile(FSImage fsImage) throws Exception {
         FSImageUploader fsImageUploader = new FSImageUploader(fsImage);
         fsImageUploader.start();
     }
