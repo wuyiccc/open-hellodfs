@@ -1,8 +1,6 @@
 package com.wuyiccc.hellodfs.client;
 
-import com.wuyiccc.hellodfs.namenode.rpc.model.MkdirRequest;
-import com.wuyiccc.hellodfs.namenode.rpc.model.MkdirResponse;
-import com.wuyiccc.hellodfs.namenode.rpc.model.ShutdownRequest;
+import com.wuyiccc.hellodfs.namenode.rpc.model.*;
 import com.wuyiccc.hellodfs.namenode.rpc.service.NameNodeServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NegotiationType;
@@ -45,7 +43,21 @@ public class FileSystemImpl implements FileSystem {
     }
 
     @Override
-    public void upload(byte[] file, String filename) throws Exception {
+    public Boolean upload(byte[] file, String filename) throws Exception {
 
+        if (!createFile(filename)) {
+            return false;
+        }
+        return true;
+    }
+
+    private Boolean createFile(String filename) {
+        CreateFileRequest request = CreateFileRequest.newBuilder().setFilename(filename).build();
+        CreateFileResponse response = this.nameNode.create(request);
+
+        if (response.getStatus() == 1) {
+            return true;
+        }
+        return false;
     }
 }

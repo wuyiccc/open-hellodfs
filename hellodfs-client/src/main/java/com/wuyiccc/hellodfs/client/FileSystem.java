@@ -22,6 +22,6 @@ public interface FileSystem {
      * @param filename
      * @throws Exception
      */
-    void upload(byte[] file, String filename) throws Exception;
+    Boolean upload(byte[] file, String filename) throws Exception;
 
 }
