@@ -43,7 +43,7 @@ public class FileSystemImpl implements FileSystem {
     }
 
     @Override
-    public Boolean upload(byte[] file, String filename) throws Exception {
+    public Boolean upload(byte[] file, String filename, long fileSize) throws Exception {
 
         if (!createFile(filename)) {
             return false;

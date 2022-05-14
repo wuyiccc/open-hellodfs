@@ -215,6 +215,16 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
         }
     }
 
+    /**
+     * allocate dataNodes for file upload
+     * @param request
+     * @param responseObserver
+     */
+    @Override
+    public void allocateDataNodes(AllocateDataNodesRequest request, StreamObserver<AllocateDataNodesResponse> responseObserver) {
+
+    }
+
 
     /**
      * @param flushedTxId startTxId_endTxId

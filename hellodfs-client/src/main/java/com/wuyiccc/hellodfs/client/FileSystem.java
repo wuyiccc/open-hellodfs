@@ -20,8 +20,9 @@ public interface FileSystem {
      * upload file
      * @param file
      * @param filename
+     * @param fileSize
      * @throws Exception
      */
-    Boolean upload(byte[] file, String filename) throws Exception;
+    Boolean upload(byte[] file, String filename, long fileSize) throws Exception;
 
 }

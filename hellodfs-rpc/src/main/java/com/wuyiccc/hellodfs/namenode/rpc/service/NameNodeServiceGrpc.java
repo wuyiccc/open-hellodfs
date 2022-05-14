@@ -84,6 +84,15 @@ public class NameNodeServiceGrpc {
               "com.wuyiccc.hellodfs.namenode.rpc.NameNodeService", "create"),
           io.grpc.protobuf.ProtoUtils.marshaller(com.wuyiccc.hellodfs.namenode.rpc.model.CreateFileRequest.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(com.wuyiccc.hellodfs.namenode.rpc.model.CreateFileResponse.getDefaultInstance()));
+  @io.grpc.ExperimentalApi
+  public static final io.grpc.MethodDescriptor<com.wuyiccc.hellodfs.namenode.rpc.model.AllocateDataNodesRequest,
+      com.wuyiccc.hellodfs.namenode.rpc.model.AllocateDataNodesResponse> METHOD_ALLOCATE_DATA_NODES =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.UNARY,
+          generateFullMethodName(
+              "com.wuyiccc.hellodfs.namenode.rpc.NameNodeService", "allocateDataNodes"),
+          io.grpc.protobuf.ProtoUtils.marshaller(com.wuyiccc.hellodfs.namenode.rpc.model.AllocateDataNodesRequest.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(com.wuyiccc.hellodfs.namenode.rpc.model.AllocateDataNodesResponse.getDefaultInstance()));
 
   public static NameNodeServiceStub newStub(io.grpc.Channel channel) {
     return new NameNodeServiceStub(channel);
@@ -121,6 +130,9 @@ public class NameNodeServiceGrpc {
 
     public void create(com.wuyiccc.hellodfs.namenode.rpc.model.CreateFileRequest request,
         io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.CreateFileResponse> responseObserver);
+
+    public void allocateDataNodes(com.wuyiccc.hellodfs.namenode.rpc.model.AllocateDataNodesRequest request,
+        io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.AllocateDataNodesResponse> responseObserver);
   }
 
   public static interface NameNodeServiceBlockingClient {
@@ -138,6 +150,8 @@ public class NameNodeServiceGrpc {
     public com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdResponse updateCheckpointTxId(com.wuyiccc.hellodfs.namenode.rpc.model.UpdateCheckpointTxIdRequest request);
 
     public com.wuyiccc.hellodfs.namenode.rpc.model.CreateFileResponse create(com.wuyiccc.hellodfs.namenode.rpc.model.CreateFileRequest request);
+
+    public com.wuyiccc.hellodfs.namenode.rpc.model.AllocateDataNodesResponse allocateDataNodes(com.wuyiccc.hellodfs.namenode.rpc.model.AllocateDataNodesRequest request);
   }
 
   public static interface NameNodeServiceFutureClient {
@@ -162,6 +176,9 @@ public class NameNodeServiceGrpc {
 
     public com.google.common.util.concurrent.ListenableFuture<com.wuyiccc.hellodfs.namenode.rpc.model.CreateFileResponse> create(
         com.wuyiccc.hellodfs.namenode.rpc.model.CreateFileRequest request);
+
+    public com.google.common.util.concurrent.ListenableFuture<com.wuyiccc.hellodfs.namenode.rpc.model.AllocateDataNodesResponse> allocateDataNodes(
+        com.wuyiccc.hellodfs.namenode.rpc.model.AllocateDataNodesRequest request);
   }
 
   public static class NameNodeServiceStub extends io.grpc.stub.AbstractStub<NameNodeServiceStub>
@@ -229,6 +246,13 @@ public class NameNodeServiceGrpc {
       asyncUnaryCall(
           getChannel().newCall(METHOD_CREATE, getCallOptions()), request, responseObserver);
     }
+
+    @java.lang.Override
+    public void allocateDataNodes(com.wuyiccc.hellodfs.namenode.rpc.model.AllocateDataNodesRequest request,
+        io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.AllocateDataNodesResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_ALLOCATE_DATA_NODES, getCallOptions()), request, responseObserver);
+    }
   }
 
   public static class NameNodeServiceBlockingStub extends io.grpc.stub.AbstractStub<NameNodeServiceBlockingStub>
@@ -288,6 +312,12 @@ public class NameNodeServiceGrpc {
     public com.wuyiccc.hellodfs.namenode.rpc.model.CreateFileResponse create(com.wuyiccc.hellodfs.namenode.rpc.model.CreateFileRequest request) {
       return blockingUnaryCall(
           getChannel(), METHOD_CREATE, getCallOptions(), request);
+    }
+
+    @java.lang.Override
+    public com.wuyiccc.hellodfs.namenode.rpc.model.AllocateDataNodesResponse allocateDataNodes(com.wuyiccc.hellodfs.namenode.rpc.model.AllocateDataNodesRequest request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_ALLOCATE_DATA_NODES, getCallOptions(), request);
     }
   }
 
@@ -356,6 +386,13 @@ public class NameNodeServiceGrpc {
       return futureUnaryCall(
           getChannel().newCall(METHOD_CREATE, getCallOptions()), request);
     }
+
+    @java.lang.Override
+    public com.google.common.util.concurrent.ListenableFuture<com.wuyiccc.hellodfs.namenode.rpc.model.AllocateDataNodesResponse> allocateDataNodes(
+        com.wuyiccc.hellodfs.namenode.rpc.model.AllocateDataNodesRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_ALLOCATE_DATA_NODES, getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_REGISTER = 0;
@@ -365,6 +402,7 @@ public class NameNodeServiceGrpc {
   private static final int METHODID_FETCH_EDITS_LOG = 4;
   private static final int METHODID_UPDATE_CHECKPOINT_TX_ID = 5;
   private static final int METHODID_CREATE = 6;
+  private static final int METHODID_ALLOCATE_DATA_NODES = 7;
 
   private static class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -409,6 +447,10 @@ public class NameNodeServiceGrpc {
         case METHODID_CREATE:
           serviceImpl.create((com.wuyiccc.hellodfs.namenode.rpc.model.CreateFileRequest) request,
               (io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.CreateFileResponse>) responseObserver);
+          break;
+        case METHODID_ALLOCATE_DATA_NODES:
+          serviceImpl.allocateDataNodes((com.wuyiccc.hellodfs.namenode.rpc.model.AllocateDataNodesRequest) request,
+              (io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.AllocateDataNodesResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -477,6 +519,13 @@ public class NameNodeServiceGrpc {
               com.wuyiccc.hellodfs.namenode.rpc.model.CreateFileRequest,
               com.wuyiccc.hellodfs.namenode.rpc.model.CreateFileResponse>(
                 serviceImpl, METHODID_CREATE)))
+        .addMethod(
+          METHOD_ALLOCATE_DATA_NODES,
+          asyncUnaryCall(
+            new MethodHandlers<
+              com.wuyiccc.hellodfs.namenode.rpc.model.AllocateDataNodesRequest,
+              com.wuyiccc.hellodfs.namenode.rpc.model.AllocateDataNodesResponse>(
+                serviceImpl, METHODID_ALLOCATE_DATA_NODES)))
         .build();
   }
 }
