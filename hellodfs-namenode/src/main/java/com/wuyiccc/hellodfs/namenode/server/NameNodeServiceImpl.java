@@ -23,6 +23,8 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
 
     public static final Integer STATUS_SHUTDOWN = 3;
 
+    public static final Integer STATUS_DUPLICATE = 4;
+
     public static final Integer BACKUP_NODE_FETCH_SIZE = 10;
 
 
@@ -188,6 +190,29 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
         response = UpdateCheckpointTxIdResponse.newBuilder().setStatus(1).build();
         responseObserver.onNext(response);
         responseObserver.onCompleted();
+    }
+
+    @Override
+    public void create(CreateFileRequest request, StreamObserver<CreateFileResponse> responseObserver) {
+        try {
+            CreateFileResponse response = null;
+            if (!isRunning) {
+                response = CreateFileResponse.newBuilder().setStatus(STATUS_SHUTDOWN).build();
+            } else {
+                String filename = request.getFilename();
+                Boolean success = this.fsNameSystem.create(filename);
+
+                if (success) {
+                    response = CreateFileResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
+                } else {
+                    response = CreateFileResponse.newBuilder().setStatus(STATUS_DUPLICATE).build();
+                }
+            }
+            responseObserver.onNext(response);
+            responseObserver.onCompleted();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

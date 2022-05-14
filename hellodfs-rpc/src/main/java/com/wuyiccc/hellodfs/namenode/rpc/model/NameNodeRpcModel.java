@@ -74,6 +74,16 @@ public final class NameNodeRpcModel {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_wuyiccc_hellodfs_namenode_rpc_UpdateCheckpointTxIdResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_wuyiccc_hellodfs_namenode_rpc_CreateFileRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_wuyiccc_hellodfs_namenode_rpc_CreateFileRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_wuyiccc_hellodfs_namenode_rpc_CreateFileResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_wuyiccc_hellodfs_namenode_rpc_CreateFileResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -96,9 +106,11 @@ public final class NameNodeRpcModel {
       "\001 \001(\003\")\n\025FetchEditsLogResponse\022\020\n\010editsL" +
       "og\030\001 \001(\t\"+\n\033UpdateCheckpointTxIdRequest\022" +
       "\014\n\004txId\030\001 \001(\003\".\n\034UpdateCheckpointTxIdRes" +
-      "ponse\022\016\n\006status\030\001 \001(\005B=\n\'com.wuyiccc.hel" +
-      "lodfs.namenode.rpc.modelB\020NameNodeRpcMod" +
-      "elP\001b\006proto3"
+      "ponse\022\016\n\006status\030\001 \001(\005\"%\n\021CreateFileReque" +
+      "st\022\020\n\010filename\030\001 \001(\t\"$\n\022CreateFileRespon" +
+      "se\022\016\n\006status\030\001 \001(\005B=\n\'com.wuyiccc.hellod" +
+      "fs.namenode.rpc.modelB\020NameNodeRpcModelP" +
+      "\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -183,6 +195,18 @@ public final class NameNodeRpcModel {
     internal_static_com_wuyiccc_hellodfs_namenode_rpc_UpdateCheckpointTxIdResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_wuyiccc_hellodfs_namenode_rpc_UpdateCheckpointTxIdResponse_descriptor,
+        new java.lang.String[] { "Status", });
+    internal_static_com_wuyiccc_hellodfs_namenode_rpc_CreateFileRequest_descriptor =
+      getDescriptor().getMessageTypes().get(12);
+    internal_static_com_wuyiccc_hellodfs_namenode_rpc_CreateFileRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_wuyiccc_hellodfs_namenode_rpc_CreateFileRequest_descriptor,
+        new java.lang.String[] { "Filename", });
+    internal_static_com_wuyiccc_hellodfs_namenode_rpc_CreateFileResponse_descriptor =
+      getDescriptor().getMessageTypes().get(13);
+    internal_static_com_wuyiccc_hellodfs_namenode_rpc_CreateFileResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_wuyiccc_hellodfs_namenode_rpc_CreateFileResponse_descriptor,
         new java.lang.String[] { "Status", });
   }
 

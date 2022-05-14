@@ -52,6 +52,64 @@ public class FSDirectory {
         //printDirTree(this.rootDirTree, "-");
     }
 
+    /**
+     * create file
+     * @param filename /products/img001.jpg
+     * @return
+     */
+    public Boolean create(String filename) {
+
+        synchronized (this.rootDirTree) {
+            String[] splitFilename = filename.split("/");
+            String realFilename = splitFilename[splitFilename.length - 1];
+
+            INode parent = this.rootDirTree;
+
+            for (int i = 0; i < splitFilename.length - 1; i++) {
+
+                if (i == 0) {
+                    continue;
+                }
+                INode dir = findDirectory(parent, splitFilename[i]);
+                // if we find the target directory, then continue to recursive find
+                if (dir != null) {
+                    parent = dir;
+                    continue;
+                }
+                // if not found the target directory, we create a directory and then add into the parentDirectory
+                INode child = new INode(splitFilename[i]);
+                parent.addChild(child);
+                parent = child;
+            }
+
+            if (existFile(parent, realFilename)) {
+                return false;
+            }
+
+            // create file
+            INode file = new INode(realFilename);
+            parent.addChild(file);
+            return true;
+        }
+    }
+
+    /**
+     * test the dir has the file
+     * @param dir
+     * @param filename
+     * @return
+     */
+    private Boolean existFile(INode dir, String filename) {
+        if (dir.getChildrenList() != null && dir.getChildrenList().size() > 0) {
+            for (INode child : dir.getChildrenList()) {
+                if (child.getPath().equals(filename)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     private void printDirTree(INode dirTree, String blank) {
         if (dirTree == null || dirTree.getChildrenList().size() == 0) {
             return;

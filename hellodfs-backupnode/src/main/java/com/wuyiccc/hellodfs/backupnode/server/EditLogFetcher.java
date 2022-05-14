@@ -44,14 +44,12 @@ public class EditLogFetcher extends Thread {
                 long syncedTxId = this.fsNameSystem.getSyncedTxId();
                 JSONArray editsLog = this.nameNodeRpcClient.fetchEditsLog(syncedTxId);
                 if (editsLog.size() == 0) {
-                    System.out.println("hasn't fetch editLog, wait 1 second");
                     TimeUnit.SECONDS.sleep(1);
                     continue;
                 }
 
                 if (editsLog.size() < BACKUP_NODE_FETCH_SIZE) {
                     TimeUnit.SECONDS.sleep(1);
-                    System.out.println("pull editsLog size <= 10, wait 1 second");
                 }
 
                 for (int i = 0; i < editsLog.size(); i++) {
@@ -63,6 +61,13 @@ public class EditLogFetcher extends Thread {
                         String path = editLog.getString("PATH");
                         try {
                             this.fsNameSystem.mkdir(editLog.getLongValue("txId"), path);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else if ("CREATE".equals(op)) {
+                        String filename = editLog.getString("PATH");
+                        try {
+                            this.fsNameSystem.create(filename);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

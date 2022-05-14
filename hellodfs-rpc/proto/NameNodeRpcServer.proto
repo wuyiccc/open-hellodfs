@@ -15,4 +15,5 @@ service NameNodeService {
   rpc shutdown(ShutdownRequest) returns (ShutdownResponse);
   rpc fetchEditsLog(FetchEditsLogRequest) returns (FetchEditsLogResponse);
   rpc updateCheckpointTxId(UpdateCheckpointTxIdRequest) returns (UpdateCheckpointTxIdResponse);
+  rpc create(CreateFileRequest) returns (CreateFileResponse);
 }

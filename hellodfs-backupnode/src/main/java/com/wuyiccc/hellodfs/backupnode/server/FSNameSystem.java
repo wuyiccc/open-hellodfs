@@ -67,6 +67,22 @@ public class FSNameSystem {
         return true;
     }
 
+    /**
+     * create file
+     * @param filename /products/img0001.jpg
+     * @return
+     * @throws Exception
+     */
+    public Boolean create(String filename) throws Exception {
+
+        if (!this.fsDirectory.create(filename)) {
+            return false;
+        }
+        return true;
+    }
+
+
+
 
     public FSImage getFSImageJson() throws Exception {
         return this.fsDirectory.getFSImage();

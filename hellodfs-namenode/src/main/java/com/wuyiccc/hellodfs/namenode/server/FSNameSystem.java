@@ -1,6 +1,5 @@
 package com.wuyiccc.hellodfs.namenode.server;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import java.io.File;
@@ -12,7 +11,9 @@ import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * The core components responsible for managing metadata
@@ -101,7 +102,23 @@ public class FSNameSystem {
      */
     public Boolean mkdir(String path) throws Exception {
         this.fsDirectory.mkdir(path);
-        this.fsEditLog.logEdit("{'OP':'MKDIR','PATH':'" + path + "'}");
+        this.fsEditLog.logEdit(EditLogFactory.mkdir(path));
+        return true;
+    }
+
+    /**
+     * create file
+     *
+     * @param filename /products/img0001.jpg
+     * @return
+     * @throws Exception
+     */
+    public Boolean create(String filename) throws Exception {
+
+        if (!this.fsDirectory.create(filename)) {
+            return false;
+        }
+        this.fsEditLog.logEdit(EditLogFactory.create(filename));
         return true;
     }
 
@@ -215,6 +232,13 @@ public class FSNameSystem {
                                 String path = editLog.getString("PATH");
                                 try {
                                     this.fsDirectory.mkdir(path);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            } else if ("CREATE".equals(op)) {
+                                String path = editLog.getString("PATH");
+                                try {
+                                    this.fsDirectory.create(path);
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }

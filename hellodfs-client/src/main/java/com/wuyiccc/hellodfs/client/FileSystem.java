@@ -15,4 +15,13 @@ public interface FileSystem {
      */
     public void shutdown() throws Exception;
 
+
+    /**
+     * upload file
+     * @param file
+     * @param filename
+     * @throws Exception
+     */
+    void upload(byte[] file, String filename) throws Exception;
+
 }

@@ -43,4 +43,9 @@ public class FileSystemImpl implements FileSystem {
                 .build();
         this.nameNode.shutdown(request);
     }
+
+    @Override
+    public void upload(byte[] file, String filename) throws Exception {
+
+    }
 }
