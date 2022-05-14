@@ -16,7 +16,7 @@ public class FSImageCheckpointer extends Thread {
 
     //public static final Integer CHECKPOINT_INTERVAL = 1 * 60 * 60;
 
-    public static final Integer CHECKPOINT_INTERVAL = 60;
+    public static final Integer CHECKPOINT_INTERVAL = 20;
 
     private BackupNode backupNode;
 
@@ -41,6 +41,16 @@ public class FSImageCheckpointer extends Thread {
 
         while (this.backupNode.isRunning()) {
             try {
+
+                if (!this.fsNameSystem.isFinishedRecovered()) {
+                    System.out.println("hasn't finished metadata recover, jump execute checkpoint");
+                    TimeUnit.SECONDS.sleep(1);
+                    continue;
+                }
+
+                if (this.lastFSImageFilePath.equals("")) {
+                    this.lastFSImageFilePath = this.fsNameSystem.getCheckpointFile();
+                }
 
                 long now = System.currentTimeMillis();
 
@@ -98,7 +108,7 @@ public class FSImageCheckpointer extends Thread {
             long now = System.currentTimeMillis();
             this.checkpointTime = now;
             long checkpointTxId = fsImage.getMaxTxId();
-            ByteBuffer dataBuffer = ByteBuffer.wrap((now + "_" + checkpointTxId).getBytes());
+            ByteBuffer dataBuffer = ByteBuffer.wrap((now + "_" + checkpointTxId + "_" + this.lastFSImageFilePath).getBytes());
             channel.write(dataBuffer);
             // force flush data from os cache into disk
             channel.force(false);

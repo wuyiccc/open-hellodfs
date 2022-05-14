@@ -18,7 +18,7 @@ public class FileSystemTest {
                 public void run() {
                     for (int i = 0; i < 100; i++) {
                         try {
-                            fileSystem.mkdir("/usr/warehouse/spark" + i + "_" + Thread.currentThread().getName());
+                            fileSystem.mkdir("/usr/warehouse/hive" + i + "_" + Thread.currentThread().getName());
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

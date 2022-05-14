@@ -24,6 +24,8 @@ public class FSNameSystem {
 
     private volatile boolean finishedRecovered = false;
 
+    private String checkpointFile = "";
+
     public FSNameSystem() {
         this.fsDirectory = new FSDirectory();
         recoverNamespace();
@@ -44,6 +46,14 @@ public class FSNameSystem {
 
     public void setCheckpointTime(long checkpointTime) {
         this.checkpointTime = checkpointTime;
+    }
+
+    public String getCheckpointFile() {
+        return checkpointFile;
+    }
+
+    public void setCheckpointFile(String checkpointFile) {
+        this.checkpointFile = checkpointFile;
     }
 
     /**
@@ -138,10 +148,16 @@ public class FSNameSystem {
             long checkpointTime = Long.parseLong(checkpointInfo.split("_")[0]);
             long syncedTxId = Long.parseLong(checkpointInfo.split("_")[1]);
 
-            System.out.println("recover checkpoint time: " + checkpointTime + ", syncedTxId: " + syncedTxId);
+            String fsImageFile = checkpointInfo.substring(checkpointInfo.split("_")[0].length() + checkpointInfo.split("_")[1].length() + 2);
+
+
+
+            System.out.println("recover checkpoint time: " + checkpointTime + ", syncedTxId: " + syncedTxId + ", fsimage file: " + fsImageFile);
+
 
             this.checkpointTime = checkpointTime;
             this.syncedTxId = syncedTxId;
+            this.checkpointFile = fsImageFile;
             this.fsDirectory.setMaxTxId(syncedTxId);
         } finally {
             if (in != null) {
