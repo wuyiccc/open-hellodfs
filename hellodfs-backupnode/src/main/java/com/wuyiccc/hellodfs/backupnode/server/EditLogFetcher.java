@@ -67,7 +67,7 @@ public class EditLogFetcher extends Thread {
                     } else if ("CREATE".equals(op)) {
                         String filename = editLog.getString("PATH");
                         try {
-                            this.fsNameSystem.create(filename);
+                            this.fsNameSystem.create(editLog.getLongValue("txId"), filename);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

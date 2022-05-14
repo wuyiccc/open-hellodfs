@@ -9,9 +9,14 @@ import java.util.concurrent.TimeUnit;
  */
 public class FileSystemTest {
 
-    public static void main(String[] args) throws Exception {
-        FileSystem fileSystem = new FileSystemImpl();
+    private static FileSystem fileSystem = new FileSystemImpl();
 
+    public static void main(String[] args) throws Exception {
+        testCreateFile();
+    }
+
+
+    private static void testMkdir() throws Exception {
         for (int j = 0; j < 10; j++) {
             new Thread() {
                 @Override
@@ -26,9 +31,13 @@ public class FileSystemTest {
                 }
             }.start();
         }
-
-        //fileSystem.shutdown();
-
     }
 
+    private static void testShutdown() throws Exception {
+        fileSystem.shutdown();
+    }
+
+    private static void testCreateFile() throws Exception {
+        fileSystem.upload(null, "/image/product/iphone001.jpg");
+    }
 }

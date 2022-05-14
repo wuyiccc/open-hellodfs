@@ -89,6 +89,8 @@ public class FSDirectory {
             // create file
             INode file = new INode(realFilename);
             parent.addChild(file);
+
+            System.out.println(this.rootDirTree);
             return true;
         }
     }

@@ -117,12 +117,15 @@ public class FSDirectory {
 
     /**
      * create file
+     *
      * @param filename /products/img001.jpg
      * @return
      */
-    public Boolean create(String filename) {
+    public Boolean create(long txId, String filename) {
+        try {
+            writeLock();
 
-        synchronized (this.rootDirTree) {
+            this.maxTxId = txId;
             String[] splitFilename = filename.split("/");
             String realFilename = splitFilename[splitFilename.length - 1];
 
@@ -153,11 +156,15 @@ public class FSDirectory {
             INode file = new INode(realFilename);
             parent.addChild(file);
             return true;
+        } finally {
+            writeUnLock();
         }
+
     }
 
     /**
      * test the dir has the file
+     *
      * @param dir
      * @param filename
      * @return
@@ -206,7 +213,6 @@ public class FSDirectory {
         }
         return null;
     }
-
 
 
     /**

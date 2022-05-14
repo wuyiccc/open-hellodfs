@@ -73,9 +73,9 @@ public class FSNameSystem {
      * @return
      * @throws Exception
      */
-    public Boolean create(String filename) throws Exception {
+    public Boolean create(long txId, String filename) throws Exception {
 
-        if (!this.fsDirectory.create(filename)) {
+        if (!this.fsDirectory.create(txId, filename)) {
             return false;
         }
         return true;
