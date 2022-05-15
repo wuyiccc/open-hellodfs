@@ -15,9 +15,20 @@ public class DataNodeInfo {
 
     private long lastHeartBeatTime;
 
+    private long storedDataSize;
+
     public DataNodeInfo(String ip, String hostname) {
         this.ip = ip;
         this.hostname = hostname;
+        this.storedDataSize = 0L;
+    }
+
+    public long getStoredDataSize() {
+        return storedDataSize;
+    }
+
+    public void setStoredDataSize(long storedDataSize) {
+        this.storedDataSize = storedDataSize;
     }
 
     public String getIp() {
