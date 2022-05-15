@@ -10,11 +10,11 @@ public class DataNodeConfig {
 
     public static final Integer NAMENODE_PORT = 50070;
 
-    public static final String DATANODE_HOSTNAME = "hadoop-data-01";
+    public static final String DATANODE_HOSTNAME = "datanode02";
 
-    public static final String DATANODE_IP = "localhost";
+    public static final String DATANODE_IP = "127.0.0.1";
 
-    public static final Integer NIO_PORT = 9000;
+    public static final Integer NIO_PORT = 9301;
 
-    public static final String DATA_DIR = "E:\\code_learn\\031-opensource\\06-hellodfs\\hellodfs\\image\\tmp";
+    public static final String DATA_DIR = "E:\\code_learn\\031-opensource\\06-hellodfs\\hellodfs\\image\\tmp2";
 }

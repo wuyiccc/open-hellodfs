@@ -51,6 +51,7 @@ public class NIOClient {
                             // set fileSize in transport stream header, the long type need 8 bytes
                             buffer.putLong(fileSize);
                             buffer.put(file);
+                            buffer.flip();
 
                             int sentData = channel.write(buffer);
 

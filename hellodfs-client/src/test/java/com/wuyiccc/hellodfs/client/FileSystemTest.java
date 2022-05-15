@@ -1,6 +1,10 @@
 package com.wuyiccc.hellodfs.client;
 
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -38,6 +42,21 @@ public class FileSystemTest {
     }
 
     private static void testCreateFile() throws Exception {
-        fileSystem.upload(null, "/image/product/iphone003.jpg", 312L);
+        File image = new File("E:\\code_learn\\031-opensource\\06-hellodfs\\hellodfs\\test\\lingyu.jpg");
+        long imageLength = image.length();
+
+        ByteBuffer buffer = ByteBuffer.allocate((int)imageLength);
+
+        FileInputStream imageIn = new FileInputStream(image);
+        FileChannel imageChannel = imageIn.getChannel();
+        imageChannel.read(buffer);
+
+        buffer.flip();
+        byte[] imageBytes = buffer.array();
+
+        fileSystem.upload(imageBytes, "/image/product/lingyu2.jpg", imageLength);
+
+        imageIn.close();
+        imageChannel.close();
     }
 }

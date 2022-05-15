@@ -117,18 +117,24 @@ public class DataNodeNIOServer extends Thread {
                     }
                     String remoteAddr = channel.getRemoteAddress().toString();
 
+                    System.out.println("receive client request: " + remoteAddr);
+
                     ByteBuffer buffer = ByteBuffer.allocate(10 * 1024);
                     // get filename from channel
                     String filename = getFilename(channel, buffer);
+                    System.out.println("parse filename from channel: " + filename);
                     // if filename is null, skip read
                     if (filename == null) {
+                        channel.close();
                         continue;
                     }
 
                     // get file length from channel
                     long imageLength = getImageLength(channel, buffer);
+                    System.out.println("parse file size: " + imageLength);
                     // get already read file length from cache
                     long hasReadImageLength = getHasReadImageLength(channel);
+                    System.out.println("hasReadImageLength: " + hasReadImageLength);
 
 
                     FileOutputStream imageOut = new FileOutputStream(filename);
@@ -138,6 +144,7 @@ public class DataNodeNIOServer extends Thread {
                     // write the remaining data in the buffer after the first read to the file
                     if (!cachedImageMap.containsKey(remoteAddr)) {
                         hasReadImageLength += imageChannel.write(buffer);
+                        System.out.println("already write into disk file size: " + hasReadImageLength);
                         buffer.clear();
                     }
 
@@ -145,6 +152,7 @@ public class DataNodeNIOServer extends Thread {
                     int len = -1;
                     while ((len = channel.read(buffer)) > 0) {
                         hasReadImageLength += len;
+                        System.out.println("already write into disk file size: " + hasReadImageLength);
                         buffer.flip();
                         imageChannel.write(buffer);
                         buffer.clear();
@@ -157,11 +165,13 @@ public class DataNodeNIOServer extends Thread {
                         ByteBuffer outBuffer = ByteBuffer.wrap("SUCCESS".getBytes());
                         channel.write(outBuffer);
                         cachedImageMap.remove(remoteAddr);
+                        System.out.println("file read completed, return to client success");
                     } else {
                         // cache the file
                         CachedImage cachedImage = new CachedImage(filename, imageLength, hasReadImageLength);
                         cachedImageMap.put(remoteAddr, cachedImage);
                         key.interestOps(SelectionKey.OP_READ);
+                        System.out.println("file hasn't read completed, wait the next request, already cached file: " + cachedImage);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -220,6 +230,7 @@ public class DataNodeNIOServer extends Thread {
             byte[] filenameLengthBytes = new byte[4];
             // get filename length from buffer, set into filenameLengthBytes
             // int(4 bytes)
+            buffer.flip();
             buffer.get(filenameLengthBytes, 0, 4);
 
             ByteBuffer filenameLengthBuffer = ByteBuffer.allocate(4);
@@ -230,7 +241,7 @@ public class DataNodeNIOServer extends Thread {
 
             byte[] filenameBytes = new byte[filenameLength];
             // get filename from buffer, and set into filenameBytes
-            buffer.get(filenameBytes, 4, filenameLength);
+            buffer.get(filenameBytes, 0, filenameLength);
             // convert byte data to string
             String filename = new String(filenameBytes);
             return filename;
