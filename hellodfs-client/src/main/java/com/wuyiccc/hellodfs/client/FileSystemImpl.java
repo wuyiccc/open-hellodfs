@@ -51,6 +51,7 @@ public class FileSystemImpl implements FileSystem {
 
         String dataNodeListJson = allocateDataNodeList(filename, fileSize);
         System.out.println(dataNodeListJson);
+        NIOClient.sendFile(file, fileSize);
         return true;
     }
 

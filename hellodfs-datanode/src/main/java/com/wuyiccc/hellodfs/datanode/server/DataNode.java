@@ -17,14 +17,18 @@ public class DataNode {
 
     private void initialize() {
         this.shouldRun = true;
+
         this.offerService = new NameNodeOfferService();
         this.offerService.start();
+
+        DataNodeNIOServer nioServer = new DataNodeNIOServer();
+        nioServer.start();
     }
 
     private void run() {
         try {
             while (shouldRun) {
-                TimeUnit.SECONDS.sleep(10);
+                TimeUnit.SECONDS.sleep(1);
             }
         } catch (Exception e) {
             e.printStackTrace();
