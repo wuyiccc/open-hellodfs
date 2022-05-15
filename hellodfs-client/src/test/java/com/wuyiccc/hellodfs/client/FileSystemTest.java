@@ -38,6 +38,6 @@ public class FileSystemTest {
     }
 
     private static void testCreateFile() throws Exception {
-        fileSystem.upload(null, "/image/product/iphone001.jpg", 0L);
+        fileSystem.upload(null, "/image/product/iphone003.jpg", 312L);
     }
 }

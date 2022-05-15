@@ -50,7 +50,7 @@ public class DataNodeManager {
             Collections.sort(dataNodeInfoList);
 
             List<DataNodeInfo> selectedDataNodeList = new ArrayList<>();
-            if (selectedDataNodeList.size() >= 2) {
+            if (dataNodeInfoList.size() >= 2) {
                 selectedDataNodeList.add(dataNodeInfoList.get(0));
                 selectedDataNodeList.add(dataNodeInfoList.get(1));
                 // update dataNodeInfo file size
@@ -86,6 +86,7 @@ public class DataNodeManager {
                     if (!toRemoveDataNodes.isEmpty()) {
                         for (String toRemoveDataNode : toRemoveDataNodes) {
                             dataNodeMap.remove(toRemoveDataNode);
+                            System.out.println("datanodes: " + toRemoveDataNode + ", hearbeat is down....");
                         }
                     }
 

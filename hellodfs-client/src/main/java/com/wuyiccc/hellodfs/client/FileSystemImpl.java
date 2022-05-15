@@ -48,6 +48,9 @@ public class FileSystemImpl implements FileSystem {
         if (!createFile(filename)) {
             return false;
         }
+
+        String dataNodeListJson = allocateDataNodeList(filename, fileSize);
+        System.out.println(dataNodeListJson);
         return true;
     }
 
@@ -59,5 +62,13 @@ public class FileSystemImpl implements FileSystem {
             return true;
         }
         return false;
+    }
+
+    private String allocateDataNodeList(String filename, long fileSize) {
+        AllocateDataNodesRequest request = AllocateDataNodesRequest.newBuilder().setFilename(filename).setFileSize(fileSize)
+                .build();
+        AllocateDataNodesResponse response = this.nameNode.allocateDataNodes(request);
+
+        return response.getDataNodes();
     }
 }

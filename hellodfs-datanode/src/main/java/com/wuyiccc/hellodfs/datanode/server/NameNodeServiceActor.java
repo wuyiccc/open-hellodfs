@@ -58,8 +58,8 @@ public class NameNodeServiceActor {
             try {
                 System.out.println("send rpc request to namenode for register.......");
 
-                String ip = "127.0.0.1";
-                String hostname = "dfs-data-01";
+                String ip = "127.0.0.2";
+                String hostname = "dfs-data-02";
 
                 RegisterRequest request = RegisterRequest.newBuilder().setIp(ip).setHostname(hostname).build();
                 RegisterResponse response = nameNode.register(request);
@@ -83,8 +83,8 @@ public class NameNodeServiceActor {
                 while (true) {
                     System.out.println("send rpc request to namenode for heartbeat.......");
 
-                    String ip = "127.0.0.1";
-                    String hostname = "dfs-data-01";
+                    String ip = "127.0.0.2";
+                    String hostname = "dfs-data-02";
 
                     HeartBeatRequest request = HeartBeatRequest.newBuilder().setIp(ip).setHostname(hostname).build();
                     HeartBeatResponse response = nameNode.heartBeat(request);
