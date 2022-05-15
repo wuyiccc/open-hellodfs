@@ -19,14 +19,12 @@ import java.util.concurrent.TimeUnit;
  */
 public class NameNodeServiceActor {
 
-    private static final String NAME_NODE_HOSTNAME = "localhost";
-    private static final Integer NAME_NODE_PORT = 50070;
 
     private NameNodeServiceGrpc.NameNodeServiceBlockingStub nameNode;
 
 
     public NameNodeServiceActor() {
-        ManagedChannel channel = NettyChannelBuilder.forAddress(NAME_NODE_HOSTNAME, NAME_NODE_PORT).negotiationType(NegotiationType.PLAINTEXT).build();
+        ManagedChannel channel = NettyChannelBuilder.forAddress(DataNodeConfig.NAMENODE_HOSTNAME, DataNodeConfig.NAMENODE_PORT).negotiationType(NegotiationType.PLAINTEXT).build();
         this.nameNode = NameNodeServiceGrpc.newBlockingStub(channel);
     }
 
