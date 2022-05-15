@@ -14,13 +14,13 @@ import java.util.Iterator;
  */
 public class NIOClient {
 
-    public static void sendFile(byte[] file, long fileSize) {
+    public static void sendFile(String hostname, int nioPort, byte[] file, long fileSize) {
         SocketChannel channel = null;
         Selector selector = null;
         try {
             channel = SocketChannel.open();
             channel.configureBlocking(false);
-            channel.connect(new InetSocketAddress("localhost", 9000));
+            channel.connect(new InetSocketAddress(hostname, nioPort));
             selector = Selector.open();
             channel.register(selector, SelectionKey.OP_CONNECT);
 
@@ -46,6 +46,11 @@ public class NIOClient {
                             // set fileSize in transport stream header, the long type need 8 bytes
                             buffer.putLong(imageLength);
                             buffer.put(file);
+
+                            int sentData = channel.write(buffer);
+
+                            System.out.println("already sent: " + sentData + " bytes data");
+
                             channel.register(selector, SelectionKey.OP_READ);
                         }
                     } else if (key.isReadable()) {

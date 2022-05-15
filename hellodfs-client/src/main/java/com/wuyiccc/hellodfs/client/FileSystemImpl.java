@@ -1,5 +1,8 @@
 package com.wuyiccc.hellodfs.client;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.google.errorprone.annotations.Var;
 import com.wuyiccc.hellodfs.namenode.rpc.model.*;
 import com.wuyiccc.hellodfs.namenode.rpc.service.NameNodeServiceGrpc;
 import io.grpc.ManagedChannel;
@@ -51,7 +54,15 @@ public class FileSystemImpl implements FileSystem {
 
         String dataNodeListJson = allocateDataNodeList(filename, fileSize);
         System.out.println(dataNodeListJson);
-        NIOClient.sendFile(file, fileSize);
+
+        JSONArray dataNodeListArray = JSONArray.parseArray(dataNodeListJson);
+
+        for (int i = 0; i < dataNodeListArray.size(); i++) {
+            JSONObject dataNode = dataNodeListArray.getJSONObject(i);
+            String hostname = dataNode.getString("hostname");
+            int nioPort = dataNode.getIntValue("nioPort");
+            NIOClient.sendFile(hostname, nioPort, file, fileSize);
+        }
         return true;
     }
 
