@@ -19,10 +19,23 @@ public class DataNodeInfo implements Comparable<DataNodeInfo>{
 
     private long storedDataSize;
 
-    public DataNodeInfo(String ip, String hostname) {
+    private int nioPort;
+
+
+    public DataNodeInfo(String ip, String hostname, int nioPort) {
         this.ip = ip;
         this.hostname = hostname;
+        this.nioPort = nioPort;
+        this.lastHeartBeatTime = System.currentTimeMillis();
         this.storedDataSize = 0L;
+    }
+
+    public int getNioPort() {
+        return nioPort;
+    }
+
+    public void setNioPort(int nioPort) {
+        this.nioPort = nioPort;
     }
 
     public long getStoredDataSize() {

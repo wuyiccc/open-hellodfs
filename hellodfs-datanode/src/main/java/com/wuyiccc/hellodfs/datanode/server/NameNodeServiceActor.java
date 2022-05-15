@@ -58,10 +58,14 @@ public class NameNodeServiceActor {
             try {
                 System.out.println("send rpc request to namenode for register.......");
 
-                String ip = "127.0.0.2";
-                String hostname = "dfs-data-02";
+                String ip = DataNodeConfig.DATANODE_IP;
+                String hostname = DataNodeConfig.DATANODE_HOSTNAME;
 
-                RegisterRequest request = RegisterRequest.newBuilder().setIp(ip).setHostname(hostname).build();
+                RegisterRequest request = RegisterRequest.newBuilder()
+                        .setIp(ip)
+                        .setHostname(hostname)
+                        .setNioPort(DataNodeConfig.NIO_PORT)
+                        .build();
                 RegisterResponse response = nameNode.register(request);
 
                 System.out.println("register thread accept namenode response data" + response.getStatus());
@@ -83,8 +87,8 @@ public class NameNodeServiceActor {
                 while (true) {
                     System.out.println("send rpc request to namenode for heartbeat.......");
 
-                    String ip = "127.0.0.2";
-                    String hostname = "dfs-data-02";
+                    String ip = DataNodeConfig.DATANODE_IP;
+                    String hostname = DataNodeConfig.DATANODE_HOSTNAME;
 
                     HeartBeatRequest request = HeartBeatRequest.newBuilder().setIp(ip).setHostname(hostname).build();
                     HeartBeatResponse response = nameNode.heartBeat(request);

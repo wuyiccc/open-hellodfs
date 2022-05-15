@@ -19,10 +19,10 @@ public class DataNodeManager {
         new DataNodeAliveMonitor().start();
     }
 
-    public Boolean register(String ip, String hostname) {
-        DataNodeInfo dataNodeInfo = new DataNodeInfo(ip, hostname);
+    public Boolean register(String ip, String hostname, int nioPort) {
+        DataNodeInfo dataNodeInfo = new DataNodeInfo(ip, hostname, nioPort);
         dataNodeMap.put(ip + "-" + hostname, dataNodeInfo);
-        System.out.println("DataNode register ip= " + ip + ", hostname= " + hostname);
+        System.out.println("DataNode register ip= " + ip + ", hostname= " + hostname + ", nioPort=" + nioPort);
         return true;
     }
 

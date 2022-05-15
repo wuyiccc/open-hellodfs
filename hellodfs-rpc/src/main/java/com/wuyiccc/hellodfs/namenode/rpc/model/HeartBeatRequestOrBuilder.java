@@ -26,4 +26,9 @@ public interface HeartBeatRequestOrBuilder extends
    */
   com.google.protobuf.ByteString
       getHostnameBytes();
+
+  /**
+   * <code>optional int32 nioPort = 3;</code>
+   */
+  int getNioPort();
 }

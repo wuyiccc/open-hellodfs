@@ -17,6 +17,7 @@ public  final class RegisterRequest extends
   private RegisterRequest() {
     ip_ = "";
     hostname_ = "";
+    nioPort_ = 0;
   }
 
   @java.lang.Override
@@ -54,6 +55,11 @@ public  final class RegisterRequest extends
             java.lang.String s = input.readStringRequireUtf8();
 
             hostname_ = s;
+            break;
+          }
+          case 24: {
+
+            nioPort_ = input.readInt32();
             break;
           }
         }
@@ -147,6 +153,15 @@ public  final class RegisterRequest extends
     }
   }
 
+  public static final int NIOPORT_FIELD_NUMBER = 3;
+  private int nioPort_;
+  /**
+   * <code>optional int32 nioPort = 3;</code>
+   */
+  public int getNioPort() {
+    return nioPort_;
+  }
+
   private byte memoizedIsInitialized = -1;
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -165,6 +180,9 @@ public  final class RegisterRequest extends
     if (!getHostnameBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 2, hostname_);
     }
+    if (nioPort_ != 0) {
+      output.writeInt32(3, nioPort_);
+    }
   }
 
   public int getSerializedSize() {
@@ -177,6 +195,10 @@ public  final class RegisterRequest extends
     }
     if (!getHostnameBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, hostname_);
+    }
+    if (nioPort_ != 0) {
+      size += com.google.protobuf.CodedOutputStream
+        .computeInt32Size(3, nioPort_);
     }
     memoizedSize = size;
     return size;
@@ -198,6 +220,8 @@ public  final class RegisterRequest extends
         .equals(other.getIp());
     result = result && getHostname()
         .equals(other.getHostname());
+    result = result && (getNioPort()
+        == other.getNioPort());
     return result;
   }
 
@@ -212,6 +236,8 @@ public  final class RegisterRequest extends
     hash = (53 * hash) + getIp().hashCode();
     hash = (37 * hash) + HOSTNAME_FIELD_NUMBER;
     hash = (53 * hash) + getHostname().hashCode();
+    hash = (37 * hash) + NIOPORT_FIELD_NUMBER;
+    hash = (53 * hash) + getNioPort();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -334,6 +360,8 @@ public  final class RegisterRequest extends
 
       hostname_ = "";
 
+      nioPort_ = 0;
+
       return this;
     }
 
@@ -358,6 +386,7 @@ public  final class RegisterRequest extends
       com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest result = new com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest(this);
       result.ip_ = ip_;
       result.hostname_ = hostname_;
+      result.nioPort_ = nioPort_;
       onBuilt();
       return result;
     }
@@ -406,6 +435,9 @@ public  final class RegisterRequest extends
       if (!other.getHostname().isEmpty()) {
         hostname_ = other.hostname_;
         onChanged();
+      }
+      if (other.getNioPort() != 0) {
+        setNioPort(other.getNioPort());
       }
       onChanged();
       return this;
@@ -567,6 +599,32 @@ public  final class RegisterRequest extends
   checkByteStringIsUtf8(value);
       
       hostname_ = value;
+      onChanged();
+      return this;
+    }
+
+    private int nioPort_ ;
+    /**
+     * <code>optional int32 nioPort = 3;</code>
+     */
+    public int getNioPort() {
+      return nioPort_;
+    }
+    /**
+     * <code>optional int32 nioPort = 3;</code>
+     */
+    public Builder setNioPort(int value) {
+      
+      nioPort_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional int32 nioPort = 3;</code>
+     */
+    public Builder clearNioPort() {
+      
+      nioPort_ = 0;
       onChanged();
       return this;
     }

@@ -9,6 +9,7 @@ option java_outer_classname = "NameNodeRpcModel";
 message RegisterRequest {
   string ip = 1;
   string hostname = 2;
+  int32 nioPort = 3;
 }
 
 message RegisterResponse {
@@ -18,6 +19,7 @@ message RegisterResponse {
 message HeartBeatRequest {
   string ip = 1;
   string hostname = 2;
+  int32 nioPort = 3;
 }
 
 message HeartBeatResponse {
