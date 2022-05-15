@@ -41,7 +41,7 @@ public class DataNodeNIOServer extends Thread {
                 new Worker(queueList.get(i)).start();
             }
 
-            System.out.println("NIOServer is starting, begin to listen port：" + 9000);
+            System.out.println("NIOServer is starting, begin to listen port：" + DataNodeConfig.NIO_PORT);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -92,36 +92,6 @@ public class DataNodeNIOServer extends Thread {
             }
         }
     }
-
-    class CachedImage {
-
-        String filename;
-        /**
-         * full length
-         */
-        long imageLength;
-        /**
-         * already read length
-         */
-        long hasReadImageLength;
-
-        public CachedImage(String filename, long imageLength, long hasReadImageLength) {
-            this.filename = filename;
-            this.imageLength = imageLength;
-            this.hasReadImageLength = hasReadImageLength;
-        }
-
-
-        @Override
-        public String toString() {
-            return "CachedImage{" +
-                    "filename='" + filename + '\'' +
-                    ", imageLength=" + imageLength +
-                    ", hasReadImageLength=" + hasReadImageLength +
-                    '}';
-        }
-    }
-
 
     class Worker extends Thread {
 
@@ -241,5 +211,35 @@ public class DataNodeNIOServer extends Thread {
             }
         }
 
+    }
+
+
+    class CachedImage {
+
+        String filename;
+        /**
+         * full length
+         */
+        long imageLength;
+        /**
+         * already read length
+         */
+        long hasReadImageLength;
+
+        public CachedImage(String filename, long imageLength, long hasReadImageLength) {
+            this.filename = filename;
+            this.imageLength = imageLength;
+            this.hasReadImageLength = hasReadImageLength;
+        }
+
+
+        @Override
+        public String toString() {
+            return "CachedImage{" +
+                    "filename='" + filename + '\'' +
+                    ", imageLength=" + imageLength +
+                    ", hasReadImageLength=" + hasReadImageLength +
+                    '}';
+        }
     }
 }
