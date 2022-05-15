@@ -223,6 +223,15 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
     @Override
     public void allocateDataNodes(AllocateDataNodesRequest request, StreamObserver<AllocateDataNodesResponse> responseObserver) {
 
+        long fileSize = request.getFileSize();
+        List<DataNodeInfo> selectedDataNodeInfoList = this.dataNodeManager.allocateDataNodes(fileSize);
+
+        String selectedDataNodeInfoListJson = JSONArray.toJSONString(selectedDataNodeInfoList);
+
+        AllocateDataNodesResponse response = AllocateDataNodesResponse.newBuilder().setDataNodes(selectedDataNodeInfoListJson).build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
     }
 
 

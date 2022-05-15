@@ -1,12 +1,14 @@
 package com.wuyiccc.hellodfs.namenode.server;
 
+import java.net.SocketAddress;
+
 /**
  * desc datanode info
  *
  * @author wuyiccc
  * @date 2022/5/1 19:20
  */
-public class DataNodeInfo {
+public class DataNodeInfo implements Comparable<DataNodeInfo>{
 
 
     private String ip;
@@ -53,5 +55,20 @@ public class DataNodeInfo {
 
     public void setLastHeartBeatTime(long lastHeartBeatTime) {
         this.lastHeartBeatTime = lastHeartBeatTime;
+    }
+
+    public void addStoredDataSize(long storedDataSize) {
+        this.storedDataSize += storedDataSize;
+    }
+
+    @Override
+    public int compareTo(DataNodeInfo o) {
+        if (this.storedDataSize - o.getStoredDataSize() > 0) {
+            return 1;
+        } else if (this.storedDataSize - o.getStoredDataSize() < 0) {
+            return -1;
+        } else {
+            return 0;
+        }
     }
 }

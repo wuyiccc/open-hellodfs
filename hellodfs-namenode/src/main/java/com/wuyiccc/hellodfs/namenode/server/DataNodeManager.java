@@ -1,9 +1,6 @@
 package com.wuyiccc.hellodfs.namenode.server;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -37,6 +34,31 @@ public class DataNodeManager {
             return true;
         }
         return false;
+    }
+
+    /**
+     * get the two smallest dataNodes and update the storedDataSize
+     */
+    public List<DataNodeInfo> allocateDataNodes(long fileSize) {
+        synchronized (this) {
+            List<DataNodeInfo> dataNodeInfoList = new ArrayList<>();
+            for (DataNodeInfo dataNodeInfo : dataNodeMap.values()) {
+                dataNodeInfoList.add(dataNodeInfo);
+            }
+
+            // sort min to max
+            Collections.sort(dataNodeInfoList);
+
+            List<DataNodeInfo> selectedDataNodeList = new ArrayList<>();
+            if (selectedDataNodeList.size() >= 2) {
+                selectedDataNodeList.add(dataNodeInfoList.get(0));
+                selectedDataNodeList.add(dataNodeInfoList.get(1));
+                // update dataNodeInfo file size
+                dataNodeInfoList.get(0).addStoredDataSize(fileSize);
+                dataNodeInfoList.get(1).addStoredDataSize(fileSize);
+            }
+            return  selectedDataNodeList;
+        }
     }
 
     /**
