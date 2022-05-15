@@ -61,7 +61,7 @@ public class FileSystemImpl implements FileSystem {
             JSONObject dataNode = dataNodeListArray.getJSONObject(i);
             String hostname = dataNode.getString("hostname");
             int nioPort = dataNode.getIntValue("nioPort");
-            NIOClient.sendFile(hostname, nioPort, file, fileSize);
+            NIOClient.sendFile(hostname, nioPort, file, filename, fileSize);
         }
         return true;
     }

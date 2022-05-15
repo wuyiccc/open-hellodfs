@@ -14,7 +14,7 @@ import java.util.Iterator;
  */
 public class NIOClient {
 
-    public static void sendFile(String hostname, int nioPort, byte[] file, long fileSize) {
+    public static void sendFile(String hostname, int nioPort, byte[] file, String filename, long fileSize) {
         SocketChannel channel = null;
         Selector selector = null;
         try {
@@ -40,11 +40,16 @@ public class NIOClient {
                         if (channel.isConnectionPending()) {
                             channel.finishConnect();
 
-                            long imageLength = fileSize;
+                            byte[] filenameBytes = filename.getBytes();
 
-                            ByteBuffer buffer = ByteBuffer.allocate((int) imageLength * 2);
+                            ByteBuffer buffer = ByteBuffer.allocate((int) fileSize * 2 + filenameBytes.length);
+
+                            // set filename
+                            buffer.putInt(filenameBytes.length);
+                            buffer.put(filenameBytes);
+
                             // set fileSize in transport stream header, the long type need 8 bytes
-                            buffer.putLong(imageLength);
+                            buffer.putLong(fileSize);
                             buffer.put(file);
 
                             int sentData = channel.write(buffer);
