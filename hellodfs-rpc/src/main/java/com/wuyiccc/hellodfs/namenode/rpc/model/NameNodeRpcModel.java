@@ -94,6 +94,16 @@ public final class NameNodeRpcModel {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_wuyiccc_hellodfs_namenode_rpc_AllocateDataNodesResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_wuyiccc_hellodfs_namenode_rpc_InformReplicaReceivedRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_wuyiccc_hellodfs_namenode_rpc_InformReplicaReceivedRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_wuyiccc_hellodfs_namenode_rpc_InformReplicaReceivedResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_wuyiccc_hellodfs_namenode_rpc_InformReplicaReceivedResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -122,8 +132,12 @@ public final class NameNodeRpcModel {
       "status\030\001 \001(\005\">\n\030AllocateDataNodesRequest" +
       "\022\020\n\010filename\030\001 \001(\t\022\020\n\010fileSize\030\002 \001(\003\".\n\031" +
       "AllocateDataNodesResponse\022\021\n\tdataNodes\030\001" +
-      " \001(\tB=\n\'com.wuyiccc.hellodfs.namenode.rp",
-      "c.modelB\020NameNodeRpcModelP\001b\006proto3"
+      " \001(\t\"N\n\034InformReplicaReceivedRequest\022\n\n\002",
+      "ip\030\001 \001(\t\022\020\n\010hostname\030\002 \001(\t\022\020\n\010filename\030\003" +
+      " \001(\t\"/\n\035InformReplicaReceivedResponse\022\016\n" +
+      "\006status\030\001 \001(\005B=\n\'com.wuyiccc.hellodfs.na" +
+      "menode.rpc.modelB\020NameNodeRpcModelP\001b\006pr" +
+      "oto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -233,6 +247,18 @@ public final class NameNodeRpcModel {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_wuyiccc_hellodfs_namenode_rpc_AllocateDataNodesResponse_descriptor,
         new java.lang.String[] { "DataNodes", });
+    internal_static_com_wuyiccc_hellodfs_namenode_rpc_InformReplicaReceivedRequest_descriptor =
+      getDescriptor().getMessageTypes().get(16);
+    internal_static_com_wuyiccc_hellodfs_namenode_rpc_InformReplicaReceivedRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_wuyiccc_hellodfs_namenode_rpc_InformReplicaReceivedRequest_descriptor,
+        new java.lang.String[] { "Ip", "Hostname", "Filename", });
+    internal_static_com_wuyiccc_hellodfs_namenode_rpc_InformReplicaReceivedResponse_descriptor =
+      getDescriptor().getMessageTypes().get(17);
+    internal_static_com_wuyiccc_hellodfs_namenode_rpc_InformReplicaReceivedResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_wuyiccc_hellodfs_namenode_rpc_InformReplicaReceivedResponse_descriptor,
+        new java.lang.String[] { "Status", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

@@ -234,6 +234,11 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
         responseObserver.onCompleted();
     }
 
+    @Override
+    public void informReplicaReceived(InformReplicaReceivedRequest request, StreamObserver<InformReplicaReceivedResponse> responseObserver) {
+
+    }
+
 
     /**
      * @param flushedTxId startTxId_endTxId
