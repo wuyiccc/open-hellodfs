@@ -52,7 +52,11 @@ public class NameNodeRpcClient {
      * notify the master that it has received a replica data
      */
     public void informReplicaReceived(String filename) throws Exception {
-        InformReplicaReceivedRequest request = InformReplicaReceivedRequest.newBuilder().setFilename(filename).build();
+        InformReplicaReceivedRequest request = InformReplicaReceivedRequest.newBuilder()
+                .setHostname(DataNodeConfig.DATANODE_HOSTNAME)
+                .setIp(DataNodeConfig.DATANODE_IP)
+                .setFilename(filename)
+                .build();
         this.nameNode.informReplicaReceived(request);
     }
 

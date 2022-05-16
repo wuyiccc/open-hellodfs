@@ -61,6 +61,10 @@ public class DataNodeManager {
         }
     }
 
+    public DataNodeInfo getDataNodeInfo(String ip, String hostname) {
+        return dataNodeMap.get(ip + "-" + hostname);
+    }
+
     /**
      * check datanode is alive
      */

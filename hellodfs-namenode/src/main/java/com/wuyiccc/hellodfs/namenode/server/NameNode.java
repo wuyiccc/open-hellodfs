@@ -28,9 +28,9 @@ public class NameNode {
     /**
      * initialize namenode
      */
-    private void initialize() {
-        this.fsNameSystem = new FSNameSystem();
+    public NameNode() {
         this.dataNodeManager = new DataNodeManager();
+        this.fsNameSystem = new FSNameSystem(this.dataNodeManager);
         this.nameNodeRpcServer = new NameNodeRpcServer(this.fsNameSystem, this.dataNodeManager);
         this.fsImageUploadServer = new FSImageUploadServer();
     }
@@ -44,7 +44,6 @@ public class NameNode {
 
     public static void main(String[] args) throws Exception {
         NameNode nameNode = new NameNode();
-        nameNode.initialize();
         nameNode.start();
     }
 

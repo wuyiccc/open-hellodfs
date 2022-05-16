@@ -217,6 +217,7 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
 
     /**
      * allocate dataNodes for file upload
+     *
      * @param request
      * @param responseObserver
      */
@@ -237,6 +238,25 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
     @Override
     public void informReplicaReceived(InformReplicaReceivedRequest request, StreamObserver<InformReplicaReceivedResponse> responseObserver) {
 
+        String hostname = request.getHostname();
+        String ip = request.getIp();
+        String filename = request.getFilename();
+
+        InformReplicaReceivedResponse response = null;
+
+        try {
+            this.fsNameSystem.addReceivedReplica(hostname, ip, filename);
+            response = InformReplicaReceivedResponse.newBuilder()
+                    .setStatus(STATUS_SUCCESS)
+                    .build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            response = InformReplicaReceivedResponse.newBuilder()
+                    .setStatus(STATUS_FAILURE)
+                    .build();
+        }
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
     }
 
 

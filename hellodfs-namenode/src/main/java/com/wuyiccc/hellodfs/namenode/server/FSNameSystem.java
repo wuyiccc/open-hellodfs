@@ -2,6 +2,7 @@ package com.wuyiccc.hellodfs.namenode.server;
 
 import com.alibaba.fastjson.JSONObject;
 
+import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -11,9 +12,7 @@ import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 /**
  * The core components responsible for managing metadata
@@ -34,7 +33,11 @@ public class FSNameSystem {
      */
     private long checkpointTxId = 0;
 
-    public FSNameSystem() {
+    private Map<String, List<DataNodeInfo>> replicasByFilenameMap = new HashMap<>();
+
+    private DataNodeManager dataNodeManager;
+
+    public FSNameSystem(DataNodeManager dataNodeManager) {
         this.fsDirectory = new FSDirectory();
         this.fsEditLog = new FSEditLog(this);
         recoverNamespace();
@@ -281,4 +284,16 @@ public class FSNameSystem {
     }
 
 
+    public void addReceivedReplica(String hostname, String ip, String filename) {
+       synchronized (this.replicasByFilenameMap) {
+           List<DataNodeInfo> replicas = replicasByFilenameMap.get(filename);
+           if (replicas == null) {
+               replicas = new ArrayList<>();
+               replicasByFilenameMap.put(filename, replicas);
+           }
+
+           DataNodeInfo dataNodeInfo = this.dataNodeManager.getDataNodeInfo(ip, hostname);
+           replicas.add(dataNodeInfo);
+       }
+    }
 }
