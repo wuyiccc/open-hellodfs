@@ -12,16 +12,16 @@ public class DataNode {
 
     private volatile Boolean shouldRun;
 
-    private NameNodeOfferService offerService;
 
+    private NameNodeRpcClient nameNodeRpcClient;
 
-    private void initialize() {
+    private void initialize() throws Exception{
         this.shouldRun = true;
 
-        this.offerService = new NameNodeOfferService();
-        this.offerService.start();
+        this.nameNodeRpcClient = new NameNodeRpcClient();
+        this.nameNodeRpcClient.start();
 
-        DataNodeNIOServer nioServer = new DataNodeNIOServer();
+        DataNodeNIOServer nioServer = new DataNodeNIOServer(this.nameNodeRpcClient);
         nioServer.start();
     }
 
@@ -36,7 +36,7 @@ public class DataNode {
     }
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
 
         DataNode dataNode = new DataNode();
         dataNode.initialize();

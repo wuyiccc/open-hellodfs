@@ -1,6 +1,8 @@
 package com.wuyiccc.hellodfs.datanode.server;
 
 
+import com.wuyiccc.hellodfs.namenode.rpc.service.NameNodeServiceGrpc;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -20,11 +22,15 @@ public class DataNodeNIOServer extends Thread {
     private List<LinkedBlockingQueue<SelectionKey>> queueList = new ArrayList<>();
     private Map<String, CachedImage> cachedImageMap = new HashMap<>();
 
+    private NameNodeRpcClient nameNodeRpcClient;
 
-    public DataNodeNIOServer() {
+
+    public DataNodeNIOServer(NameNodeRpcClient nameNodeRpcClient) {
         ServerSocketChannel serverSocketChannel = null;
 
         try {
+            this.nameNodeRpcClient = nameNodeRpcClient;
+
             selector = Selector.open();
 
             serverSocketChannel = ServerSocketChannel.open();
@@ -121,7 +127,7 @@ public class DataNodeNIOServer extends Thread {
 
                     ByteBuffer buffer = ByteBuffer.allocate(10 * 1024);
                     // get filename from channel
-                    String filename = getFilename(channel, buffer);
+                    Filename filename = getFilename(channel, buffer);
                     System.out.println("parse filename from channel: " + filename);
                     // if filename is null, skip read
                     if (filename == null) {
@@ -137,7 +143,7 @@ public class DataNodeNIOServer extends Thread {
                     System.out.println("hasReadImageLength: " + hasReadImageLength);
 
 
-                    FileOutputStream imageOut = new FileOutputStream(filename);
+                    FileOutputStream imageOut = new FileOutputStream(filename.absoluteFilename);
                     FileChannel imageChannel = imageOut.getChannel();
                     imageChannel.position(imageChannel.size());
 
@@ -166,6 +172,7 @@ public class DataNodeNIOServer extends Thread {
                         channel.write(outBuffer);
                         cachedImageMap.remove(remoteAddr);
                         System.out.println("file read completed, return to client success");
+                        nameNodeRpcClient.informReplicaReceived(filename.relativeFilename);
                     } else {
                         // cache the file
                         CachedImage cachedImage = new CachedImage(filename, imageLength, hasReadImageLength);
@@ -187,27 +194,29 @@ public class DataNodeNIOServer extends Thread {
         }
     }
 
-    private String getFilename(SocketChannel channel, ByteBuffer buffer) throws Exception {
-        String filename = null;
+    private Filename getFilename(SocketChannel channel, ByteBuffer buffer) throws Exception {
+        Filename filename = new Filename();
         String remoteAddr = channel.getRemoteAddress().toString();
 
-        // try to get filename from cache
-        if (this.cachedImageMap.containsKey(remoteAddr)) {
-            filename = this.cachedImageMap.get(remoteAddr).filename;
+        if (cachedImageMap.containsKey(remoteAddr)) {
+            filename = cachedImageMap.get(remoteAddr).filename;
         } else {
-            filename = getFilenameFromChannel(channel, buffer);
-            if (filename == null) {
+            // relative file path
+            String relativeFilename = getRelativeFilename(channel, buffer);
+            if (relativeFilename == null) {
                 return null;
             }
             // /image/product/iphone.jpg
-            String[] filenameSplit = filename.split("/");
+            filename.relativeFilename = relativeFilename;
+
+            String[] relativeFilenameSplit = relativeFilename.split("/");
 
             String dirPath = DataNodeConfig.DATA_DIR;
-            for (int i = 0; i < filenameSplit.length - 1; i++) {
+            for (int i = 0; i < relativeFilenameSplit.length - 1; i++) {
                 if (i == 0) {
                     continue;
                 }
-                dirPath += "\\" + filenameSplit[i];
+                dirPath += "\\" + relativeFilenameSplit[i];
             }
 
             File dir = new File(dirPath);
@@ -215,7 +224,8 @@ public class DataNodeNIOServer extends Thread {
                 dir.mkdirs();
             }
 
-            filename = dirPath + "\\" + filenameSplit[filenameSplit.length - 1];
+            String absoluteFilename = dirPath + "\\" + relativeFilenameSplit[relativeFilenameSplit.length - 1];
+            filename.absoluteFilename = absoluteFilename;
         }
 
         return filename;
@@ -224,25 +234,22 @@ public class DataNodeNIOServer extends Thread {
     /**
      * get filename from channel
      */
-    private String getFilenameFromChannel(SocketChannel channel, ByteBuffer buffer) throws Exception {
+    private String getRelativeFilename(SocketChannel channel, ByteBuffer buffer) throws Exception {
         int len = channel.read(buffer);
         if (len > 0) {
-            byte[] filenameLengthBytes = new byte[4];
-            // get filename length from buffer, set into filenameLengthBytes
-            // int(4 bytes)
             buffer.flip();
+
+            // int
+            byte[] filenameLengthBytes = new byte[4];
             buffer.get(filenameLengthBytes, 0, 4);
 
             ByteBuffer filenameLengthBuffer = ByteBuffer.allocate(4);
             filenameLengthBuffer.put(filenameLengthBytes);
             filenameLengthBuffer.flip();
-            // convert byte data to int
             int filenameLength = filenameLengthBuffer.getInt();
 
             byte[] filenameBytes = new byte[filenameLength];
-            // get filename from buffer, and set into filenameBytes
             buffer.get(filenameBytes, 0, filenameLength);
-            // convert byte data to string
             String filename = new String(filenameBytes);
             return filename;
         }
@@ -278,30 +285,46 @@ public class DataNodeNIOServer extends Thread {
         return hasReadImageLength;
     }
 
+    class Filename {
+
+        String relativeFilename;
+
+        String absoluteFilename;
+
+        @Override
+        public String toString() {
+            return "Filename{" +
+                    "relativeFilename='" + relativeFilename + '\'' +
+                    ", absoluteFilename='" + absoluteFilename + '\'' +
+                    '}';
+        }
+    }
 
     class CachedImage {
 
-        String filename;
+        Filename filename;
+
         /**
          * full length
          */
         long imageLength;
+
         /**
          * already read length
          */
         long hasReadImageLength;
 
-        public CachedImage(String filename, long imageLength, long hasReadImageLength) {
+
+        public CachedImage(Filename filename, long imageLength, long hasReadImageLength) {
             this.filename = filename;
             this.imageLength = imageLength;
             this.hasReadImageLength = hasReadImageLength;
         }
 
-
         @Override
         public String toString() {
             return "CachedImage{" +
-                    "filename='" + filename + '\'' +
+                    "filename=" + filename +
                     ", imageLength=" + imageLength +
                     ", hasReadImageLength=" + hasReadImageLength +
                     '}';

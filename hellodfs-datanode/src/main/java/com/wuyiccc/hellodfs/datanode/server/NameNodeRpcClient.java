@@ -1,9 +1,6 @@
 package com.wuyiccc.hellodfs.datanode.server;
 
-import com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatRequest;
-import com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse;
-import com.wuyiccc.hellodfs.namenode.rpc.model.RegisterRequest;
-import com.wuyiccc.hellodfs.namenode.rpc.model.RegisterResponse;
+import com.wuyiccc.hellodfs.namenode.rpc.model.*;
 import com.wuyiccc.hellodfs.namenode.rpc.service.NameNodeServiceGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.NegotiationType;
@@ -17,15 +14,21 @@ import java.util.concurrent.TimeUnit;
  * @author wuyiccc
  * @date 2022/4/30 20:23
  */
-public class NameNodeServiceActor {
+public class NameNodeRpcClient {
 
 
     private NameNodeServiceGrpc.NameNodeServiceBlockingStub nameNode;
 
 
-    public NameNodeServiceActor() {
+    public NameNodeRpcClient() {
         ManagedChannel channel = NettyChannelBuilder.forAddress(DataNodeConfig.NAMENODE_HOSTNAME, DataNodeConfig.NAMENODE_PORT).negotiationType(NegotiationType.PLAINTEXT).build();
         this.nameNode = NameNodeServiceGrpc.newBlockingStub(channel);
+    }
+
+
+    public void start() throws Exception {
+        register();
+        startHeartBeat();
     }
 
     /**
@@ -43,6 +46,14 @@ public class NameNodeServiceActor {
      */
     public void startHeartBeat() {
         new HeartBeatThread().start();
+    }
+
+    /**
+     * notify the master that it has received a replica data
+     */
+    public void informReplicaReceived(String filename) throws Exception {
+        InformReplicaReceivedRequest request = InformReplicaReceivedRequest.newBuilder().setFilename(filename).build();
+        this.nameNode.informReplicaReceived(request);
     }
 
     /**
