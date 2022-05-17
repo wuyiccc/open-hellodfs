@@ -106,7 +106,7 @@ public class NameNodeRpcClient {
                     HeartBeatRequest request = HeartBeatRequest.newBuilder().setIp(ip).setHostname(hostname).build();
                     HeartBeatResponse response = nameNode.heartBeat(request);
 
-                    System.out.println("hearbeat thread accept namnode response data: " + response.getStatus());
+                    System.out.println("heartbeat thread accept namenode response data: " + response.getStatus());
 
                     TimeUnit.SECONDS.sleep(30);
                 }
