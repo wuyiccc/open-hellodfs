@@ -259,6 +259,11 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
         responseObserver.onCompleted();
     }
 
+    @Override
+    public void reportAllStorageInfo(ReportAllStorageInfoRequest request, StreamObserver<ReportAllStorageInfoResponse> responseObserver) {
+
+    }
+
 
     /**
      * @param flushedTxId startTxId_endTxId

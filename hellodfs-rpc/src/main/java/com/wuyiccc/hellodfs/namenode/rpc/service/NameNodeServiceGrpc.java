@@ -102,6 +102,15 @@ public class NameNodeServiceGrpc {
               "com.wuyiccc.hellodfs.namenode.rpc.NameNodeService", "informReplicaReceived"),
           io.grpc.protobuf.ProtoUtils.marshaller(com.wuyiccc.hellodfs.namenode.rpc.model.InformReplicaReceivedRequest.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(com.wuyiccc.hellodfs.namenode.rpc.model.InformReplicaReceivedResponse.getDefaultInstance()));
+  @io.grpc.ExperimentalApi
+  public static final io.grpc.MethodDescriptor<com.wuyiccc.hellodfs.namenode.rpc.model.ReportAllStorageInfoRequest,
+      com.wuyiccc.hellodfs.namenode.rpc.model.ReportAllStorageInfoResponse> METHOD_REPORT_ALL_STORAGE_INFO =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.UNARY,
+          generateFullMethodName(
+              "com.wuyiccc.hellodfs.namenode.rpc.NameNodeService", "reportAllStorageInfo"),
+          io.grpc.protobuf.ProtoUtils.marshaller(com.wuyiccc.hellodfs.namenode.rpc.model.ReportAllStorageInfoRequest.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(com.wuyiccc.hellodfs.namenode.rpc.model.ReportAllStorageInfoResponse.getDefaultInstance()));
 
   public static NameNodeServiceStub newStub(io.grpc.Channel channel) {
     return new NameNodeServiceStub(channel);
@@ -145,6 +154,9 @@ public class NameNodeServiceGrpc {
 
     public void informReplicaReceived(com.wuyiccc.hellodfs.namenode.rpc.model.InformReplicaReceivedRequest request,
         io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.InformReplicaReceivedResponse> responseObserver);
+
+    public void reportAllStorageInfo(com.wuyiccc.hellodfs.namenode.rpc.model.ReportAllStorageInfoRequest request,
+        io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.ReportAllStorageInfoResponse> responseObserver);
   }
 
   public static interface NameNodeServiceBlockingClient {
@@ -166,6 +178,8 @@ public class NameNodeServiceGrpc {
     public com.wuyiccc.hellodfs.namenode.rpc.model.AllocateDataNodesResponse allocateDataNodes(com.wuyiccc.hellodfs.namenode.rpc.model.AllocateDataNodesRequest request);
 
     public com.wuyiccc.hellodfs.namenode.rpc.model.InformReplicaReceivedResponse informReplicaReceived(com.wuyiccc.hellodfs.namenode.rpc.model.InformReplicaReceivedRequest request);
+
+    public com.wuyiccc.hellodfs.namenode.rpc.model.ReportAllStorageInfoResponse reportAllStorageInfo(com.wuyiccc.hellodfs.namenode.rpc.model.ReportAllStorageInfoRequest request);
   }
 
   public static interface NameNodeServiceFutureClient {
@@ -196,6 +210,9 @@ public class NameNodeServiceGrpc {
 
     public com.google.common.util.concurrent.ListenableFuture<com.wuyiccc.hellodfs.namenode.rpc.model.InformReplicaReceivedResponse> informReplicaReceived(
         com.wuyiccc.hellodfs.namenode.rpc.model.InformReplicaReceivedRequest request);
+
+    public com.google.common.util.concurrent.ListenableFuture<com.wuyiccc.hellodfs.namenode.rpc.model.ReportAllStorageInfoResponse> reportAllStorageInfo(
+        com.wuyiccc.hellodfs.namenode.rpc.model.ReportAllStorageInfoRequest request);
   }
 
   public static class NameNodeServiceStub extends io.grpc.stub.AbstractStub<NameNodeServiceStub>
@@ -277,6 +294,13 @@ public class NameNodeServiceGrpc {
       asyncUnaryCall(
           getChannel().newCall(METHOD_INFORM_REPLICA_RECEIVED, getCallOptions()), request, responseObserver);
     }
+
+    @java.lang.Override
+    public void reportAllStorageInfo(com.wuyiccc.hellodfs.namenode.rpc.model.ReportAllStorageInfoRequest request,
+        io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.ReportAllStorageInfoResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_REPORT_ALL_STORAGE_INFO, getCallOptions()), request, responseObserver);
+    }
   }
 
   public static class NameNodeServiceBlockingStub extends io.grpc.stub.AbstractStub<NameNodeServiceBlockingStub>
@@ -348,6 +372,12 @@ public class NameNodeServiceGrpc {
     public com.wuyiccc.hellodfs.namenode.rpc.model.InformReplicaReceivedResponse informReplicaReceived(com.wuyiccc.hellodfs.namenode.rpc.model.InformReplicaReceivedRequest request) {
       return blockingUnaryCall(
           getChannel(), METHOD_INFORM_REPLICA_RECEIVED, getCallOptions(), request);
+    }
+
+    @java.lang.Override
+    public com.wuyiccc.hellodfs.namenode.rpc.model.ReportAllStorageInfoResponse reportAllStorageInfo(com.wuyiccc.hellodfs.namenode.rpc.model.ReportAllStorageInfoRequest request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_REPORT_ALL_STORAGE_INFO, getCallOptions(), request);
     }
   }
 
@@ -430,6 +460,13 @@ public class NameNodeServiceGrpc {
       return futureUnaryCall(
           getChannel().newCall(METHOD_INFORM_REPLICA_RECEIVED, getCallOptions()), request);
     }
+
+    @java.lang.Override
+    public com.google.common.util.concurrent.ListenableFuture<com.wuyiccc.hellodfs.namenode.rpc.model.ReportAllStorageInfoResponse> reportAllStorageInfo(
+        com.wuyiccc.hellodfs.namenode.rpc.model.ReportAllStorageInfoRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_REPORT_ALL_STORAGE_INFO, getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_REGISTER = 0;
@@ -441,6 +478,7 @@ public class NameNodeServiceGrpc {
   private static final int METHODID_CREATE = 6;
   private static final int METHODID_ALLOCATE_DATA_NODES = 7;
   private static final int METHODID_INFORM_REPLICA_RECEIVED = 8;
+  private static final int METHODID_REPORT_ALL_STORAGE_INFO = 9;
 
   private static class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -493,6 +531,10 @@ public class NameNodeServiceGrpc {
         case METHODID_INFORM_REPLICA_RECEIVED:
           serviceImpl.informReplicaReceived((com.wuyiccc.hellodfs.namenode.rpc.model.InformReplicaReceivedRequest) request,
               (io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.InformReplicaReceivedResponse>) responseObserver);
+          break;
+        case METHODID_REPORT_ALL_STORAGE_INFO:
+          serviceImpl.reportAllStorageInfo((com.wuyiccc.hellodfs.namenode.rpc.model.ReportAllStorageInfoRequest) request,
+              (io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.ReportAllStorageInfoResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -575,6 +617,13 @@ public class NameNodeServiceGrpc {
               com.wuyiccc.hellodfs.namenode.rpc.model.InformReplicaReceivedRequest,
               com.wuyiccc.hellodfs.namenode.rpc.model.InformReplicaReceivedResponse>(
                 serviceImpl, METHODID_INFORM_REPLICA_RECEIVED)))
+        .addMethod(
+          METHOD_REPORT_ALL_STORAGE_INFO,
+          asyncUnaryCall(
+            new MethodHandlers<
+              com.wuyiccc.hellodfs.namenode.rpc.model.ReportAllStorageInfoRequest,
+              com.wuyiccc.hellodfs.namenode.rpc.model.ReportAllStorageInfoResponse>(
+                serviceImpl, METHODID_REPORT_ALL_STORAGE_INFO)))
         .build();
   }
 }
