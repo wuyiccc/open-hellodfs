@@ -58,9 +58,15 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
      */
     @Override
     public void register(RegisterRequest request, StreamObserver<RegisterResponse> responseObserver) {
-        dataNodeManager.register(request.getIp(), request.getHostname(), request.getNioPort());
+        Boolean res = dataNodeManager.register(request.getIp(), request.getHostname(), request.getNioPort());
 
-        RegisterResponse response = RegisterResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
+        RegisterResponse response = null;
+
+        if (res) {
+            response = RegisterResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
+        } else {
+            response = RegisterResponse.newBuilder().setStatus(STATUS_FAILURE).build();
+        }
 
         responseObserver.onNext(response);
         responseObserver.onCompleted();

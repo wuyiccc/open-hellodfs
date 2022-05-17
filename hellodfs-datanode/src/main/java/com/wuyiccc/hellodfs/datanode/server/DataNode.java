@@ -20,16 +20,21 @@ public class DataNode {
         this.shouldRun = true;
 
         this.nameNodeRpcClient = new NameNodeRpcClient();
-        this.nameNodeRpcClient.register();
+        Boolean res = this.nameNodeRpcClient.register();
         this.nameNodeRpcClient.startHeartBeat();
 
-        StorageInfo storageInfo = getStorageInfo();
-        if (storageInfo != null) {
-            this.nameNodeRpcClient.reportAllStorageInfo(storageInfo);
-        }
+        if (res) {
+            StorageInfo storageInfo = getStorageInfo();
+            if (storageInfo != null) {
+                this.nameNodeRpcClient.reportAllStorageInfo(storageInfo);
+            }
 
-        DataNodeNIOServer nioServer = new DataNodeNIOServer(this.nameNodeRpcClient);
-        nioServer.start();
+            DataNodeNIOServer nioServer = new DataNodeNIOServer(this.nameNodeRpcClient);
+            nioServer.start();
+        } else {
+            System.out.println("register to namenode failure");
+            System.exit(1);
+        }
     }
 
     private StorageInfo getStorageInfo() {

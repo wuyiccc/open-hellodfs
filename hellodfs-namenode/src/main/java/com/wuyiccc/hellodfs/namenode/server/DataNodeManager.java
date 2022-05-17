@@ -20,6 +20,12 @@ public class DataNodeManager {
     }
 
     public Boolean register(String ip, String hostname, int nioPort) {
+
+        // if dataNodeMap contains this datanode, this means the datanode has been registered before and does not need to be re-registered
+        if (this.dataNodeMap.containsKey(ip + "-" + hostname)) {
+            return false;
+        }
+
         DataNodeInfo dataNodeInfo = new DataNodeInfo(ip, hostname, nioPort);
         dataNodeMap.put(ip + "-" + hostname, dataNodeInfo);
         System.out.println("DataNode register ip= " + ip + ", hostname= " + hostname + ", nioPort=" + nioPort);

@@ -32,7 +32,7 @@ public class NameNodeRpcClient {
     /**
      * send register request to NameNode which bind
      */
-    public void register() throws Exception {
+    public Boolean register() throws Exception {
 
         System.out.println("send rpc request to namenode for register.......");
 
@@ -44,6 +44,12 @@ public class NameNodeRpcClient {
         RegisterResponse response = this.nameNode.register(request);
 
         System.out.println("register thread accept namenode response data" + response.getStatus());
+
+        if (response.getStatus() == 1) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
