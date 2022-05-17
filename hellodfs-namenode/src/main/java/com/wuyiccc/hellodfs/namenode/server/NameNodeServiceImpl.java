@@ -262,6 +262,23 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
     @Override
     public void reportAllStorageInfo(ReportAllStorageInfoRequest request, StreamObserver<ReportAllStorageInfoResponse> responseObserver) {
 
+        String ip = request.getIp();
+        String hostname = request.getHostname();
+        String filenamesJson = request.getFilenames();
+        Long storedDataSize = request.getStoredDataSize();
+
+        this.dataNodeManager.setStoredDataSize(ip, hostname, storedDataSize);
+
+        JSONArray filenameJSONArray = JSONArray.parseArray(filenamesJson);
+
+        for (int i = 0; i < filenameJSONArray.size(); i++) {
+            String filename = filenameJSONArray.getString(i);
+            this.fsNameSystem.addReceivedReplica(hostname, ip, filename);
+        }
+
+        ReportAllStorageInfoResponse response = ReportAllStorageInfoResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
     }
 
 

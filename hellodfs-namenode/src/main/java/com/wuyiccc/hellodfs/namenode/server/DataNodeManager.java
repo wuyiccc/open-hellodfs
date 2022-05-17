@@ -61,8 +61,15 @@ public class DataNodeManager {
         }
     }
 
+
     public DataNodeInfo getDataNodeInfo(String ip, String hostname) {
         return dataNodeMap.get(ip + "-" + hostname);
+    }
+
+    public void setStoredDataSize(String ip, String hostname, Long storedDataSize) {
+        // datanode registration takes precedence over report
+        DataNodeInfo dataNodeInfo = dataNodeMap.get(ip + "-" + hostname);
+        dataNodeInfo.setStoredDataSize(storedDataSize);
     }
 
     /**
