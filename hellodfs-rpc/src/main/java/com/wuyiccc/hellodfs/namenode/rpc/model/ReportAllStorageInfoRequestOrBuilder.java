@@ -28,14 +28,14 @@ public interface ReportAllStorageInfoRequestOrBuilder extends
       getHostnameBytes();
 
   /**
-   * <code>optional string filenames = 3;</code>
+   * <code>optional string filenameListJson = 3;</code>
    */
-  java.lang.String getFilenames();
+  java.lang.String getFilenameListJson();
   /**
-   * <code>optional string filenames = 3;</code>
+   * <code>optional string filenameListJson = 3;</code>
    */
   com.google.protobuf.ByteString
-      getFilenamesBytes();
+      getFilenameListJsonBytes();
 
   /**
    * <code>optional int64 storedDataSize = 4;</code>

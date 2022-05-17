@@ -264,12 +264,12 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
 
         String ip = request.getIp();
         String hostname = request.getHostname();
-        String filenamesJson = request.getFilenames();
+        String filenameListJson = request.getFilenameListJson();
         Long storedDataSize = request.getStoredDataSize();
 
         this.dataNodeManager.setStoredDataSize(ip, hostname, storedDataSize);
 
-        JSONArray filenameJSONArray = JSONArray.parseArray(filenamesJson);
+        JSONArray filenameJSONArray = JSONArray.parseArray(filenameListJson);
 
         for (int i = 0; i < filenameJSONArray.size(); i++) {
             String filename = filenameJSONArray.getString(i);

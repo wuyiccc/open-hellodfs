@@ -87,7 +87,7 @@ message InformReplicaReceivedResponse {
 message ReportAllStorageInfoRequest {
   string ip = 1;
   string hostname = 2;
-  string filenames = 3;
+  string filenameListJson = 3;
   int64 storedDataSize = 4;
 }
 

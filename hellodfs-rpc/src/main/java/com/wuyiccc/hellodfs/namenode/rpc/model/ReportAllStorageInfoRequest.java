@@ -17,7 +17,7 @@ public  final class ReportAllStorageInfoRequest extends
   private ReportAllStorageInfoRequest() {
     ip_ = "";
     hostname_ = "";
-    filenames_ = "";
+    filenameListJson_ = "";
     storedDataSize_ = 0L;
   }
 
@@ -61,7 +61,7 @@ public  final class ReportAllStorageInfoRequest extends
           case 26: {
             java.lang.String s = input.readStringRequireUtf8();
 
-            filenames_ = s;
+            filenameListJson_ = s;
             break;
           }
           case 32: {
@@ -160,34 +160,34 @@ public  final class ReportAllStorageInfoRequest extends
     }
   }
 
-  public static final int FILENAMES_FIELD_NUMBER = 3;
-  private volatile java.lang.Object filenames_;
+  public static final int FILENAMELISTJSON_FIELD_NUMBER = 3;
+  private volatile java.lang.Object filenameListJson_;
   /**
-   * <code>optional string filenames = 3;</code>
+   * <code>optional string filenameListJson = 3;</code>
    */
-  public java.lang.String getFilenames() {
-    java.lang.Object ref = filenames_;
+  public java.lang.String getFilenameListJson() {
+    java.lang.Object ref = filenameListJson_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      filenames_ = s;
+      filenameListJson_ = s;
       return s;
     }
   }
   /**
-   * <code>optional string filenames = 3;</code>
+   * <code>optional string filenameListJson = 3;</code>
    */
   public com.google.protobuf.ByteString
-      getFilenamesBytes() {
-    java.lang.Object ref = filenames_;
+      getFilenameListJsonBytes() {
+    java.lang.Object ref = filenameListJson_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      filenames_ = b;
+      filenameListJson_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
@@ -221,8 +221,8 @@ public  final class ReportAllStorageInfoRequest extends
     if (!getHostnameBytes().isEmpty()) {
       com.google.protobuf.GeneratedMessageV3.writeString(output, 2, hostname_);
     }
-    if (!getFilenamesBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, filenames_);
+    if (!getFilenameListJsonBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, filenameListJson_);
     }
     if (storedDataSize_ != 0L) {
       output.writeInt64(4, storedDataSize_);
@@ -240,8 +240,8 @@ public  final class ReportAllStorageInfoRequest extends
     if (!getHostnameBytes().isEmpty()) {
       size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, hostname_);
     }
-    if (!getFilenamesBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, filenames_);
+    if (!getFilenameListJsonBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, filenameListJson_);
     }
     if (storedDataSize_ != 0L) {
       size += com.google.protobuf.CodedOutputStream
@@ -267,8 +267,8 @@ public  final class ReportAllStorageInfoRequest extends
         .equals(other.getIp());
     result = result && getHostname()
         .equals(other.getHostname());
-    result = result && getFilenames()
-        .equals(other.getFilenames());
+    result = result && getFilenameListJson()
+        .equals(other.getFilenameListJson());
     result = result && (getStoredDataSize()
         == other.getStoredDataSize());
     return result;
@@ -285,8 +285,8 @@ public  final class ReportAllStorageInfoRequest extends
     hash = (53 * hash) + getIp().hashCode();
     hash = (37 * hash) + HOSTNAME_FIELD_NUMBER;
     hash = (53 * hash) + getHostname().hashCode();
-    hash = (37 * hash) + FILENAMES_FIELD_NUMBER;
-    hash = (53 * hash) + getFilenames().hashCode();
+    hash = (37 * hash) + FILENAMELISTJSON_FIELD_NUMBER;
+    hash = (53 * hash) + getFilenameListJson().hashCode();
     hash = (37 * hash) + STOREDDATASIZE_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getStoredDataSize());
@@ -412,7 +412,7 @@ public  final class ReportAllStorageInfoRequest extends
 
       hostname_ = "";
 
-      filenames_ = "";
+      filenameListJson_ = "";
 
       storedDataSize_ = 0L;
 
@@ -440,7 +440,7 @@ public  final class ReportAllStorageInfoRequest extends
       com.wuyiccc.hellodfs.namenode.rpc.model.ReportAllStorageInfoRequest result = new com.wuyiccc.hellodfs.namenode.rpc.model.ReportAllStorageInfoRequest(this);
       result.ip_ = ip_;
       result.hostname_ = hostname_;
-      result.filenames_ = filenames_;
+      result.filenameListJson_ = filenameListJson_;
       result.storedDataSize_ = storedDataSize_;
       onBuilt();
       return result;
@@ -491,8 +491,8 @@ public  final class ReportAllStorageInfoRequest extends
         hostname_ = other.hostname_;
         onChanged();
       }
-      if (!other.getFilenames().isEmpty()) {
-        filenames_ = other.filenames_;
+      if (!other.getFilenameListJson().isEmpty()) {
+        filenameListJson_ = other.filenameListJson_;
         onChanged();
       }
       if (other.getStoredDataSize() != 0L) {
@@ -662,71 +662,71 @@ public  final class ReportAllStorageInfoRequest extends
       return this;
     }
 
-    private java.lang.Object filenames_ = "";
+    private java.lang.Object filenameListJson_ = "";
     /**
-     * <code>optional string filenames = 3;</code>
+     * <code>optional string filenameListJson = 3;</code>
      */
-    public java.lang.String getFilenames() {
-      java.lang.Object ref = filenames_;
+    public java.lang.String getFilenameListJson() {
+      java.lang.Object ref = filenameListJson_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        filenames_ = s;
+        filenameListJson_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
       }
     }
     /**
-     * <code>optional string filenames = 3;</code>
+     * <code>optional string filenameListJson = 3;</code>
      */
     public com.google.protobuf.ByteString
-        getFilenamesBytes() {
-      java.lang.Object ref = filenames_;
+        getFilenameListJsonBytes() {
+      java.lang.Object ref = filenameListJson_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        filenames_ = b;
+        filenameListJson_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <code>optional string filenames = 3;</code>
+     * <code>optional string filenameListJson = 3;</code>
      */
-    public Builder setFilenames(
+    public Builder setFilenameListJson(
         java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      filenames_ = value;
+      filenameListJson_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional string filenames = 3;</code>
+     * <code>optional string filenameListJson = 3;</code>
      */
-    public Builder clearFilenames() {
+    public Builder clearFilenameListJson() {
       
-      filenames_ = getDefaultInstance().getFilenames();
+      filenameListJson_ = getDefaultInstance().getFilenameListJson();
       onChanged();
       return this;
     }
     /**
-     * <code>optional string filenames = 3;</code>
+     * <code>optional string filenameListJson = 3;</code>
      */
-    public Builder setFilenamesBytes(
+    public Builder setFilenameListJsonBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      filenames_ = value;
+      filenameListJson_ = value;
       onChanged();
       return this;
     }
