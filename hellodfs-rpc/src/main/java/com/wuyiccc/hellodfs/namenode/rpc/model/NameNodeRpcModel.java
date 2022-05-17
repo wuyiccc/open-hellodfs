@@ -145,12 +145,13 @@ public final class NameNodeRpcModel {
       " \001(\t\"N\n\034InformReplicaReceivedRequest\022\n\n\002",
       "ip\030\001 \001(\t\022\020\n\010hostname\030\002 \001(\t\022\020\n\010filename\030\003" +
       " \001(\t\"/\n\035InformReplicaReceivedResponse\022\016\n" +
-      "\006status\030\001 \001(\005\"f\n\033ReportAllStorageInfoReq" +
-      "uest\022\n\n\002ip\030\001 \001(\t\022\020\n\010hostname\030\002 \001(\t\022\021\n\tfi" +
-      "lenames\030\003 \001(\t\022\026\n\016storedDataSize\030\004 \001(\003\".\n" +
-      "\034ReportAllStorageInfoResponse\022\016\n\006status\030" +
-      "\001 \001(\005B=\n\'com.wuyiccc.hellodfs.namenode.r" +
-      "pc.modelB\020NameNodeRpcModelP\001b\006proto3"
+      "\006status\030\001 \001(\005\"m\n\033ReportAllStorageInfoReq" +
+      "uest\022\n\n\002ip\030\001 \001(\t\022\020\n\010hostname\030\002 \001(\t\022\030\n\020fi" +
+      "lenameListJson\030\003 \001(\t\022\026\n\016storedDataSize\030\004" +
+      " \001(\003\".\n\034ReportAllStorageInfoResponse\022\016\n\006" +
+      "status\030\001 \001(\005B=\n\'com.wuyiccc.hellodfs.nam" +
+      "enode.rpc.modelB\020NameNodeRpcModelP\001b\006pro" +
+      "to3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -277,7 +278,7 @@ public final class NameNodeRpcModel {
     internal_static_com_wuyiccc_hellodfs_namenode_rpc_ReportAllStorageInfoRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_wuyiccc_hellodfs_namenode_rpc_ReportAllStorageInfoRequest_descriptor,
-        new java.lang.String[] { "Ip", "Hostname", "Filenames", "StoredDataSize", });
+        new java.lang.String[] { "Ip", "Hostname", "FilenameListJson", "StoredDataSize", });
     internal_static_com_wuyiccc_hellodfs_namenode_rpc_ReportAllStorageInfoResponse_descriptor =
       getDescriptor().getMessageTypes().get(19);
     internal_static_com_wuyiccc_hellodfs_namenode_rpc_ReportAllStorageInfoResponse_fieldAccessorTable = new
