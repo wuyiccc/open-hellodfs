@@ -16,7 +16,8 @@ public class FileSystemTest {
     private static FileSystem fileSystem = new FileSystemImpl();
 
     public static void main(String[] args) throws Exception {
-        testCreateFile();
+        //testCreateFile();
+        testShutdown();
     }
 
 
