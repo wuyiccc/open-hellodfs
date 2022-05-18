@@ -54,7 +54,7 @@ public class FileSystemTest {
         buffer.flip();
         byte[] imageBytes = buffer.array();
 
-        fileSystem.upload(imageBytes, "/image/product/lingyu2.jpg", imageLength);
+        fileSystem.upload(imageBytes, "/image/product/lingyu.jpg", imageLength);
 
         imageIn.close();
         imageChannel.close();

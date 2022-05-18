@@ -40,6 +40,7 @@ public class FSNameSystem {
     public FSNameSystem(DataNodeManager dataNodeManager) {
         this.fsDirectory = new FSDirectory();
         this.fsEditLog = new FSEditLog(this);
+        this.dataNodeManager = dataNodeManager;
         recoverNamespace();
     }
 

@@ -42,4 +42,12 @@ public class StorageInfo {
     public void addStoredDataSize(Long storedDataSize) {
         this.storedDataSize += storedDataSize;
     }
+
+    @Override
+    public String toString() {
+        return "StorageInfo{" +
+                "filenameList=" + filenameList +
+                ", storedDataSize=" + storedDataSize +
+                '}';
+    }
 }

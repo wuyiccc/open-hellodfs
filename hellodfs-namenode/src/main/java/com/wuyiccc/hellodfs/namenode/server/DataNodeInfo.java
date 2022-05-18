@@ -84,4 +84,15 @@ public class DataNodeInfo implements Comparable<DataNodeInfo>{
             return 0;
         }
     }
+
+    @Override
+    public String toString() {
+        return "DataNodeInfo{" +
+                "ip='" + ip + '\'' +
+                ", hostname='" + hostname + '\'' +
+                ", lastHeartBeatTime=" + lastHeartBeatTime +
+                ", storedDataSize=" + storedDataSize +
+                ", nioPort=" + nioPort +
+                '}';
+    }
 }
