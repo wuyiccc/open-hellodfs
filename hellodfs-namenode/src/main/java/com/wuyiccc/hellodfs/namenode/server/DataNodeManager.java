@@ -23,6 +23,7 @@ public class DataNodeManager {
 
         // if dataNodeMap contains this datanode, this means the datanode has been registered before and does not need to be re-registered
         if (this.dataNodeMap.containsKey(ip + "-" + hostname)) {
+            System.out.println("datanode register failed, this datanode already exist");
             return false;
         }
 

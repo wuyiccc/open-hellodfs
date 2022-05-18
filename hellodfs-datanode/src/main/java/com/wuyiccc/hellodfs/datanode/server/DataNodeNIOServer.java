@@ -173,6 +173,7 @@ public class DataNodeNIOServer extends Thread {
                         cachedImageMap.remove(remoteAddr);
                         System.out.println("file read completed, return to client success");
                         nameNodeRpcClient.informReplicaReceived(filename.relativeFilename);
+                        System.out.println("datanode begin informReplicaReceived...");
                     } else {
                         // cache the file
                         CachedImage cachedImage = new CachedImage(filename, imageLength, hasReadImageLength);

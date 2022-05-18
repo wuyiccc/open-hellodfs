@@ -28,19 +28,17 @@ public class DataNode {
         this.nameNodeRpcClient = new NameNodeRpcClient();
         Boolean res = this.nameNodeRpcClient.register();
 
-        if (!res) {
-            System.out.println("register to namenode failure");
-            System.exit(1);
+        this.storageManager = new StorageManager();
+
+        if (res) {
+            StorageInfo storageInfo = this.storageManager.getStorageInfo();
+            this.nameNodeRpcClient.reportAllStorageInfo(storageInfo);
+        } else {
+            System.out.println("already register, don't need to report all storage info...");
         }
 
-        this.storageManager = new StorageManager();
         this.heartBeatManager = new HeartBeatManager(this.nameNodeRpcClient, this.storageManager);
         this.heartBeatManager.start();
-
-        StorageInfo storageInfo = this.storageManager.getStorageInfo();
-        if (storageInfo != null) {
-            this.nameNodeRpcClient.reportAllStorageInfo(storageInfo);
-        }
 
         DataNodeNIOServer nioServer = new DataNodeNIOServer(this.nameNodeRpcClient);
         nioServer.start();

@@ -294,6 +294,8 @@ public class FSNameSystem {
 
            DataNodeInfo dataNodeInfo = this.dataNodeManager.getDataNodeInfo(ip, hostname);
            replicas.add(dataNodeInfo);
+
+           System.out.println("received replica info, current replicasByFilenameMap: " + replicasByFilenameMap);
        }
     }
 }

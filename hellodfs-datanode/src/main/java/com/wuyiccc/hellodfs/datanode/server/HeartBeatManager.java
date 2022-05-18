@@ -33,8 +33,8 @@ public class HeartBeatManager {
 
         @Override
         public void run() {
-            try {
-                while (true) {
+            while (true) {
+                try {
                     System.out.println("send rpc request to namenode for heartbeat.......");
 
                     HeartBeatResponse response = nameNodeRpcClient.heartBeat();
@@ -62,12 +62,17 @@ public class HeartBeatManager {
                             }
                         }
                     }
-
-                    TimeUnit.SECONDS.sleep(30);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+
+                try {
+                    TimeUnit.SECONDS.sleep(30);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
+
         }
 
     }
