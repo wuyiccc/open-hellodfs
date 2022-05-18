@@ -9,6 +9,7 @@ import io.grpc.stub.StreamObserver;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -74,9 +75,28 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
 
     @Override
     public void heartBeat(HeartBeatRequest request, StreamObserver<HeartBeatResponse> responseObserver) {
-        dataNodeManager.heartBeat(request.getIp(), request.getHostname());
+        Boolean result = dataNodeManager.heartBeat(request.getIp(), request.getHostname());
 
-        HeartBeatResponse response = HeartBeatResponse.newBuilder().setStatus(STATUS_SUCCESS).build();
+        HeartBeatResponse response = null;
+
+        List<Command> commandList = new ArrayList<>();
+
+        if (result) {
+            response = HeartBeatResponse.newBuilder()
+                    .setStatus(STATUS_SUCCESS)
+                    .setCommands(JSONArray.toJSONString(commandList))
+                    .build();
+        } else {
+            Command registerCommand = new Command(Command.REGISTER);
+            Command reportCompleteStorageInfoCommand = new Command(Command.REPORT_COMPLETE_STORAGE_INFO);
+            commandList.add(registerCommand);
+            commandList.add(reportCompleteStorageInfoCommand);
+
+            response = HeartBeatResponse.newBuilder()
+                    .setStatus(STATUS_FAILURE)
+                    .setCommands(JSONArray.toJSONString(commandList))
+                    .build();
+        }
 
         responseObserver.onNext(response);
         responseObserver.onCompleted();

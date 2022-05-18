@@ -34,12 +34,12 @@ public class DataNodeManager {
 
     public Boolean heartBeat(String ip, String hostname) {
         DataNodeInfo dataNodeInfo = dataNodeMap.get(ip + "-" + hostname);
-        if (dataNodeInfo != null) {
-            dataNodeInfo.setLastHeartBeatTime(System.currentTimeMillis());
-            System.out.println("DataNode heartBeat ip= " + ip + ", hostname= " + hostname);
-            return true;
+        if (dataNodeInfo == null) {
+            return false;
         }
-        return false;
+        dataNodeInfo.setLastHeartBeatTime(System.currentTimeMillis());
+        System.out.println("DataNode heartBeat ip= " + ip + ", hostname= " + hostname);
+        return true;
     }
 
     /**
@@ -63,7 +63,7 @@ public class DataNodeManager {
                 dataNodeInfoList.get(0).addStoredDataSize(fileSize);
                 dataNodeInfoList.get(1).addStoredDataSize(fileSize);
             }
-            return  selectedDataNodeList;
+            return selectedDataNodeList;
         }
     }
 
