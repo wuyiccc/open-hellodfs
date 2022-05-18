@@ -36,6 +36,7 @@ public class DataNodeManager {
     public Boolean heartBeat(String ip, String hostname) {
         DataNodeInfo dataNodeInfo = dataNodeMap.get(ip + "-" + hostname);
         if (dataNodeInfo == null) {
+            System.out.println("heartbeat fail, datanode need register again...");
             return false;
         }
         dataNodeInfo.setLastHeartBeatTime(System.currentTimeMillis());

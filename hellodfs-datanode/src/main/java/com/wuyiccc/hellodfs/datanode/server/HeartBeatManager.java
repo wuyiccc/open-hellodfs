@@ -63,6 +63,7 @@ public class HeartBeatManager {
                         }
                     }
                 } catch (Exception e) {
+                    System.out.println("current namenode cannot use, heartbeat fail...");
                     e.printStackTrace();
                 }
 

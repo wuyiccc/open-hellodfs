@@ -62,6 +62,12 @@ public class NameNodeRpcClient {
     }
 
     public void reportAllStorageInfo(StorageInfo storageInfo) {
+
+        if (storageInfo == null) {
+            System.out.println("the current datanode has no stored files, all report is not required");
+            return;
+        }
+
         ReportAllStorageInfoRequest request = ReportAllStorageInfoRequest.newBuilder()
                 .setIp(DataNodeConfig.DATANODE_IP)
                 .setHostname(DataNodeConfig.DATANODE_HOSTNAME)
@@ -69,6 +75,7 @@ public class NameNodeRpcClient {
                 .setStoredDataSize(storageInfo.getStoredDataSize())
                 .build();
         this.nameNode.reportAllStorageInfo(request);
+        System.out.println("reportAllStorageInfo: " + storageInfo);
     }
 
     /**
