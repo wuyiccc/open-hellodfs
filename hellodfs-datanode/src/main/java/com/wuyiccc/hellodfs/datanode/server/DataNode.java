@@ -1,5 +1,7 @@
 package com.wuyiccc.hellodfs.datanode.server;
 
+import sun.plugin2.message.HeartbeatMessage;
+
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 
@@ -16,63 +18,34 @@ public class DataNode {
 
     private NameNodeRpcClient nameNodeRpcClient;
 
+    private HeartBeatManager heartBeatManager;
+
+    private StorageManager storageManager;
+
     private DataNode() throws Exception {
         this.shouldRun = true;
 
         this.nameNodeRpcClient = new NameNodeRpcClient();
         Boolean res = this.nameNodeRpcClient.register();
-        this.nameNodeRpcClient.startHeartBeat();
 
-        if (res) {
-            StorageInfo storageInfo = getStorageInfo();
-            if (storageInfo != null) {
-                this.nameNodeRpcClient.reportAllStorageInfo(storageInfo);
-            }
-
-            DataNodeNIOServer nioServer = new DataNodeNIOServer(this.nameNodeRpcClient);
-            nioServer.start();
-        } else {
+        if (!res) {
             System.out.println("register to namenode failure");
             System.exit(1);
         }
+
+        this.storageManager = new StorageManager();
+        this.heartBeatManager = new HeartBeatManager(this.nameNodeRpcClient, this.storageManager);
+        this.heartBeatManager.start();
+
+        StorageInfo storageInfo = this.storageManager.getStorageInfo();
+        if (storageInfo != null) {
+            this.nameNodeRpcClient.reportAllStorageInfo(storageInfo);
+        }
+
+        DataNodeNIOServer nioServer = new DataNodeNIOServer(this.nameNodeRpcClient);
+        nioServer.start();
     }
 
-    private StorageInfo getStorageInfo() {
-        StorageInfo storageInfo = new StorageInfo();
-
-        File parentDataDir = new File(DataNodeConfig.DATA_DIR);
-        File[] children = parentDataDir.listFiles();
-        if (children == null || children.length == 0) {
-            return null;
-        }
-
-        for (File child : children) {
-            scanFiles(child, storageInfo);
-        }
-        return storageInfo;
-    }
-
-    private void scanFiles(File dir, StorageInfo storageInfo) {
-        if (dir.isFile()) {
-            String path = dir.getPath();
-            path = path.substring(DataNodeConfig.DATA_DIR.length());
-            path = path.replace("\\\\", "/");
-
-            storageInfo.addFilename(path);
-            storageInfo.addStoredDataSize(dir.length());
-            return;
-        }
-
-        // is directory, recursive
-        File[] children = dir.listFiles();
-        if (children == null || children.length == 0) {
-            return;
-        }
-
-        for (File child : children) {
-            scanFiles(child, storageInfo);
-        }
-    }
 
     private void start() {
         try {

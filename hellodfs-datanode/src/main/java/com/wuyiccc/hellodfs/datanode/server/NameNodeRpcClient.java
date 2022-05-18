@@ -52,11 +52,13 @@ public class NameNodeRpcClient {
         }
     }
 
-    /**
-     * send heartbeat request to NameNode per 30s
-     */
-    public void startHeartBeat() {
-        new HeartBeatThread().start();
+    public HeartBeatResponse heartBeat() throws Exception{
+        HeartBeatRequest request = HeartBeatRequest.newBuilder()
+                .setIp(DataNodeConfig.DATANODE_IP)
+                .setHostname(DataNodeConfig.DATANODE_HOSTNAME)
+                .setNioPort(DataNodeConfig.NIO_PORT)
+                .build();
+        return this.nameNode.heartBeat(request);
     }
 
     public void reportAllStorageInfo(StorageInfo storageInfo) {
@@ -81,32 +83,6 @@ public class NameNodeRpcClient {
         this.nameNode.informReplicaReceived(request);
     }
 
-    /**
-     * send heartbeat to namenode thread
-     */
-    class HeartBeatThread extends Thread {
 
-        @Override
-        public void run() {
-            try {
-                while (true) {
-                    System.out.println("send rpc request to namenode for heartbeat.......");
-
-                    HeartBeatRequest request = HeartBeatRequest.newBuilder()
-                            .setIp(DataNodeConfig.DATANODE_IP)
-                            .setHostname(DataNodeConfig.DATANODE_HOSTNAME)
-                            .build();
-                    HeartBeatResponse response = nameNode.heartBeat(request);
-
-                    System.out.println("heartbeat thread accept namenode response data: " + response.getStatus());
-
-                    TimeUnit.SECONDS.sleep(30);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
 
 }
