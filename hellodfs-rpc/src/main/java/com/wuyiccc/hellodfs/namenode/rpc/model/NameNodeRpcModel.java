@@ -128,30 +128,30 @@ public final class NameNodeRpcModel {
       "\n\002ip\030\001 \001(\t\022\020\n\010hostname\030\002 \001(\t\022\017\n\007nioPort\030" +
       "\003 \001(\005\"\"\n\020RegisterResponse\022\016\n\006status\030\001 \001(" +
       "\005\"A\n\020HeartBeatRequest\022\n\n\002ip\030\001 \001(\t\022\020\n\010hos" +
-      "tname\030\002 \001(\t\022\017\n\007nioPort\030\003 \001(\005\"#\n\021HeartBea" +
-      "tResponse\022\016\n\006status\030\001 \001(\005\"\034\n\014MkdirReques" +
-      "t\022\014\n\004path\030\001 \001(\t\"\037\n\rMkdirResponse\022\016\n\006stat" +
-      "us\030\001 \001(\005\"\037\n\017ShutdownRequest\022\014\n\004code\030\001 \001(" +
-      "\005\"\"\n\020ShutdownResponse\022\016\n\006status\030\001 \001(\005\"(\n",
-      "\024FetchEditsLogRequest\022\020\n\010syncTxId\030\001 \001(\003\"" +
-      ")\n\025FetchEditsLogResponse\022\020\n\010editsLog\030\001 \001" +
-      "(\t\"+\n\033UpdateCheckpointTxIdRequest\022\014\n\004txI" +
-      "d\030\001 \001(\003\".\n\034UpdateCheckpointTxIdResponse\022" +
-      "\016\n\006status\030\001 \001(\005\"%\n\021CreateFileRequest\022\020\n\010" +
-      "filename\030\001 \001(\t\"$\n\022CreateFileResponse\022\016\n\006" +
-      "status\030\001 \001(\005\">\n\030AllocateDataNodesRequest" +
-      "\022\020\n\010filename\030\001 \001(\t\022\020\n\010fileSize\030\002 \001(\003\".\n\031" +
-      "AllocateDataNodesResponse\022\021\n\tdataNodes\030\001" +
-      " \001(\t\"N\n\034InformReplicaReceivedRequest\022\n\n\002",
-      "ip\030\001 \001(\t\022\020\n\010hostname\030\002 \001(\t\022\020\n\010filename\030\003" +
-      " \001(\t\"/\n\035InformReplicaReceivedResponse\022\016\n" +
-      "\006status\030\001 \001(\005\"m\n\033ReportAllStorageInfoReq" +
-      "uest\022\n\n\002ip\030\001 \001(\t\022\020\n\010hostname\030\002 \001(\t\022\030\n\020fi" +
-      "lenameListJson\030\003 \001(\t\022\026\n\016storedDataSize\030\004" +
-      " \001(\003\".\n\034ReportAllStorageInfoResponse\022\016\n\006" +
-      "status\030\001 \001(\005B=\n\'com.wuyiccc.hellodfs.nam" +
-      "enode.rpc.modelB\020NameNodeRpcModelP\001b\006pro" +
-      "to3"
+      "tname\030\002 \001(\t\022\017\n\007nioPort\030\003 \001(\005\"5\n\021HeartBea" +
+      "tResponse\022\016\n\006status\030\001 \001(\005\022\020\n\010commands\030\002 " +
+      "\001(\t\"\034\n\014MkdirRequest\022\014\n\004path\030\001 \001(\t\"\037\n\rMkd" +
+      "irResponse\022\016\n\006status\030\001 \001(\005\"\037\n\017ShutdownRe" +
+      "quest\022\014\n\004code\030\001 \001(\005\"\"\n\020ShutdownResponse\022",
+      "\016\n\006status\030\001 \001(\005\"(\n\024FetchEditsLogRequest\022" +
+      "\020\n\010syncTxId\030\001 \001(\003\")\n\025FetchEditsLogRespon" +
+      "se\022\020\n\010editsLog\030\001 \001(\t\"+\n\033UpdateCheckpoint" +
+      "TxIdRequest\022\014\n\004txId\030\001 \001(\003\".\n\034UpdateCheck" +
+      "pointTxIdResponse\022\016\n\006status\030\001 \001(\005\"%\n\021Cre" +
+      "ateFileRequest\022\020\n\010filename\030\001 \001(\t\"$\n\022Crea" +
+      "teFileResponse\022\016\n\006status\030\001 \001(\005\">\n\030Alloca" +
+      "teDataNodesRequest\022\020\n\010filename\030\001 \001(\t\022\020\n\010" +
+      "fileSize\030\002 \001(\003\".\n\031AllocateDataNodesRespo" +
+      "nse\022\021\n\tdataNodes\030\001 \001(\t\"N\n\034InformReplicaR",
+      "eceivedRequest\022\n\n\002ip\030\001 \001(\t\022\020\n\010hostname\030\002" +
+      " \001(\t\022\020\n\010filename\030\003 \001(\t\"/\n\035InformReplicaR" +
+      "eceivedResponse\022\016\n\006status\030\001 \001(\005\"m\n\033Repor" +
+      "tAllStorageInfoRequest\022\n\n\002ip\030\001 \001(\t\022\020\n\010ho" +
+      "stname\030\002 \001(\t\022\030\n\020filenameListJson\030\003 \001(\t\022\026" +
+      "\n\016storedDataSize\030\004 \001(\003\".\n\034ReportAllStora" +
+      "geInfoResponse\022\016\n\006status\030\001 \001(\005B=\n\'com.wu" +
+      "yiccc.hellodfs.namenode.rpc.modelB\020NameN" +
+      "odeRpcModelP\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -188,7 +188,7 @@ public final class NameNodeRpcModel {
     internal_static_com_wuyiccc_hellodfs_namenode_rpc_HeartBeatResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_wuyiccc_hellodfs_namenode_rpc_HeartBeatResponse_descriptor,
-        new java.lang.String[] { "Status", });
+        new java.lang.String[] { "Status", "Commands", });
     internal_static_com_wuyiccc_hellodfs_namenode_rpc_MkdirRequest_descriptor =
       getDescriptor().getMessageTypes().get(4);
     internal_static_com_wuyiccc_hellodfs_namenode_rpc_MkdirRequest_fieldAccessorTable = new

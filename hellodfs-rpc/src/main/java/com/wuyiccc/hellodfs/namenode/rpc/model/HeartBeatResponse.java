@@ -16,6 +16,7 @@ public  final class HeartBeatResponse extends
   }
   private HeartBeatResponse() {
     status_ = 0;
+    commands_ = "";
   }
 
   @java.lang.Override
@@ -46,6 +47,12 @@ public  final class HeartBeatResponse extends
           case 8: {
 
             status_ = input.readInt32();
+            break;
+          }
+          case 18: {
+            java.lang.String s = input.readStringRequireUtf8();
+
+            commands_ = s;
             break;
           }
         }
@@ -80,6 +87,40 @@ public  final class HeartBeatResponse extends
     return status_;
   }
 
+  public static final int COMMANDS_FIELD_NUMBER = 2;
+  private volatile java.lang.Object commands_;
+  /**
+   * <code>optional string commands = 2;</code>
+   */
+  public java.lang.String getCommands() {
+    java.lang.Object ref = commands_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      commands_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>optional string commands = 2;</code>
+   */
+  public com.google.protobuf.ByteString
+      getCommandsBytes() {
+    java.lang.Object ref = commands_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      commands_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
+  }
+
   private byte memoizedIsInitialized = -1;
   public final boolean isInitialized() {
     byte isInitialized = memoizedIsInitialized;
@@ -95,6 +136,9 @@ public  final class HeartBeatResponse extends
     if (status_ != 0) {
       output.writeInt32(1, status_);
     }
+    if (!getCommandsBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 2, commands_);
+    }
   }
 
   public int getSerializedSize() {
@@ -105,6 +149,9 @@ public  final class HeartBeatResponse extends
     if (status_ != 0) {
       size += com.google.protobuf.CodedOutputStream
         .computeInt32Size(1, status_);
+    }
+    if (!getCommandsBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, commands_);
     }
     memoizedSize = size;
     return size;
@@ -124,6 +171,8 @@ public  final class HeartBeatResponse extends
     boolean result = true;
     result = result && (getStatus()
         == other.getStatus());
+    result = result && getCommands()
+        .equals(other.getCommands());
     return result;
   }
 
@@ -136,6 +185,8 @@ public  final class HeartBeatResponse extends
     hash = (19 * hash) + getDescriptorForType().hashCode();
     hash = (37 * hash) + STATUS_FIELD_NUMBER;
     hash = (53 * hash) + getStatus();
+    hash = (37 * hash) + COMMANDS_FIELD_NUMBER;
+    hash = (53 * hash) + getCommands().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -256,6 +307,8 @@ public  final class HeartBeatResponse extends
       super.clear();
       status_ = 0;
 
+      commands_ = "";
+
       return this;
     }
 
@@ -279,6 +332,7 @@ public  final class HeartBeatResponse extends
     public com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse buildPartial() {
       com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse result = new com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse(this);
       result.status_ = status_;
+      result.commands_ = commands_;
       onBuilt();
       return result;
     }
@@ -322,6 +376,10 @@ public  final class HeartBeatResponse extends
       if (other == com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse.getDefaultInstance()) return this;
       if (other.getStatus() != 0) {
         setStatus(other.getStatus());
+      }
+      if (!other.getCommands().isEmpty()) {
+        commands_ = other.commands_;
+        onChanged();
       }
       onChanged();
       return this;
@@ -371,6 +429,75 @@ public  final class HeartBeatResponse extends
     public Builder clearStatus() {
       
       status_ = 0;
+      onChanged();
+      return this;
+    }
+
+    private java.lang.Object commands_ = "";
+    /**
+     * <code>optional string commands = 2;</code>
+     */
+    public java.lang.String getCommands() {
+      java.lang.Object ref = commands_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        commands_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
+    }
+    /**
+     * <code>optional string commands = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getCommandsBytes() {
+      java.lang.Object ref = commands_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        commands_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>optional string commands = 2;</code>
+     */
+    public Builder setCommands(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      commands_ = value;
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional string commands = 2;</code>
+     */
+    public Builder clearCommands() {
+      
+      commands_ = getDefaultInstance().getCommands();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional string commands = 2;</code>
+     */
+    public Builder setCommandsBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      commands_ = value;
       onChanged();
       return this;
     }

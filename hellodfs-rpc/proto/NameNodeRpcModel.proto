@@ -24,6 +24,7 @@ message HeartBeatRequest {
 
 message HeartBeatResponse {
   int32 status = 1;
+  string commands = 2;
 }
 
 message MkdirRequest {
