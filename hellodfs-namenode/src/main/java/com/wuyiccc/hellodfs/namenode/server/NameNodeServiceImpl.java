@@ -309,12 +309,19 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
 
     /**
      * get the datanode where the file is located
-     * @param request
-     * @param responseObserver
      */
     @Override
     public void getDataNodeForFile(GetDataNodeForFileRequest request, StreamObserver<GetDataNodeForFileResponse> responseObserver) {
 
+        String filename = request.getFilename();
+        DataNodeInfo dataNodeInfo = this.fsNameSystem.getDataNodeForFile(filename);
+
+        GetDataNodeForFileResponse response = GetDataNodeForFileResponse.newBuilder()
+                .setDataNodeInfo(JSONObject.toJSONString(dataNodeInfo))
+                .build();
+
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
     }
 
 

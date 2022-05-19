@@ -2,7 +2,6 @@ package com.wuyiccc.hellodfs.namenode.server;
 
 import com.alibaba.fastjson.JSONObject;
 
-import javax.annotation.Resource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -13,6 +12,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
  * The core components responsible for managing metadata
@@ -36,6 +36,8 @@ public class FSNameSystem {
     private Map<String, List<DataNodeInfo>> replicasByFilenameMap = new HashMap<>();
 
     private DataNodeManager dataNodeManager;
+
+    ReentrantReadWriteLock replicaReentrantReadWriteLock = new ReentrantReadWriteLock();
 
     public FSNameSystem(DataNodeManager dataNodeManager) {
         this.fsDirectory = new FSDirectory();
@@ -286,17 +288,39 @@ public class FSNameSystem {
 
 
     public void addReceivedReplica(String hostname, String ip, String filename) {
-       synchronized (this.replicasByFilenameMap) {
-           List<DataNodeInfo> replicas = replicasByFilenameMap.get(filename);
-           if (replicas == null) {
-               replicas = new ArrayList<>();
-               replicasByFilenameMap.put(filename, replicas);
-           }
 
-           DataNodeInfo dataNodeInfo = this.dataNodeManager.getDataNodeInfo(ip, hostname);
-           replicas.add(dataNodeInfo);
+        try {
+            replicaReentrantReadWriteLock.writeLock().lock();
+            List<DataNodeInfo> replicas = replicasByFilenameMap.get(filename);
+            if (replicas == null) {
+                replicas = new ArrayList<>();
+                replicasByFilenameMap.put(filename, replicas);
+            }
 
-           System.out.println("received replica info, current replicasByFilenameMap: " + replicasByFilenameMap);
-       }
+            DataNodeInfo dataNodeInfo = this.dataNodeManager.getDataNodeInfo(ip, hostname);
+            replicas.add(dataNodeInfo);
+
+            System.out.println("received replica info, current replicasByFilenameMap: " + replicasByFilenameMap);
+        } finally {
+            replicaReentrantReadWriteLock.writeLock().unlock();
+        }
+    }
+
+    public DataNodeInfo getDataNodeForFile(String filename) {
+        try {
+            replicaReentrantReadWriteLock.readLock().lock();
+
+            List<DataNodeInfo> dataNodeInfoList = replicasByFilenameMap.get(filename);
+            int size = dataNodeInfoList.size();
+
+            Random random = new Random();
+            int index = random.nextInt(size);
+
+            return dataNodeInfoList.get(index);
+        } finally {
+            replicaReentrantReadWriteLock.readLock().unlock();
+        }
+
+
     }
 }
