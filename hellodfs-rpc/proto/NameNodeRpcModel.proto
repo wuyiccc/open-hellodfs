@@ -95,3 +95,11 @@ message ReportAllStorageInfoRequest {
 message ReportAllStorageInfoResponse {
   int32 status = 1;
 }
+
+message GetDataNodeForFileRequest {
+  string filename = 1;
+}
+
+message GetDataNodeForFileResponse {
+  string dataNodeInfo = 1;
+}

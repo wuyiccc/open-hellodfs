@@ -25,7 +25,7 @@ public final class NameNodeServer {
     java.lang.String[] descriptorData = {
       "\n\027NameNodeRpcServer.proto\022!com.wuyiccc.h" +
       "ellodfs.namenode.rpc\032\026NameNodeRpcModel.p" +
-      "roto2\275\n\n\017NameNodeService\022s\n\010register\0222.c" +
+      "roto2\321\013\n\017NameNodeService\022s\n\010register\0222.c" +
       "om.wuyiccc.hellodfs.namenode.rpc.Registe" +
       "rRequest\0323.com.wuyiccc.hellodfs.namenode" +
       ".rpc.RegisterResponse\022v\n\theartBeat\0223.com" +
@@ -58,9 +58,13 @@ public final class NameNodeServer {
       "eportAllStorageInfo\022>.com.wuyiccc.hellod" +
       "fs.namenode.rpc.ReportAllStorageInfoRequ" +
       "est\032?.com.wuyiccc.hellodfs.namenode.rpc." +
-      "ReportAllStorageInfoResponseB=\n)com.wuyi" +
-      "ccc.hellodfs.namenode.rpc.serviceB\016NameN" +
-      "odeServerP\001b\006proto3"
+      "ReportAllStorageInfoResponse\022\221\001\n\022getData" +
+      "NodeForFile\022<.com.wuyiccc.hellodfs.namen" +
+      "ode.rpc.GetDataNodeForFileRequest\032=.com." +
+      "wuyiccc.hellodfs.namenode.rpc.GetDataNod" +
+      "eForFileResponseB=\n)com.wuyiccc.hellodfs",
+      ".namenode.rpc.serviceB\016NameNodeServerP\001b" +
+      "\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
