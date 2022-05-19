@@ -307,6 +307,16 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
         responseObserver.onCompleted();
     }
 
+    /**
+     * get the datanode where the file is located
+     * @param request
+     * @param responseObserver
+     */
+    @Override
+    public void getDataNodeForFile(GetDataNodeForFileRequest request, StreamObserver<GetDataNodeForFileResponse> responseObserver) {
+
+    }
+
 
     /**
      * @param flushedTxId startTxId_endTxId
