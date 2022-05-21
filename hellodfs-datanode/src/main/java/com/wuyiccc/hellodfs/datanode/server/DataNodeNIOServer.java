@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
-import java.rmi.MarshalledObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -206,23 +205,39 @@ public class DataNodeNIOServer extends Thread {
         long hasReadImageLength = getHasReadFileLength(channel);
         System.out.println("hasReadImageLength: " + hasReadImageLength);
 
-        FileOutputStream imageOut = new FileOutputStream(filename.absoluteFilename);
-        FileChannel imageChannel = imageOut.getChannel();
-        // set position, add data after the last data
-        imageChannel.position(imageChannel.size());
+        FileOutputStream imageOut = null;
+        FileChannel imageChannel = null;
 
-        ByteBuffer fileBuffer = ByteBuffer.allocate(Integer.parseInt(String.valueOf(fileLength)));
-        hasReadImageLength += channel.read(fileBuffer);
+        try {
+            imageOut = new FileOutputStream(filename.absoluteFilename);
+            imageChannel = imageOut.getChannel();
+
+            // set position, add data after the last data
+            imageChannel.position(imageChannel.size());
+
+            ByteBuffer fileBuffer = null;
+
+            if (fileByClient.containsKey(client)) {
+                fileBuffer = fileByClient.get(client);
+            } else {
+                fileBuffer = ByteBuffer.allocate(Integer.parseInt(String.valueOf(fileLength)));
+            }
+
+            hasReadImageLength += channel.read(fileBuffer);
 
 
-        if (!fileBuffer.hasRemaining()) {
-            fileBuffer.rewind();
-            imageChannel.write(fileBuffer);
+            if (!fileBuffer.hasRemaining()) {
+                fileBuffer.rewind();
+                imageChannel.write(fileBuffer);
+                fileByClient.remove(client);
+            } else {
+                fileByClient.put(client, fileBuffer);
+                getCachedRequest(client).hasReadFileLength = hasReadImageLength;
+                return;
+            }
+        } finally {
             imageChannel.close();
             imageOut.close();
-        } else {
-            fileByClient.put(client, fileBuffer);
-            return;
         }
 
         // if already read all file, the remove the cache, and return success to client
@@ -239,7 +254,7 @@ public class DataNodeNIOServer extends Thread {
     }
 
     private void handleReadFileRequest(SocketChannel channel, SelectionKey key) throws Exception {
-        String remoteAddr = channel.getRemoteAddress().toString();
+        String client = channel.getRemoteAddress().toString();
 
         // parse filename from request
         Filename filename = getFilename(channel);
@@ -268,7 +283,8 @@ public class DataNodeNIOServer extends Thread {
         imageIn.close();
 
         if (hasReadImageLength == fileLength) {
-            System.out.println("file ready send to client: " + remoteAddr);
+            System.out.println("file ready send to client: " + client);
+            cachedRequests.remove(client);
             // delete read
             key.interestOps(key.interestOps() & ~SelectionKey.OP_READ);
         }
