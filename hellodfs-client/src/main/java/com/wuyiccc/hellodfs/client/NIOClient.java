@@ -100,7 +100,9 @@ public class NIOClient {
     }
 
 
-    public void readFile(String hostname, int nioPort, String filename) {
+    public byte[] readFile(String hostname, int nioPort, String filename) {
+        byte[] file = null;
+
         SocketChannel channel = null;
         Selector selector = null;
 
@@ -149,17 +151,25 @@ public class NIOClient {
                     } else if (key.isReadable()) {
                         channel = (SocketChannel) key.channel();
 
-                        ByteBuffer buffer = ByteBuffer.allocate(1024);
-                        int len = channel.read(buffer);
+                        ByteBuffer fileLengthBuffer = ByteBuffer.allocate(8);
+                        channel.read(fileLengthBuffer);
 
-                        if (len > 0) {
-                            System.out.println("[" + Thread.currentThread().getName()
-                                    + "]received" + hostname + "'response：" + new String(buffer.array(), 0, len));
-                            reading = false;
+                        if (!fileLengthBuffer.hasRemaining()) {
+                            Long fileLength = fileLengthBuffer.getLong();
+
+                            ByteBuffer fileBuffer = ByteBuffer.allocate(Integer.parseInt(String.valueOf(fileLength)));
+                            channel.read(fileBuffer);
+
+                            if (!fileBuffer.hasRemaining()) {
+                                file = fileBuffer.array();
+                                reading = false;
+                            }
+
                         }
                     }
                 }
             }
+            return file;
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -179,6 +189,7 @@ public class NIOClient {
                 }
             }
         }
+        return null;
     }
 
 

@@ -1,9 +1,7 @@
 package com.wuyiccc.hellodfs.client;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.google.errorprone.annotations.Var;
 import com.wuyiccc.hellodfs.namenode.rpc.model.*;
 import com.wuyiccc.hellodfs.namenode.rpc.service.NameNodeServiceGrpc;
 import io.grpc.ManagedChannel;
@@ -77,7 +75,11 @@ public class FileSystemImpl implements FileSystem {
     public byte[] download(String filename) throws Exception {
         JSONObject datanode = getDataNodeForFile(filename);
 
-        return null;
+
+        String hostname = datanode.getString("hostname");
+        Integer nioPort = datanode.getInteger("nioPort");
+
+        return nioClient.readFile(hostname, nioPort, filename);
     }
 
     private JSONObject getDataNodeForFile(String filename) throws Exception {

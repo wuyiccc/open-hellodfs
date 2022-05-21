@@ -222,24 +222,22 @@ public class DataNodeNIOServer extends Thread {
             return;
         }
 
-
         File file = new File(filename.absoluteFilename);
-        long fileLength = file.length();
+        Long fileLength = file.length();
 
         FileInputStream imageIn = new FileInputStream(filename.absoluteFilename);
         FileChannel imageChannel = imageIn.getChannel();
 
 
-        ByteBuffer buffer = ByteBuffer.allocate((int) (fileLength) * 2);
-        long hasReadImageLength = 0L;
-        int len = -1;
-        while ((len = imageChannel.read(buffer)) > 0) {
-            hasReadImageLength += len;
-            System.out.println("already read from local disk file" + hasReadImageLength + "bytes data");
-            buffer.flip();
-            channel.write(buffer);
-            buffer.clear();
-        }
+        // long (mark the file length) + file
+        ByteBuffer buffer = ByteBuffer.allocate(8 + Integer.parseInt(String.valueOf(fileLength)));
+        buffer.putLong(fileLength);
+
+        int hasReadImageLength = imageChannel.read(buffer);
+
+        buffer.rewind();
+        channel.write(buffer);
+
         imageChannel.close();
         imageIn.close();
 
