@@ -1,5 +1,6 @@
 package com.wuyiccc.hellodfs.client;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.errorprone.annotations.Var;
@@ -20,10 +21,13 @@ public class FileSystemImpl implements FileSystem {
     private static final String NAME_NODE_HOSTNAME = "localhost";
     private static final Integer NAME_NODE_PORT = 50070;
 
+    private NIOClient nioClient;
+
     public FileSystemImpl() {
 
         ManagedChannel channel = NettyChannelBuilder.forAddress(NAME_NODE_HOSTNAME, NAME_NODE_PORT).negotiationType(NegotiationType.PLAINTEXT).build();
         this.nameNode = NameNodeServiceGrpc.newBlockingStub(channel);
+        this.nioClient = new NIOClient();
     }
 
     @Override
@@ -61,9 +65,25 @@ public class FileSystemImpl implements FileSystem {
             JSONObject dataNode = dataNodeListArray.getJSONObject(i);
             String hostname = dataNode.getString("hostname");
             int nioPort = dataNode.getIntValue("nioPort");
-            NIOClient.sendFile(hostname, nioPort, file, filename, fileSize);
+            this.nioClient.sendFile(hostname, nioPort, file, filename, fileSize);
         }
         return true;
+    }
+
+    /**
+     * download file
+     */
+    @Override
+    public byte[] download(String filename) throws Exception {
+        JSONObject datanode = getDataNodeForFile(filename);
+
+        return null;
+    }
+
+    private JSONObject getDataNodeForFile(String filename) throws Exception {
+        GetDataNodeForFileRequest request = GetDataNodeForFileRequest.newBuilder().setFilename(filename).build();
+        GetDataNodeForFileResponse response = this.nameNode.getDataNodeForFile(request);
+        return JSONObject.parseObject(response.getDataNodeInfo());
     }
 
     private Boolean createFile(String filename) {

@@ -11,6 +11,7 @@ public interface FileSystem {
 
     /**
      * graceful close
+     *
      * @throws Exception
      */
     public void shutdown() throws Exception;
@@ -18,11 +19,15 @@ public interface FileSystem {
 
     /**
      * upload file
+     *
      * @param file
      * @param filename
      * @param fileSize
      * @throws Exception
      */
     Boolean upload(byte[] file, String filename, long fileSize) throws Exception;
+
+
+    byte[] download(String filename) throws Exception;
 
 }
