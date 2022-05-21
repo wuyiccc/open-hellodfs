@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
+import java.rmi.MarshalledObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -55,6 +56,11 @@ public class DataNodeNIOServer extends Thread {
      */
     private Map<String, ByteBuffer> fileLengthByClient = new ConcurrentHashMap<>();
 
+
+    /**
+     * cache unread files
+     */
+    private Map<String, ByteBuffer> fileByClient = new ConcurrentHashMap<>();
 
     public DataNodeNIOServer(NameNodeRpcClient nameNodeRpcClient) {
         ServerSocketChannel serverSocketChannel = null;
@@ -180,7 +186,7 @@ public class DataNodeNIOServer extends Thread {
 
     private void handleSendFileRequest(SocketChannel channel, SelectionKey key) throws Exception {
 
-        String remoteAddr = channel.getRemoteAddress().toString();
+        String client = channel.getRemoteAddress().toString();
         // get filename from channel
         Filename filename = getFilename(channel);
         System.out.println("parse filename from channel: " + filename);
@@ -205,25 +211,25 @@ public class DataNodeNIOServer extends Thread {
         // set position, add data after the last data
         imageChannel.position(imageChannel.size());
 
-        ByteBuffer buffer = ByteBuffer.allocate(10 * 1024);
+        ByteBuffer fileBuffer = ByteBuffer.allocate(Integer.parseInt(String.valueOf(fileLength)));
+        hasReadImageLength += channel.read(fileBuffer);
 
-        // loop read data from channel and write to the disk file
-        int len = -1;
-        while ((len = channel.read(buffer)) > 0) {
-            hasReadImageLength += len;
-            System.out.println("already write into disk file size: " + hasReadImageLength);
-            buffer.flip();
-            imageChannel.write(buffer);
-            buffer.clear();
+
+        if (!fileBuffer.hasRemaining()) {
+            fileBuffer.rewind();
+            imageChannel.write(fileBuffer);
+            imageChannel.close();
+            imageOut.close();
+        } else {
+            fileByClient.put(client, fileBuffer);
+            return;
         }
-        imageChannel.close();
-        imageOut.close();
 
         // if already read all file, the remove the cache, and return success to client
         if (hasReadImageLength == fileLength) {
             ByteBuffer outBuffer = ByteBuffer.wrap("SUCCESS".getBytes());
             channel.write(outBuffer);
-            cachedRequests.remove(remoteAddr);
+            cachedRequests.remove(client);
             System.out.println("file read completed, return to client success");
             nameNodeRpcClient.informReplicaReceived(filename.relativeFilename);
             System.out.println("datanode begin informReplicaReceived...");
