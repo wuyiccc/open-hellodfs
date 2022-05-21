@@ -101,6 +101,11 @@ public class NIOClient {
 
 
     public byte[] readFile(String hostname, int nioPort, String filename) {
+
+        ByteBuffer fileLengthBuffer = null;
+        Long fileLength = null;
+        ByteBuffer fileBuffer = null;
+
         byte[] file = null;
 
         SocketChannel channel = null;
@@ -151,21 +156,27 @@ public class NIOClient {
                     } else if (key.isReadable()) {
                         channel = (SocketChannel) key.channel();
 
-                        ByteBuffer fileLengthBuffer = ByteBuffer.allocate(8);
-                        channel.read(fileLengthBuffer);
+                        if (fileLength == null) {
+                            if (fileLengthBuffer == null) {
+                                fileLengthBuffer = ByteBuffer.allocate(8);
+                            }
+                            channel.read(fileLengthBuffer);
+                            if (!fileLengthBuffer.hasRemaining()) {
+                                fileLength = fileLengthBuffer.getLong();
+                            }
+                        }
 
-                        if (!fileLengthBuffer.hasRemaining()) {
-                            Long fileLength = fileLengthBuffer.getLong();
-
-                            ByteBuffer fileBuffer = ByteBuffer.allocate(Integer.parseInt(String.valueOf(fileLength)));
+                        if (fileLength != null) {
+                            if (fileBuffer == null) {
+                                fileBuffer = ByteBuffer.allocate(Integer.parseInt(String.valueOf(fileLength)));
+                            }
                             channel.read(fileBuffer);
-
                             if (!fileBuffer.hasRemaining()) {
                                 file = fileBuffer.array();
                                 reading = false;
                             }
-
                         }
+
                     }
                 }
             }
