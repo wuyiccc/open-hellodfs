@@ -24,15 +24,36 @@ public class DataNodeNIOServer extends Thread {
     public static final Integer SEND_FILE = 1;
 
     public static final Integer READ_FILE = 2;
+
     public static final Integer NIO_BUFFER_SIZE = 10 * 1024;
 
     private Selector selector;
     private List<LinkedBlockingQueue<SelectionKey>> queueList = new ArrayList<>();
-    private Map<String, CachedImage> cachedImageMap = new ConcurrentHashMap<>();
-
-    private Map<String, String> waitReadingFilesMap = new ConcurrentHashMap<>();
 
     private NameNodeRpcClient nameNodeRpcClient;
+
+
+    private Map<String, CachedRequest> cachedRequests = new ConcurrentHashMap<>();
+
+    /**
+     * cache the type of request that has not finished reading
+     */
+    private Map<String, ByteBuffer> requestTypesByClient = new ConcurrentHashMap<>();
+
+    /**
+     * cache filename length data
+     */
+    private Map<String, ByteBuffer> filenameLengthByClient = new ConcurrentHashMap<>();
+
+    /**
+     * cache filename data
+     */
+    private Map<String, ByteBuffer> filenameByClient = new ConcurrentHashMap<>();
+
+    /**
+     * cache file length data
+     */
+    private Map<String, ByteBuffer> fileLengthByClient = new ConcurrentHashMap<>();
 
 
     public DataNodeNIOServer(NameNodeRpcClient nameNodeRpcClient) {
@@ -74,7 +95,7 @@ public class DataNodeNIOServer extends Thread {
                 while (keysIterator.hasNext()) {
                     SelectionKey key = keysIterator.next();
                     keysIterator.remove();
-                    handleEvent(key);
+                    handleEvents(key);
                 }
             } catch (Throwable t) {
                 t.printStackTrace();
@@ -82,7 +103,7 @@ public class DataNodeNIOServer extends Thread {
         }
     }
 
-    private void handleEvent(SelectionKey key) throws IOException {
+    private void handleEvents(SelectionKey key) throws IOException {
         SocketChannel channel = null;
 
         try {
@@ -95,8 +116,8 @@ public class DataNodeNIOServer extends Thread {
                 }
             } else if (key.isReadable()) {
                 channel = (SocketChannel) key.channel();
-                String remoteAddr = channel.getRemoteAddress().toString();
-                int queueIndex = remoteAddr.hashCode() % this.queueList.size();
+                String client = channel.getRemoteAddress().toString();
+                int queueIndex = client.hashCode() % this.queueList.size();
                 this.queueList.get(queueIndex).put(key);
             }
         } catch (Throwable t) {
@@ -142,10 +163,13 @@ public class DataNodeNIOServer extends Thread {
         String remoteAddr = channel.getRemoteAddress().toString();
         System.out.println("receive client request" + remoteAddr);
 
-        if (this.cachedImageMap.containsKey(remoteAddr)) {
+        if (this.cachedRequests.containsKey(remoteAddr)) {
             handleSendFileRequest(channel, key);
         } else {
             Integer requestType = getRequestType(channel);
+            if (requestType == null) {
+                return;
+            }
             if (SEND_FILE.equals(requestType)) {
                 handleSendFileRequest(channel, key);
             } else if (READ_FILE.equals(requestType)) {
@@ -162,17 +186,19 @@ public class DataNodeNIOServer extends Thread {
         System.out.println("parse filename from channel: " + filename);
         // if filename is null, skip read
         if (filename == null) {
-            channel.close();
             return;
         }
 
         // get file length from channel
-        long imageLength = getImageLength(channel);
-        System.out.println("parse file size: " + imageLength);
-        // get already read file length from cache
-        long hasReadImageLength = getHasReadImageLength(channel);
-        System.out.println("hasReadImageLength: " + hasReadImageLength);
+        Long fileLength = getFileLength(channel);
+        System.out.println("parse file size: " + fileLength);
+        if (fileLength == null) {
+            return;
+        }
 
+        // get already read file length from cache
+        long hasReadImageLength = getHasReadFileLength(channel);
+        System.out.println("hasReadImageLength: " + hasReadImageLength);
 
         FileOutputStream imageOut = new FileOutputStream(filename.absoluteFilename);
         FileChannel imageChannel = imageOut.getChannel();
@@ -194,20 +220,15 @@ public class DataNodeNIOServer extends Thread {
         imageOut.close();
 
         // if already read all file, the remove the cache, and return success to client
-        if (hasReadImageLength == imageLength) {
+        if (hasReadImageLength == fileLength) {
             ByteBuffer outBuffer = ByteBuffer.wrap("SUCCESS".getBytes());
             channel.write(outBuffer);
-            cachedImageMap.remove(remoteAddr);
+            cachedRequests.remove(remoteAddr);
             System.out.println("file read completed, return to client success");
             nameNodeRpcClient.informReplicaReceived(filename.relativeFilename);
             System.out.println("datanode begin informReplicaReceived...");
             // delete op_read
             key.interestOps(key.interestOps() & ~SelectionKey.OP_READ);
-        } else {
-            // cache the file
-            CachedImage cachedImage = new CachedImage(filename, imageLength, hasReadImageLength);
-            cachedImageMap.put(remoteAddr, cachedImage);
-            System.out.println("file hasn't read completed, wait the next request, already cached file: " + cachedImage);
         }
     }
 
@@ -218,7 +239,6 @@ public class DataNodeNIOServer extends Thread {
         Filename filename = getFilename(channel);
         System.out.println("parse filename from request：" + filename);
         if (filename == null) {
-            channel.close();
             return;
         }
 
@@ -249,23 +269,44 @@ public class DataNodeNIOServer extends Thread {
     }
 
     private Integer getRequestType(SocketChannel channel) throws Exception {
-        ByteBuffer requestType = ByteBuffer.allocate(4);
-        channel.read(requestType);
+        Integer requestType = null;
+        String client = channel.getRemoteAddress().toString();
 
-        if (!requestType.hasRemaining()) {
-            // set position = 0, and set limit = 4
-            requestType.rewind();
-            return requestType.getInt();
+        if (getCachedRequest(client).requestType != null) {
+            return getCachedRequest(client).requestType;
         }
-        return -1;
+
+        ByteBuffer requestTypeBuffer = null;
+
+        if (requestTypesByClient.containsKey(client)) {
+            requestTypeBuffer = requestTypesByClient.get(client);
+        } else {
+            requestTypeBuffer = ByteBuffer.allocate(4);
+        }
+
+        channel.read(requestTypeBuffer);
+
+        if (!requestTypeBuffer.hasRemaining()) {
+            requestTypeBuffer.rewind();
+            requestType = requestTypeBuffer.getInt();
+            System.out.println("current request type: " + requestType);
+
+            requestTypesByClient.remove(client);
+
+            CachedRequest cachedRequest = getCachedRequest(client);
+            cachedRequest.requestType = requestType;
+        } else {
+            requestTypesByClient.put(client, requestTypeBuffer);
+        }
+        return requestType;
     }
 
     private Filename getFilename(SocketChannel channel) throws Exception {
         Filename filename = new Filename();
-        String remoteAddr = channel.getRemoteAddress().toString();
+        String client = channel.getRemoteAddress().toString();
 
-        if (this.cachedImageMap.containsKey(remoteAddr)) {
-            filename = this.cachedImageMap.get(remoteAddr).filename;
+        if (getCachedRequest(client).filename != null) {
+            return getCachedRequest(client).filename;
         } else {
             String relativeFilename = getRelativeFilename(channel);
             if (relativeFilename == null) {
@@ -276,8 +317,10 @@ public class DataNodeNIOServer extends Thread {
 
             String absoluteFilename = getAbsoluteFilename(relativeFilename);
             filename.absoluteFilename = absoluteFilename;
-        }
 
+            CachedRequest cachedRequest = getCachedRequest(client);
+            cachedRequest.filename = filename;
+        }
         return filename;
     }
 
@@ -285,22 +328,47 @@ public class DataNodeNIOServer extends Thread {
      * get filename from channel
      */
     private String getRelativeFilename(SocketChannel channel) throws Exception {
+        String client = channel.getRemoteAddress().toString();
+
+        Integer filenameLength = null;
         String filename = null;
 
-        ByteBuffer filenameLengthBuffer = ByteBuffer.allocate(4);
-        channel.read(filenameLengthBuffer);
-
-        if (!filenameLengthBuffer.hasRemaining()) {
-            filenameLengthBuffer.rewind();
-            Integer filenameLength = filenameLengthBuffer.getInt();
-
-            ByteBuffer filenameBuffer = ByteBuffer.allocate(filenameLength);
-            channel.read(filenameBuffer);
-
-            if (!filenameBuffer.hasRemaining()) {
-                filenameBuffer.rewind();
-                filename = new String(filenameBuffer.array());
+        if (!filenameByClient.containsKey(client)) {
+            ByteBuffer filenameLengthBuffer = null;
+            if (filenameLengthByClient.containsKey(client)) {
+                filenameLengthBuffer = fileLengthByClient.get(client);
+            } else {
+                filenameLengthBuffer = ByteBuffer.allocate(4);
             }
+
+            channel.read(filenameLengthBuffer);
+
+            if (!filenameLengthBuffer.hasRemaining()) {
+                filenameLengthBuffer.rewind();
+                filenameLength = filenameLengthBuffer.getInt();
+                filenameLengthByClient.remove(client);
+            } else {
+                filenameLengthByClient.put(client, filenameLengthBuffer);
+            }
+        }
+
+        ByteBuffer filenameBuffer = null;
+
+        if (filenameByClient.containsKey(client)) {
+            filenameBuffer = filenameByClient.get(client);
+        } else {
+            //  TODO(wuyiccc): filenameLength 为null的问题
+            filenameBuffer = ByteBuffer.allocate(filenameLength);
+        }
+
+        channel.read(filenameBuffer);
+
+        if (!filenameBuffer.hasRemaining()) {
+            filenameBuffer.rewind();
+            filename = new String(filenameBuffer.array());
+            filenameByClient.remove(client);
+        } else {
+            filenameByClient.put(client, filenameBuffer);
         }
 
         return filename;
@@ -327,30 +395,43 @@ public class DataNodeNIOServer extends Thread {
     }
 
 
-    private Long getImageLength(SocketChannel channel) throws Exception {
-        Long imageLength = 0L;
-        String remoteAddr = channel.getRemoteAddress().toString();
+    private Long getFileLength(SocketChannel channel) throws Exception {
+        Long fileLength = null;
+        String client = channel.getRemoteAddress().toString();
 
-        if (this.cachedImageMap.containsKey(remoteAddr)) {
-            imageLength = this.cachedImageMap.get(remoteAddr).imageLength;
+        if (getCachedRequest(client).fileLength != null) {
+            return getCachedRequest(client).fileLength;
         } else {
             // long (8 bytes)
-            ByteBuffer imageLengthBuffer = ByteBuffer.allocate(8);
-            channel.read(imageLengthBuffer);
-            if (!imageLengthBuffer.hasRemaining()) {
-                imageLength = imageLengthBuffer.getLong();
+            ByteBuffer fileLengthBuffer = ByteBuffer.allocate(8);
+            channel.read(fileLengthBuffer);
+
+            if (!fileLengthBuffer.hasRemaining()) {
+                fileLength = fileLengthBuffer.getLong();
+                fileLengthByClient.remove(client);
+                getCachedRequest(client).fileLength = fileLength;
+            } else {
+                fileLengthByClient.put(client, fileLengthBuffer);
             }
         }
-        return imageLength;
+        return fileLength;
     }
 
-    private Long getHasReadImageLength(SocketChannel channel) throws Exception {
-        long hasReadImageLength = 0;
-        String remoteAddr = channel.getRemoteAddress().toString();
-        if (this.cachedImageMap.containsKey(remoteAddr)) {
-            hasReadImageLength = this.cachedImageMap.get(remoteAddr).hasReadImageLength;
+    private Long getHasReadFileLength(SocketChannel channel) throws Exception {
+        String client = channel.getRemoteAddress().toString();
+        if (getCachedRequest(client).hasReadFileLength != null) {
+            return getCachedRequest(client).hasReadFileLength;
         }
-        return hasReadImageLength;
+        return 0L;
+    }
+
+
+    private CachedRequest getCachedRequest(String client) {
+        if (!this.cachedRequests.containsKey(client)) {
+            this.cachedRequests.put(client, new CachedRequest());
+        }
+        CachedRequest cachedRequest = this.cachedRequests.get(client);
+        return cachedRequest;
     }
 
     class Filename {
@@ -368,33 +449,31 @@ public class DataNodeNIOServer extends Thread {
         }
     }
 
-    class CachedImage {
+    class CachedRequest {
+
+
+        Integer requestType;
 
         Filename filename;
 
         /**
-         * full length
+         * file full length
          */
-        long imageLength;
+        Long fileLength;
 
         /**
          * already read length
          */
-        long hasReadImageLength;
+        Long hasReadFileLength;
 
-
-        public CachedImage(Filename filename, long imageLength, long hasReadImageLength) {
-            this.filename = filename;
-            this.imageLength = imageLength;
-            this.hasReadImageLength = hasReadImageLength;
-        }
 
         @Override
         public String toString() {
-            return "CachedImage{" +
-                    "filename=" + filename +
-                    ", imageLength=" + imageLength +
-                    ", hasReadImageLength=" + hasReadImageLength +
+            return "CachedRequest{" +
+                    "requestType=" + requestType +
+                    ", filename=" + filename +
+                    ", fileLength=" + fileLength +
+                    ", hasReadFileLength=" + hasReadFileLength +
                     '}';
         }
     }
