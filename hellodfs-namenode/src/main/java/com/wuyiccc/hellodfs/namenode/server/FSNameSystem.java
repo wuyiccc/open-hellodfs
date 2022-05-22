@@ -35,9 +35,14 @@ public class FSNameSystem {
 
     private Map<String, List<DataNodeInfo>> replicasByFilenameMap = new HashMap<>();
 
+    private Map<String, List<String>> filesByDataNodeMap = new HashMap<>();
+
     private DataNodeManager dataNodeManager;
 
-    ReentrantReadWriteLock replicaReentrantReadWriteLock = new ReentrantReadWriteLock();
+    ReentrantReadWriteLock replicasLock = new ReentrantReadWriteLock();
+
+
+
 
     public FSNameSystem(DataNodeManager dataNodeManager) {
         this.fsDirectory = new FSDirectory();
@@ -290,7 +295,7 @@ public class FSNameSystem {
     public void addReceivedReplica(String hostname, String ip, String filename) {
 
         try {
-            replicaReentrantReadWriteLock.writeLock().lock();
+            replicasLock.writeLock().lock();
             List<DataNodeInfo> replicas = replicasByFilenameMap.get(filename);
             if (replicas == null) {
                 replicas = new ArrayList<>();
@@ -300,15 +305,22 @@ public class FSNameSystem {
             DataNodeInfo dataNodeInfo = this.dataNodeManager.getDataNodeInfo(ip, hostname);
             replicas.add(dataNodeInfo);
 
-            System.out.println("received replica info, current replicasByFilenameMap: " + replicasByFilenameMap);
+            List<String> files = this.filesByDataNodeMap.get(hostname);
+            if (files == null) {
+                files = new ArrayList<>();
+                filesByDataNodeMap.put(hostname, files);
+            }
+            files.add(filename);
+
+            System.out.println("received replica info, current replicasByFilenameMap: " + replicasByFilenameMap + ", filesByDataNodeMap: " + filesByDataNodeMap);
         } finally {
-            replicaReentrantReadWriteLock.writeLock().unlock();
+            replicasLock.writeLock().unlock();
         }
     }
 
     public DataNodeInfo getDataNodeForFile(String filename) {
         try {
-            replicaReentrantReadWriteLock.readLock().lock();
+            replicasLock.readLock().lock();
 
             List<DataNodeInfo> dataNodeInfoList = replicasByFilenameMap.get(filename);
             int size = dataNodeInfoList.size();
@@ -318,7 +330,7 @@ public class FSNameSystem {
 
             return dataNodeInfoList.get(index);
         } finally {
-            replicaReentrantReadWriteLock.readLock().unlock();
+            replicasLock.readLock().unlock();
         }
 
 
