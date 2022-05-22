@@ -22,6 +22,7 @@ public class NIOClient {
     public void sendFile(String hostname, int nioPort, byte[] file, String filename, long fileSize) {
         SocketChannel channel = null;
         Selector selector = null;
+        ByteBuffer buffer = null;
         try {
             channel = SocketChannel.open();
             channel.configureBlocking(false);
@@ -50,7 +51,7 @@ public class NIOClient {
                         byte[] filenameBytes = filename.getBytes();
 
                         // 4 bytes(type data) + 4 bytes(filename length data) + some bytes(filename data) + 8 bytes(file length data) + some bytes(file data)
-                        ByteBuffer buffer = ByteBuffer.allocate(4 + 4 + filenameBytes.length + 8 + (int) fileSize);
+                        buffer = ByteBuffer.allocate(4 + 4 + filenameBytes.length + 8 + (int) fileSize);
 
                         buffer.putInt(SEND_FILE);
                         // set filename
@@ -60,19 +61,32 @@ public class NIOClient {
                         // set fileSize in transport stream header, the long type need 8 bytes
                         buffer.putLong(fileSize);
                         buffer.put(file);
-                        buffer.flip();
+                        buffer.rewind();
 
 
                         // buffer: header(request type + filenameLength + filename + fileSize) + file
                         int sentData = channel.write(buffer);
 
-                        System.out.println("already sent: " + sentData + " bytes data");
+                        System.out.println("already send: " + sentData + " bytes data");
 
-                        channel.register(selector, SelectionKey.OP_READ);
+
+                        if (buffer.hasRemaining()) {
+                            // continue to write
+                            key.interestOps(SelectionKey.OP_WRITE);
+                        } else {
+                            key.interestOps(SelectionKey.OP_READ);
+                        }
+
+                    } else if (key.isWritable()) {
+                        channel = (SocketChannel) key.channel();
+                        channel.write(buffer);
+                        if (!buffer.hasRemaining()) {
+                            key.interestOps(SelectionKey.OP_READ);
+                        }
                     } else if (key.isReadable()) {
                         channel = (SocketChannel) key.channel();
 
-                        ByteBuffer buffer = ByteBuffer.allocate(1024);
+                        buffer = ByteBuffer.allocate(1024);
                         int len = channel.read(buffer);
 
                         if (len > 0) {
