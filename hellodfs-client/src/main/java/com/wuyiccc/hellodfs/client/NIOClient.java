@@ -48,6 +48,9 @@ public class NIOClient {
                                 TimeUnit.MILLISECONDS.sleep(100);
                             }
                         }
+
+                        System.out.println("finished connect with nioserver");
+
                         byte[] filenameBytes = filename.getBytes();
 
                         // 4 bytes(type data) + 4 bytes(filename length data) + some bytes(filename data) + 8 bytes(file length data) + some bytes(file data)
@@ -71,15 +74,18 @@ public class NIOClient {
 
 
                         if (buffer.hasRemaining()) {
+                            System.out.println("If the packet is not sent this time, send it next time");
                             // continue to write
                             key.interestOps(SelectionKey.OP_WRITE);
                         } else {
+                            System.out.println("The local data packet is sent and the server is ready to read the response");
                             key.interestOps(SelectionKey.OP_READ);
                         }
 
                     } else if (key.isWritable()) {
                         channel = (SocketChannel) key.channel();
                         channel.write(buffer);
+                        System.out.println("last sent data packet has not send finished, now continue to send data in this time");
                         if (!buffer.hasRemaining()) {
                             key.interestOps(SelectionKey.OP_READ);
                         }
@@ -171,7 +177,7 @@ public class NIOClient {
                         readFileRequest.flip();
 
                         int sentData = channel.write(readFileRequest);
-                        System.out.println("already send:" + sentData + "bytes data to" + hostname + "'s" + nioPort + "port");
+                        System.out.println("already send:" + sentData + " bytes data to" + hostname + "'s" + nioPort + "port");
 
                         channel.register(selector, SelectionKey.OP_READ);
                     } else if (key.isReadable()) {
@@ -183,6 +189,7 @@ public class NIOClient {
                             }
                             channel.read(fileLengthBuffer);
                             if (!fileLengthBuffer.hasRemaining()) {
+                                fileLengthBuffer.rewind();
                                 fileLength = fileLengthBuffer.getLong();
                             }
                         }
@@ -193,6 +200,7 @@ public class NIOClient {
                             }
                             channel.read(fileBuffer);
                             if (!fileBuffer.hasRemaining()) {
+                                fileBuffer.rewind();
                                 file = fileBuffer.array();
                                 reading = false;
                             }

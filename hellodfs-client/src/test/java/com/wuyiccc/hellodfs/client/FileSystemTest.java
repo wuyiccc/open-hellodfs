@@ -3,6 +3,7 @@ package com.wuyiccc.hellodfs.client;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.concurrent.TimeUnit;
@@ -17,24 +18,22 @@ public class FileSystemTest {
 
     public static void main(String[] args) throws Exception {
         //testCreateFile();
-        testShutdown();
+        //testShutdown();
+        testReadFile();
     }
 
 
     private static void testMkdir() throws Exception {
         for (int j = 0; j < 10; j++) {
-            new Thread() {
-                @Override
-                public void run() {
-                    for (int i = 0; i < 100; i++) {
-                        try {
-                            fileSystem.mkdir("/usr/warehouse/hive" + i + "_" + Thread.currentThread().getName());
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+            new Thread(() -> {
+                for (int i = 0; i < 100; i++) {
+                    try {
+                        fileSystem.mkdir("/usr/warehouse/hive" + i + "_" + Thread.currentThread().getName());
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
-            }.start();
+            }).start();
         }
     }
 
@@ -46,11 +45,17 @@ public class FileSystemTest {
         File image = new File("E:\\code_learn\\031-opensource\\06-hellodfs\\hellodfs\\test\\lingyu.jpg");
         long imageLength = image.length();
 
+        System.out.println("upload file size: " + imageLength + " bytes");
+
         ByteBuffer buffer = ByteBuffer.allocate((int)imageLength);
 
         FileInputStream imageIn = new FileInputStream(image);
         FileChannel imageChannel = imageIn.getChannel();
-        imageChannel.read(buffer);
+        int hasRead = imageChannel.read(buffer);
+
+
+
+        System.out.println("already read: " + hasRead + " bytes data into memory.");
 
         buffer.flip();
         byte[] imageBytes = buffer.array();
@@ -59,5 +64,17 @@ public class FileSystemTest {
 
         imageIn.close();
         imageChannel.close();
+    }
+
+    private static void testReadFile() throws Exception {
+        byte[] image = fileSystem.download("/image/product/lingyu.jpg");
+        ByteBuffer buffer = ByteBuffer.wrap(image);
+
+        FileOutputStream imageOut = new FileOutputStream("E:\\code_learn\\031-opensource\\06-hellodfs\\hellodfs\\test\\lingyu-copy.jpg");
+
+        FileChannel imageChannel = imageOut.getChannel();
+        imageChannel.write(buffer);
+        imageChannel.close();
+        imageOut.close();
     }
 }

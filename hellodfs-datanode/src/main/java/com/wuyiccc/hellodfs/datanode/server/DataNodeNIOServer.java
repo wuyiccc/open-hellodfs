@@ -233,6 +233,16 @@ public class DataNodeNIOServer extends Thread {
                 fileBuffer.rewind();
                 imageChannel.write(fileBuffer);
                 fileByClient.remove(client);
+
+                // if already read all file, the remove the cache, and return success to client
+                ByteBuffer outBuffer = ByteBuffer.wrap("SUCCESS".getBytes());
+                channel.write(outBuffer);
+                cachedRequests.remove(client);
+                System.out.println("file read completed, return to client success");
+                nameNodeRpcClient.informReplicaReceived(filename.relativeFilename);
+                System.out.println("datanode begin informReplicaReceived...");
+                // delete op_read
+                key.interestOps(key.interestOps() & ~SelectionKey.OP_READ);
             } else {
                 fileByClient.put(client, fileBuffer);
                 getCachedRequest(client).hasReadFileLength = hasReadImageLength;
@@ -241,18 +251,6 @@ public class DataNodeNIOServer extends Thread {
         } finally {
             imageChannel.close();
             imageOut.close();
-        }
-
-        // if already read all file, the remove the cache, and return success to client
-        if (hasReadImageLength == fileLength) {
-            ByteBuffer outBuffer = ByteBuffer.wrap("SUCCESS".getBytes());
-            channel.write(outBuffer);
-            cachedRequests.remove(client);
-            System.out.println("file read completed, return to client success");
-            nameNodeRpcClient.informReplicaReceived(filename.relativeFilename);
-            System.out.println("datanode begin informReplicaReceived...");
-            // delete op_read
-            key.interestOps(key.interestOps() & ~SelectionKey.OP_READ);
         }
     }
 
@@ -374,6 +372,7 @@ public class DataNodeNIOServer extends Thread {
                 filenameLengthByClient.remove(client);
             } else {
                 filenameLengthByClient.put(client, filenameLengthBuffer);
+                return null;
             }
         }
 
@@ -382,7 +381,6 @@ public class DataNodeNIOServer extends Thread {
         if (filenameByClient.containsKey(client)) {
             filenameBuffer = filenameByClient.get(client);
         } else {
-            //  TODO(wuyiccc): filenameLength 为null的问题
             filenameBuffer = ByteBuffer.allocate(filenameLength);
         }
 
@@ -412,7 +410,7 @@ public class DataNodeNIOServer extends Thread {
 
         File dir = new File(dirPath);
         if (!dir.exists()) {
-            return null;
+            dir.mkdirs();
         }
 
         String absoluteFilename = dirPath + "\\" + relativeFilenameSplit[relativeFilenameSplit.length - 1];
@@ -427,8 +425,16 @@ public class DataNodeNIOServer extends Thread {
         if (getCachedRequest(client).fileLength != null) {
             return getCachedRequest(client).fileLength;
         } else {
-            // long (8 bytes)
-            ByteBuffer fileLengthBuffer = ByteBuffer.allocate(8);
+
+            ByteBuffer fileLengthBuffer = null;
+
+            if (fileLengthByClient.get(client) != null) {
+                fileLengthBuffer = fileLengthByClient.get(client);
+            } else {
+                // long (8 bytes)
+                fileLengthBuffer = ByteBuffer.allocate(8);
+            }
+
             channel.read(fileLengthBuffer);
 
             if (!fileLengthBuffer.hasRemaining()) {

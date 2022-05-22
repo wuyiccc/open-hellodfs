@@ -54,10 +54,14 @@ public class FileSystemImpl implements FileSystem {
             return false;
         }
 
+        System.out.println("success create file in fileDirectory");
+
         String dataNodeListJson = allocateDataNodeList(filename, fileSize);
         System.out.println(dataNodeListJson);
 
         JSONArray dataNodeListArray = JSONArray.parseArray(dataNodeListJson);
+
+        System.out.println("apply two datanode: " + dataNodeListArray);
 
         for (int i = 0; i < dataNodeListArray.size(); i++) {
             JSONObject dataNode = dataNodeListArray.getJSONObject(i);
