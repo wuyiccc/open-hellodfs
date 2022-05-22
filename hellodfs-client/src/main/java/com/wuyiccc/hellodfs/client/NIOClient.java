@@ -7,6 +7,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author wuyiccc
@@ -42,28 +43,32 @@ public class NIOClient {
                         channel = (SocketChannel) key.channel();
 
                         if (channel.isConnectionPending()) {
-                            channel.finishConnect();
-
-                            byte[] filenameBytes = filename.getBytes();
-
-                            ByteBuffer buffer = ByteBuffer.allocate((int) fileSize * 2 + filenameBytes.length);
-
-                            buffer.putInt(SEND_FILE);
-                            // set filename
-                            buffer.putInt(filenameBytes.length);
-                            buffer.put(filenameBytes);
-
-                            // set fileSize in transport stream header, the long type need 8 bytes
-                            buffer.putLong(fileSize);
-                            buffer.put(file);
-                            buffer.flip();
-
-                            int sentData = channel.write(buffer);
-
-                            System.out.println("already sent: " + sentData + " bytes data");
-
-                            channel.register(selector, SelectionKey.OP_READ);
+                            while (!channel.finishConnect()) {
+                                TimeUnit.MILLISECONDS.sleep(100);
+                            }
                         }
+                        byte[] filenameBytes = filename.getBytes();
+
+                        // 4 bytes(type data) + 4 bytes(filename length data) + some bytes(filename data) + 8 bytes(file length data) + some bytes(file data)
+                        ByteBuffer buffer = ByteBuffer.allocate(4 + 4 + filenameBytes.length + 8 + (int) fileSize);
+
+                        buffer.putInt(SEND_FILE);
+                        // set filename
+                        buffer.putInt(filenameBytes.length);
+                        buffer.put(filenameBytes);
+
+                        // set fileSize in transport stream header, the long type need 8 bytes
+                        buffer.putLong(fileSize);
+                        buffer.put(file);
+                        buffer.flip();
+
+
+                        // buffer: header(request type + filenameLength + filename + fileSize) + file
+                        int sentData = channel.write(buffer);
+
+                        System.out.println("already sent: " + sentData + " bytes data");
+
+                        channel.register(selector, SelectionKey.OP_READ);
                     } else if (key.isReadable()) {
                         channel = (SocketChannel) key.channel();
 
