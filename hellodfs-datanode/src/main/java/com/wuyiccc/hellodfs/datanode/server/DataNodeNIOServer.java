@@ -170,17 +170,20 @@ public class DataNodeNIOServer extends Thread {
 
         if (this.cachedRequests.containsKey(remoteAddr)) {
             handleSendFileRequest(channel, key);
-        } else {
-            Integer requestType = getRequestType(channel);
-            if (requestType == null) {
-                return;
-            }
-            if (SEND_FILE.equals(requestType)) {
-                handleSendFileRequest(channel, key);
-            } else if (READ_FILE.equals(requestType)) {
-                handleReadFileRequest(channel, key);
-            }
+            return;
         }
+
+        Integer requestType = getRequestType(channel);
+        if (requestType == null) {
+            return;
+        }
+
+        if (SEND_FILE.equals(requestType)) {
+            handleSendFileRequest(channel, key);
+        } else if (READ_FILE.equals(requestType)) {
+            handleReadFileRequest(channel, key);
+        }
+
     }
 
     private void handleSendFileRequest(SocketChannel channel, SelectionKey key) throws Exception {
@@ -429,6 +432,7 @@ public class DataNodeNIOServer extends Thread {
             channel.read(fileLengthBuffer);
 
             if (!fileLengthBuffer.hasRemaining()) {
+                fileLengthBuffer.rewind();
                 fileLength = fileLengthBuffer.getLong();
                 fileLengthByClient.remove(client);
                 getCachedRequest(client).fileLength = fileLength;
@@ -449,10 +453,12 @@ public class DataNodeNIOServer extends Thread {
 
 
     private CachedRequest getCachedRequest(String client) {
-        if (!this.cachedRequests.containsKey(client)) {
-            this.cachedRequests.put(client, new CachedRequest());
-        }
         CachedRequest cachedRequest = this.cachedRequests.get(client);
+
+        if (cachedRequest == null) {
+            cachedRequest = new CachedRequest();
+            this.cachedRequests.put(client, cachedRequest);
+        }
         return cachedRequest;
     }
 

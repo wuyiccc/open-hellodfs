@@ -89,6 +89,8 @@ public class NIOClient {
                         buffer = ByteBuffer.allocate(1024);
                         int len = channel.read(buffer);
 
+                        buffer.flip();
+
                         if (len > 0) {
                             System.out.println("[" + Thread.currentThread().getName()
                                     + "]receive response：" + new String(buffer.array(), 0, len));
