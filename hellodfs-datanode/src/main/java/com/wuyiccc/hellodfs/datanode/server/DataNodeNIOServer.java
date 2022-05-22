@@ -239,7 +239,7 @@ public class DataNodeNIOServer extends Thread {
                 channel.write(outBuffer);
                 cachedRequests.remove(client);
                 System.out.println("file read completed, return to client success");
-                nameNodeRpcClient.informReplicaReceived(filename.relativeFilename);
+                nameNodeRpcClient.informReplicaReceived(filename.relativeFilename + "_" + fileLength);
                 System.out.println("datanode begin informReplicaReceived...");
                 // delete op_read
                 key.interestOps(key.interestOps() & ~SelectionKey.OP_READ);

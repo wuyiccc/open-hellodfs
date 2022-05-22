@@ -29,7 +29,7 @@ public class StorageManager {
             path = path.substring(DataNodeConfig.DATA_DIR.length());
             path = path.replace("\\", "/");
 
-            storageInfo.addFilename(path);
+            storageInfo.addFilename(path + "_" + dir.length());
             storageInfo.addStoredDataSize(dir.length());
             return;
         }

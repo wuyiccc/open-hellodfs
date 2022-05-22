@@ -31,6 +31,7 @@ public class NameNode {
     public NameNode() {
         this.dataNodeManager = new DataNodeManager();
         this.fsNameSystem = new FSNameSystem(this.dataNodeManager);
+        this.dataNodeManager.setFsNameSystem(fsNameSystem);
         this.nameNodeRpcServer = new NameNodeRpcServer(this.fsNameSystem, this.dataNodeManager);
         this.fsImageUploadServer = new FSImageUploadServer();
     }

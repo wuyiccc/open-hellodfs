@@ -1,5 +1,6 @@
 package com.wuyiccc.hellodfs.namenode.server;
 
+import javax.xml.crypto.Data;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -14,9 +15,15 @@ public class DataNodeManager {
 
     private Map<String, DataNodeInfo> dataNodeMap = new ConcurrentHashMap<>();
 
+    private FSNameSystem fsNameSystem;
+
 
     public DataNodeManager() {
         new DataNodeAliveMonitor().start();
+    }
+
+    public void setFsNameSystem(FSNameSystem fsNameSystem) {
+        this.fsNameSystem = fsNameSystem;
     }
 
     public Boolean register(String ip, String hostname, int nioPort) {
@@ -74,11 +81,45 @@ public class DataNodeManager {
         return dataNodeMap.get(ip + "-" + hostname);
     }
 
+
     public void setStoredDataSize(String ip, String hostname, Long storedDataSize) {
         // datanode registration takes precedence over report
         DataNodeInfo dataNodeInfo = dataNodeMap.get(ip + "-" + hostname);
         dataNodeInfo.setStoredDataSize(storedDataSize);
     }
+
+    public void createLostReplicaTask(DataNodeInfo dataNodeInfo) {
+        List<String> files = this.fsNameSystem.getFilesByDataNode(dataNodeInfo.getHostname());
+
+        for(String file : files) {
+            String filename = file.split("_")[0];
+            Long fileLength = Long.valueOf(file.split("_")[1]);
+            // 复制任务的目标数据节点
+            DataNodeInfo destDatanode = allocateReplicateDataNode(fileLength);
+            // 获取这个复制任务的源头数据节点
+            DataNodeInfo sourceDatanode = this.fsNameSystem.getReplicateSource(filename, dataNodeInfo);
+
+            ReplicateTask replicateTask = new ReplicateTask(filename, fileLength, sourceDatanode, destDatanode);
+        }
+    }
+
+
+    public DataNodeInfo allocateReplicateDataNode(long fileSize) {
+        synchronized (this) {
+            List<DataNodeInfo> dataNodeInfoList = new ArrayList<>();
+            for (DataNodeInfo dataNodeInfo : this.dataNodeMap.values()) {
+                dataNodeInfoList.add(dataNodeInfo);
+            }
+            Collections.sort(dataNodeInfoList);
+            DataNodeInfo selectedDataNode = null;
+            if (dataNodeInfoList.size() >= 1) {
+                selectedDataNode = dataNodeInfoList.get(0);
+                dataNodeInfoList.get(0).addStoredDataSize(fileSize);
+            }
+            return selectedDataNode;
+        }
+    }
+
 
     /**
      * check datanode is alive
@@ -91,7 +132,7 @@ public class DataNodeManager {
             while (true) {
 
                 try {
-                    List<String> toRemoveDataNodes = new ArrayList<>();
+                    List<DataNodeInfo> toRemoveDataNodes = new ArrayList<>();
 
                     Iterator<DataNodeInfo> dataNodeInfoIterator = dataNodeMap.values().iterator();
                     DataNodeInfo dataNodeInfo = null;
@@ -99,13 +140,17 @@ public class DataNodeManager {
                     while (dataNodeInfoIterator.hasNext()) {
                         dataNodeInfo = dataNodeInfoIterator.next();
                         if (System.currentTimeMillis() - dataNodeInfo.getLastHeartBeatTime() > 90 * 1000) {
-                            toRemoveDataNodes.add(dataNodeInfo.getIp() + "-" + dataNodeInfo.getHostname());
+                            toRemoveDataNodes.add(dataNodeInfo);
                         }
                     }
                     if (!toRemoveDataNodes.isEmpty()) {
-                        for (String toRemoveDataNode : toRemoveDataNodes) {
-                            dataNodeMap.remove(toRemoveDataNode);
+                        for (DataNodeInfo toRemoveDataNode : toRemoveDataNodes) {
+                            dataNodeMap.remove(toRemoveDataNode.getIp() + "-" + toRemoveDataNode.getHostname());
                             System.out.println("datanodes: " + toRemoveDataNode + ", hearbeat is down....");
+
+                            createLostReplicaTask(toRemoveDataNode);
+
+                            fsNameSystem.removeDeadDataNode(toRemoveDataNode);
                         }
                     }
 

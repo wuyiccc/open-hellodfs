@@ -1,6 +1,7 @@
 package com.wuyiccc.hellodfs.namenode.server;
 
 import java.net.SocketAddress;
+import java.util.Objects;
 
 /**
  * desc datanode info
@@ -83,6 +84,24 @@ public class DataNodeInfo implements Comparable<DataNodeInfo>{
         } else {
             return 0;
         }
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        DataNodeInfo that = (DataNodeInfo) o;
+        return Objects.equals(ip, that.ip) && Objects.equals(hostname, that.hostname);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(ip, hostname);
     }
 
     @Override

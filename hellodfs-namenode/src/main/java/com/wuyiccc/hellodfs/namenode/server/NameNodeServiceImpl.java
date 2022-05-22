@@ -271,7 +271,7 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
         InformReplicaReceivedResponse response = null;
 
         try {
-            this.fsNameSystem.addReceivedReplica(hostname, ip, filename);
+            this.fsNameSystem.addReceivedReplica(hostname, ip, filename.split("_")[0], Long.valueOf(filename.split("_")[1]));
             response = InformReplicaReceivedResponse.newBuilder()
                     .setStatus(STATUS_SUCCESS)
                     .build();
@@ -299,7 +299,7 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
 
         for (int i = 0; i < filenameJSONArray.size(); i++) {
             String filename = filenameJSONArray.getString(i);
-            this.fsNameSystem.addReceivedReplica(hostname, ip, filename);
+            this.fsNameSystem.addReceivedReplica(hostname, ip, filename.split("_")[0], Long.valueOf(filename.split("_")[1]));
         }
 
         ReportAllStorageInfoResponse response = ReportAllStorageInfoResponse.newBuilder().setStatus(STATUS_SUCCESS).build();

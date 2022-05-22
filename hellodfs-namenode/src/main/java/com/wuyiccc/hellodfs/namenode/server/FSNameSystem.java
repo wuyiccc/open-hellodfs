@@ -42,8 +42,6 @@ public class FSNameSystem {
     ReentrantReadWriteLock replicasLock = new ReentrantReadWriteLock();
 
 
-
-
     public FSNameSystem(DataNodeManager dataNodeManager) {
         this.fsDirectory = new FSDirectory();
         this.fsEditLog = new FSEditLog(this);
@@ -292,7 +290,7 @@ public class FSNameSystem {
     }
 
 
-    public void addReceivedReplica(String hostname, String ip, String filename) {
+    public void addReceivedReplica(String hostname, String ip, String filename, Long fileLength) {
 
         try {
             replicasLock.writeLock().lock();
@@ -310,7 +308,7 @@ public class FSNameSystem {
                 files = new ArrayList<>();
                 filesByDataNodeMap.put(hostname, files);
             }
-            files.add(filename);
+            files.add(filename + "_" + fileLength);
 
             System.out.println("received replica info, current replicasByFilenameMap: " + replicasByFilenameMap + ", filesByDataNodeMap: " + filesByDataNodeMap);
         } finally {
@@ -332,7 +330,51 @@ public class FSNameSystem {
         } finally {
             replicasLock.readLock().unlock();
         }
+    }
 
+    public List<String> getFilesByDataNode(String hostname) {
+        try {
+            this.replicasLock.readLock().lock();
+            return this.filesByDataNodeMap.get(hostname);
+        } finally {
+            this.replicasLock.readLock().unlock();
+        }
+    }
 
+    public void removeDeadDataNode(DataNodeInfo dataNodeInfo) {
+        try {
+            replicasLock.writeLock().lock();
+
+            List<String> filenames = this.filesByDataNodeMap.get(dataNodeInfo.getHostname());
+            for(String filename : filenames) {
+                List<DataNodeInfo> replicas = this.replicasByFilenameMap.get(filename);
+                replicas.remove(dataNodeInfo);
+            }
+
+            this.filesByDataNodeMap.remove(dataNodeInfo.getHostname());
+        } finally {
+            replicasLock.writeLock().unlock();
+        }
+    }
+
+    public DataNodeInfo getReplicateSource(String filename, DataNodeInfo deadDataNode) {
+
+        DataNodeInfo replicateSource = null;
+
+        try {
+            this.replicasLock.readLock().lock();
+
+            List<DataNodeInfo> replicas = replicasByFilenameMap.get(filename);
+
+            for (DataNodeInfo replica : replicas) {
+                if(!replica.equals(deadDataNode)) {
+                    replicateSource = replica;
+                }
+            }
+        } finally {
+            this.replicasLock.readLock().unlock();
+        }
+
+        return replicateSource;
     }
 }
