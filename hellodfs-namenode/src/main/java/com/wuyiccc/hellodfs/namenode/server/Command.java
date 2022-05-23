@@ -12,6 +12,8 @@ public class Command {
 
     public static final Integer REPLICATE = 3;
 
+    public static final Integer REMOVE_REPLICA = 4;
+
     private Integer type;
 
     private String content;

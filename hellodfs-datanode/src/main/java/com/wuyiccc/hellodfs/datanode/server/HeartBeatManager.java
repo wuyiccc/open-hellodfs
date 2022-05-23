@@ -18,6 +18,11 @@ public class HeartBeatManager {
 
     public static final Integer FAILURE = 2;
 
+    public static final Integer COMMAND_REGISTER = 1;
+    public static final Integer COMMAND_REPORT_COMPLETE_STORAGE_INFO = 2;
+    public static final Integer COMMAND_REPLICATE = 3;
+    public static final Integer COMMAND_REMOVE_REPLICA = 4;
+
 
     private NameNodeRpcClient nameNodeRpcClient;
     private StorageManager storageManager;

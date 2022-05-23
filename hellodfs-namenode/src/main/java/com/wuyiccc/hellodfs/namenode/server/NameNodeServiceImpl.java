@@ -97,6 +97,13 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
                 commandList.add(replicateCommand);
             }
 
+            RemoveReplicaTask removeReplicaTask = null;
+
+            while((removeReplicaTask = dataNodeInfo.pollRemoveReplicaTask()) != null) {
+                Command removeReplicaCommand = new Command(Command.REMOVE_REPLICA);
+                removeReplicaCommand.setContent(JSONObject.toJSONString(removeReplicaTask));
+                commandList.add(removeReplicaCommand);
+            }
 
             response = HeartBeatResponse.newBuilder()
                     .setStatus(STATUS_SUCCESS)
