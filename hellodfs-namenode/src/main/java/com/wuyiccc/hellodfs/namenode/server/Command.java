@@ -10,6 +10,7 @@ public class Command {
 
     public static final Integer REPORT_COMPLETE_STORAGE_INFO = 2;
 
+    public static final Integer REPLICATE = 3;
 
     private Integer type;
 

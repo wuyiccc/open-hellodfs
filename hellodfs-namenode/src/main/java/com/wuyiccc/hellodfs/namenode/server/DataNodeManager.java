@@ -100,6 +100,8 @@ public class DataNodeManager {
             DataNodeInfo sourceDatanode = this.fsNameSystem.getReplicateSource(filename, dataNodeInfo);
 
             ReplicateTask replicateTask = new ReplicateTask(filename, fileLength, sourceDatanode, destDatanode);
+
+            destDatanode.addReplicateTask(replicateTask);
         }
     }
 
@@ -145,10 +147,12 @@ public class DataNodeManager {
                     }
                     if (!toRemoveDataNodes.isEmpty()) {
                         for (DataNodeInfo toRemoveDataNode : toRemoveDataNodes) {
-                            dataNodeMap.remove(toRemoveDataNode.getIp() + "-" + toRemoveDataNode.getHostname());
-                            System.out.println("datanodes: " + toRemoveDataNode + ", hearbeat is down....");
 
                             createLostReplicaTask(toRemoveDataNode);
+
+                            dataNodeMap.remove(toRemoveDataNode.getId());
+                            System.out.println("datanodes: " + toRemoveDataNode + ", hearbeat is down....");
+
 
                             fsNameSystem.removeDeadDataNode(toRemoveDataNode);
                         }

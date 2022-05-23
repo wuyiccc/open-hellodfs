@@ -2,6 +2,7 @@ package com.wuyiccc.hellodfs.namenode.server;
 
 import java.net.SocketAddress;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * desc datanode info
@@ -22,6 +23,8 @@ public class DataNodeInfo implements Comparable<DataNodeInfo>{
 
     private int nioPort;
 
+    private ConcurrentLinkedQueue<ReplicateTask> replicateTaskQueue = new ConcurrentLinkedQueue<>();
+
 
     public DataNodeInfo(String ip, String hostname, int nioPort) {
         this.ip = ip;
@@ -29,6 +32,21 @@ public class DataNodeInfo implements Comparable<DataNodeInfo>{
         this.nioPort = nioPort;
         this.lastHeartBeatTime = System.currentTimeMillis();
         this.storedDataSize = 0L;
+    }
+
+    public void addReplicateTask(ReplicateTask replicateTask) {
+        this.replicateTaskQueue.offer(replicateTask);
+    }
+
+    public ReplicateTask pollReplicateTask() {
+        if (!this.replicateTaskQueue.isEmpty()) {
+            return this.replicateTaskQueue.poll();
+        }
+        return null;
+    }
+
+    public String getId() {
+        return ip + "-" + hostname;
     }
 
     public int getNioPort() {

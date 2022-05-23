@@ -75,13 +75,28 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
 
     @Override
     public void heartBeat(HeartBeatRequest request, StreamObserver<HeartBeatResponse> responseObserver) {
-        Boolean result = dataNodeManager.heartBeat(request.getIp(), request.getHostname());
+
+        String ip = request.getIp();
+        String hostname = request.getHostname();
+
+        Boolean result = dataNodeManager.heartBeat(ip, hostname);
 
         HeartBeatResponse response = null;
 
         List<Command> commandList = new ArrayList<>();
 
         if (result) {
+
+            DataNodeInfo dataNodeInfo = this.dataNodeManager.getDataNodeInfo(ip, hostname);
+            ReplicateTask replicateTask = dataNodeInfo.pollReplicateTask();
+
+
+            if (replicateTask != null) {
+                Command replicateCommand = new Command(Command.REPLICATE);
+                replicateCommand.setContent(JSONObject.toJSONString(replicateTask));
+                commandList.add(replicateCommand);
+            }
+
             response = HeartBeatResponse.newBuilder()
                     .setStatus(STATUS_SUCCESS)
                     .setCommands(JSONArray.toJSONString(commandList))
