@@ -2,6 +2,10 @@ package com.wuyiccc.hellodfs.datanode.server;
 
 import com.alibaba.fastjson.JSONObject;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.TimeUnit;
 
@@ -15,6 +19,8 @@ public class ReplicateManager {
     public static final Integer REPLICATE_THREAD_NUM = 3;
 
     private ConcurrentLinkedQueue<JSONObject> replicateTaskQueue = new ConcurrentLinkedQueue<>();
+
+    private NIOClient nioClient = new NIOClient();
 
     public ReplicateManager() {
         for (int i = 0; i < REPLICATE_THREAD_NUM; i++) {
@@ -31,17 +37,67 @@ public class ReplicateManager {
         @Override
         public void run() {
 
-            while (true) {
+            while(true) {
+                FileOutputStream imageOut = null;
+                FileChannel imageChannel = null;
+
                 try {
                     JSONObject replicateTask = replicateTaskQueue.poll();
-                    if (replicateTask == null) {
-                        TimeUnit.SECONDS.sleep(1);
+                    if(replicateTask == null) {
+                        Thread.sleep(1000);
                         continue;
                     }
+
+                    String filename = replicateTask.getString("filename");
+
+                    JSONObject sourceDatanode = replicateTask.getJSONObject("sourceDataNodeInfo");
+                    String hostname = sourceDatanode.getString("hostname");
+                    Integer nioPort = sourceDatanode.getInteger("nioPort");
+
+                    byte[] file = nioClient.readFile(hostname, nioPort, filename);
+                    ByteBuffer fileBuffer = ByteBuffer.wrap(file);
+
+                    String absoluteFilename = getAbsoluteFilename(filename);
+
+                    imageOut = new FileOutputStream(absoluteFilename);
+                    imageChannel = imageOut.getChannel();
+
+                    imageChannel.write(fileBuffer);
                 } catch (Exception e) {
                     e.printStackTrace();
+                } finally {
+                    try {
+                        if(imageChannel != null) {
+                            imageChannel.close();
+                        }
+                        if(imageOut != null) {
+                            imageOut.close();
+                        }
+                    } catch (Exception e2) {
+                        e2.printStackTrace();
+                    }
                 }
             }
+        }
+
+        private String getAbsoluteFilename(String relativeFilename) throws Exception {
+            String[] relativeFilenameSplit = relativeFilename.split("/");
+
+            String dirPath = DataNodeConfig.DATA_DIR;
+            for(int i = 0; i < relativeFilenameSplit.length - 1; i++) {
+                if(i == 0) {
+                    continue;
+                }
+                dirPath += "\\" + relativeFilenameSplit[i];
+            }
+
+            File dir = new File(dirPath);
+            if(!dir.exists()) {
+                dir.mkdirs();
+            }
+
+            String absoluteFilename = dirPath + "\\" + relativeFilenameSplit[relativeFilenameSplit.length - 1];
+            return absoluteFilename;
         }
     }
 }
