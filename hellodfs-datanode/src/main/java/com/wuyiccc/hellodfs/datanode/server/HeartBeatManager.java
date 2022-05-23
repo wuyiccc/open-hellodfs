@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -61,8 +62,20 @@ public class HeartBeatManager {
                         if (commands.size() > 0) {
                             for (int i = 0; i < commands.size(); i++) {
                                 JSONObject command = commands.getJSONObject(i);
-                                JSONObject replicateTask = command.getJSONObject("content");
-                                replicateManager.addReplicateTask(replicateTask);
+                                Integer type = command.getInteger("type");
+                                JSONObject task = command.getJSONObject("content");
+
+                                if (type.equals(COMMAND_REPLICATE)) {
+                                    replicateManager.addReplicateTask(task);
+                                } else if (type.equals(COMMAND_REMOVE_REPLICA)) {
+                                    String filename = task.getString("filename");
+                                    String absoluteFilename = FileUtils.getAbsoluteFilename(filename);
+                                    File file = new File(absoluteFilename);
+                                    if(file.exists()) {
+                                        file.delete();
+                                    }
+                                }
+
                             }
                         }
                     }

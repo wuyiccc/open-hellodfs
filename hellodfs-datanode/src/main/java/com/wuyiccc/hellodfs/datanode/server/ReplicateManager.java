@@ -57,7 +57,7 @@ public class ReplicateManager {
                     byte[] file = nioClient.readFile(hostname, nioPort, filename);
                     ByteBuffer fileBuffer = ByteBuffer.wrap(file);
 
-                    String absoluteFilename = getAbsoluteFilename(filename);
+                    String absoluteFilename = FileUtils.getAbsoluteFilename(filename);
 
                     imageOut = new FileOutputStream(absoluteFilename);
                     imageChannel = imageOut.getChannel();
@@ -80,24 +80,5 @@ public class ReplicateManager {
             }
         }
 
-        private String getAbsoluteFilename(String relativeFilename) throws Exception {
-            String[] relativeFilenameSplit = relativeFilename.split("/");
-
-            String dirPath = DataNodeConfig.DATA_DIR;
-            for(int i = 0; i < relativeFilenameSplit.length - 1; i++) {
-                if(i == 0) {
-                    continue;
-                }
-                dirPath += "\\" + relativeFilenameSplit[i];
-            }
-
-            File dir = new File(dirPath);
-            if(!dir.exists()) {
-                dir.mkdirs();
-            }
-
-            String absoluteFilename = dirPath + "\\" + relativeFilenameSplit[relativeFilenameSplit.length - 1];
-            return absoluteFilename;
-        }
     }
 }
