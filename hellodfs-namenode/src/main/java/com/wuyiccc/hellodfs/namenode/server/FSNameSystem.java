@@ -23,6 +23,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class FSNameSystem {
 
 
+    public static final Integer REPLICA_NUM = 2;
+
     private FSDirectory fsDirectory;
 
     private FSEditLog fsEditLog;
@@ -294,13 +296,26 @@ public class FSNameSystem {
 
         try {
             replicasLock.writeLock().lock();
+
+            DataNodeInfo dataNodeInfo = this.dataNodeManager.getDataNodeInfo(ip, hostname);
+
             List<DataNodeInfo> replicas = replicasByFilenameMap.get(filename);
             if (replicas == null) {
                 replicas = new ArrayList<>();
                 replicasByFilenameMap.put(filename, replicas);
             }
 
-            DataNodeInfo dataNodeInfo = this.dataNodeManager.getDataNodeInfo(ip, hostname);
+
+            // If the number of replicas exceeds the limit, then delete the redundant replicas
+            if (replicas.size() == REPLICA_NUM) {
+                dataNodeInfo.addStoredDataSize(-fileLength);
+
+                RemoveReplicaTask removeReplicaTask = new RemoveReplicaTask(filename, dataNodeInfo);
+                dataNodeInfo.addRemoveReplicaTask(removeReplicaTask);
+                return;
+            }
+
+
             replicas.add(dataNodeInfo);
 
             List<String> files = this.filesByDataNodeMap.get(hostname);

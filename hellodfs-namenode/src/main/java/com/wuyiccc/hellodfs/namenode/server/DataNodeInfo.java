@@ -25,6 +25,8 @@ public class DataNodeInfo implements Comparable<DataNodeInfo>{
 
     private ConcurrentLinkedQueue<ReplicateTask> replicateTaskQueue = new ConcurrentLinkedQueue<>();
 
+    private ConcurrentLinkedQueue<RemoveReplicaTask> removeReplicaTaskQueue = new ConcurrentLinkedQueue<>();
+
 
     public DataNodeInfo(String ip, String hostname, int nioPort) {
         this.ip = ip;
@@ -41,6 +43,17 @@ public class DataNodeInfo implements Comparable<DataNodeInfo>{
     public ReplicateTask pollReplicateTask() {
         if (!this.replicateTaskQueue.isEmpty()) {
             return this.replicateTaskQueue.poll();
+        }
+        return null;
+    }
+
+    public void addRemoveReplicaTask(RemoveReplicaTask removeReplicaTask) {
+        this.removeReplicaTaskQueue.offer(removeReplicaTask);
+    }
+
+    public RemoveReplicaTask pollRemoveReplicaTask() {
+        if (!this.removeReplicaTaskQueue.isEmpty()) {
+            return this.removeReplicaTaskQueue.poll();
         }
         return null;
     }
