@@ -1,5 +1,6 @@
 package com.wuyiccc.hellodfs.datanode.server;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.wuyiccc.hellodfs.namenode.rpc.model.HeartBeatResponse;
@@ -13,12 +14,20 @@ import java.util.concurrent.TimeUnit;
 public class HeartBeatManager {
 
 
+    public static final Integer SUCCESS = 1;
+
+    public static final Integer FAILURE = 2;
+
+
     private NameNodeRpcClient nameNodeRpcClient;
     private StorageManager storageManager;
 
-    public HeartBeatManager(NameNodeRpcClient nameNodeRpcClient, StorageManager storageManager) {
+    private ReplicateManager replicateManager;
+
+    public HeartBeatManager(NameNodeRpcClient nameNodeRpcClient, StorageManager storageManager, ReplicateManager replicateManager) {
         this.nameNodeRpcClient = nameNodeRpcClient;
         this.storageManager = storageManager;
+        this.replicateManager = replicateManager;
     }
 
 
@@ -41,9 +50,20 @@ public class HeartBeatManager {
 
                     System.out.println("heartbeat thread accept namenode response data: " + response.getStatus());
 
+                    if (SUCCESS.equals(response.getStatus())) {
+                        JSONArray commands = JSON.parseArray(response.getCommands());
+
+                        if (commands.size() > 0) {
+                            for (int i = 0; i < commands.size(); i++) {
+                                JSONObject command = commands.getJSONObject(i);
+                                JSONObject replicateTask = command.getJSONObject("content");
+                                replicateManager.addReplicateTask(replicateTask);
+                            }
+                        }
+                    }
 
                     // if heartBeat failed
-                    if (response.getStatus() == 2) {
+                    if (FAILURE.equals(response.getStatus())) {
                         JSONArray commands = JSONArray.parseArray(response.getCommands());
 
                         for (int i = 0; i < commands.size(); i++) {

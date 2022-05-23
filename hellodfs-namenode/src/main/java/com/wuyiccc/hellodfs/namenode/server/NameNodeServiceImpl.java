@@ -11,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author wuyiccc
@@ -88,14 +89,14 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
         if (result) {
 
             DataNodeInfo dataNodeInfo = this.dataNodeManager.getDataNodeInfo(ip, hostname);
-            ReplicateTask replicateTask = dataNodeInfo.pollReplicateTask();
+            ReplicateTask replicateTask = null;
 
-
-            if (replicateTask != null) {
+            while ((replicateTask = dataNodeInfo.pollReplicateTask()) != null) {
                 Command replicateCommand = new Command(Command.REPLICATE);
                 replicateCommand.setContent(JSONObject.toJSONString(replicateTask));
                 commandList.add(replicateCommand);
             }
+
 
             response = HeartBeatResponse.newBuilder()
                     .setStatus(STATUS_SUCCESS)

@@ -22,6 +22,8 @@ public class DataNode {
 
     private StorageManager storageManager;
 
+    private ReplicateManager replicateManager;
+
     private DataNode() throws Exception {
         this.shouldRun = true;
 
@@ -37,7 +39,9 @@ public class DataNode {
             System.out.println("already register, don't need to report all storage info...");
         }
 
-        this.heartBeatManager = new HeartBeatManager(this.nameNodeRpcClient, this.storageManager);
+        this.replicateManager = new ReplicateManager();
+
+        this.heartBeatManager = new HeartBeatManager(this.nameNodeRpcClient, this.storageManager, this.replicateManager);
         this.heartBeatManager.start();
 
         DataNodeNIOServer nioServer = new DataNodeNIOServer(this.nameNodeRpcClient);
