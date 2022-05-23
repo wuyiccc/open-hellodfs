@@ -1,8 +1,10 @@
 package com.wuyiccc.hellodfs.datanode.server;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
@@ -122,6 +124,22 @@ public class NIOClient {
             }
         }
         return null;
+    }
+
+    public static void main(String[] args) throws Exception {
+
+        FileOutputStream imageOut = null;
+        FileChannel imageChannel = null;
+
+        byte[] file = new NIOClient().readFile("datanode01", 9301, "/image/product/lingyu.jpg");
+        ByteBuffer fileBuffer = ByteBuffer.wrap(file);
+
+        String absoluteFilename = FileUtils.getAbsoluteFilename("/image/product/lingyu.jpg");
+
+        imageOut = new FileOutputStream(absoluteFilename);
+        imageChannel = imageOut.getChannel();
+
+        imageChannel.write(fileBuffer);
     }
 
 

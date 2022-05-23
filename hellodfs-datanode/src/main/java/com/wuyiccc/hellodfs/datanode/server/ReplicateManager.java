@@ -2,12 +2,10 @@ package com.wuyiccc.hellodfs.datanode.server;
 
 import com.alibaba.fastjson.JSONObject;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author wuyiccc
@@ -22,7 +20,10 @@ public class ReplicateManager {
 
     private NIOClient nioClient = new NIOClient();
 
-    public ReplicateManager() {
+    private NameNodeRpcClient nameNodeRpcClient;
+
+    public ReplicateManager(NameNodeRpcClient nameNodeRpcClient) {
+        this.nameNodeRpcClient = nameNodeRpcClient;
         for (int i = 0; i < REPLICATE_THREAD_NUM; i++) {
             new ReplicateWorker().start();
         }
@@ -37,22 +38,25 @@ public class ReplicateManager {
         @Override
         public void run() {
 
-            while(true) {
+            while (true) {
                 FileOutputStream imageOut = null;
                 FileChannel imageChannel = null;
 
                 try {
                     JSONObject replicateTask = replicateTaskQueue.poll();
-                    if(replicateTask == null) {
+                    if (replicateTask == null) {
                         Thread.sleep(1000);
                         continue;
                     }
 
                     String filename = replicateTask.getString("filename");
+                    Long fileLength = replicateTask.getLong("fileLength");
 
                     JSONObject sourceDatanode = replicateTask.getJSONObject("sourceDataNodeInfo");
                     String hostname = sourceDatanode.getString("hostname");
                     Integer nioPort = sourceDatanode.getInteger("nioPort");
+
+                    System.out.println("datanode retry read file from: hostname: " + hostname + ", nioPort:" + nioPort + ", filename: " + filename);
 
                     byte[] file = nioClient.readFile(hostname, nioPort, filename);
                     ByteBuffer fileBuffer = ByteBuffer.wrap(file);
@@ -63,14 +67,18 @@ public class ReplicateManager {
                     imageChannel = imageOut.getChannel();
 
                     imageChannel.write(fileBuffer);
+
+                    System.out.println("send replica info to namenode");
+
+                    nameNodeRpcClient.informReplicaReceived(filename + "_" + fileLength);
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
                     try {
-                        if(imageChannel != null) {
+                        if (imageChannel != null) {
                             imageChannel.close();
                         }
-                        if(imageOut != null) {
+                        if (imageOut != null) {
                             imageOut.close();
                         }
                     } catch (Exception e2) {

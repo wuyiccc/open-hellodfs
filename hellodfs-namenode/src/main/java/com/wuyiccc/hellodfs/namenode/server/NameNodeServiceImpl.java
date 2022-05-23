@@ -95,7 +95,9 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
                 Command replicateCommand = new Command(Command.REPLICATE);
                 replicateCommand.setContent(JSONObject.toJSONString(replicateTask));
                 commandList.add(replicateCommand);
+                System.out.println("commandList-replicaTask: " + replicateCommand);
             }
+
 
             RemoveReplicaTask removeReplicaTask = null;
 

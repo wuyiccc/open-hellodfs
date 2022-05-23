@@ -318,10 +318,10 @@ public class FSNameSystem {
 
             replicas.add(dataNodeInfo);
 
-            List<String> files = this.filesByDataNodeMap.get(hostname);
+            List<String> files = this.filesByDataNodeMap.get(ip + "-" + hostname);
             if (files == null) {
                 files = new ArrayList<>();
-                filesByDataNodeMap.put(hostname, files);
+                filesByDataNodeMap.put(ip + "-" + hostname, files);
             }
             files.add(filename + "_" + fileLength);
 
@@ -347,10 +347,10 @@ public class FSNameSystem {
         }
     }
 
-    public List<String> getFilesByDataNode(String hostname) {
+    public List<String> getFilesByDataNode(String ip, String hostname) {
         try {
             this.replicasLock.readLock().lock();
-            return this.filesByDataNodeMap.get(hostname);
+            return this.filesByDataNodeMap.get(ip + "-" + hostname);
         } finally {
             this.replicasLock.readLock().unlock();
         }
@@ -360,13 +360,13 @@ public class FSNameSystem {
         try {
             replicasLock.writeLock().lock();
 
-            List<String> filenames = this.filesByDataNodeMap.get(dataNodeInfo.getHostname());
+            List<String> filenames = this.filesByDataNodeMap.get(dataNodeInfo.getId());
             for(String filename : filenames) {
-                List<DataNodeInfo> replicas = this.replicasByFilenameMap.get(filename);
+                List<DataNodeInfo> replicas = this.replicasByFilenameMap.get(filename.split("_")[0]);
                 replicas.remove(dataNodeInfo);
             }
 
-            this.filesByDataNodeMap.remove(dataNodeInfo.getHostname());
+            this.filesByDataNodeMap.remove(dataNodeInfo.getId());
         } finally {
             replicasLock.writeLock().unlock();
         }

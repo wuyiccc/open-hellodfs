@@ -89,15 +89,20 @@ public class DataNodeManager {
     }
 
     public void createLostReplicaTask(DataNodeInfo dataNodeInfo) {
-        List<String> files = this.fsNameSystem.getFilesByDataNode(dataNodeInfo.getHostname());
+        List<String> files = this.fsNameSystem.getFilesByDataNode(dataNodeInfo.getIp(), dataNodeInfo.getHostname());
 
         for(String file : files) {
+            System.out.println("need replica filename: " + file);
             String filename = file.split("_")[0];
             Long fileLength = Long.valueOf(file.split("_")[1]);
-            // 复制任务的目标数据节点
-            DataNodeInfo destDatanode = allocateReplicateDataNode(fileLength);
+
+
             // 获取这个复制任务的源头数据节点
             DataNodeInfo sourceDatanode = this.fsNameSystem.getReplicateSource(filename, dataNodeInfo);
+
+            // 复制任务的目标数据节点
+            DataNodeInfo destDatanode = allocateReplicateDataNode(fileLength, sourceDatanode, dataNodeInfo);
+
 
             ReplicateTask replicateTask = new ReplicateTask(filename, fileLength, sourceDatanode, destDatanode);
 
@@ -106,15 +111,17 @@ public class DataNodeManager {
     }
 
 
-    public DataNodeInfo allocateReplicateDataNode(long fileSize) {
+    public DataNodeInfo allocateReplicateDataNode(long fileSize, DataNodeInfo sourceDataNode, DataNodeInfo deadDataNode) {
         synchronized (this) {
             List<DataNodeInfo> dataNodeInfoList = new ArrayList<>();
             for (DataNodeInfo dataNodeInfo : this.dataNodeMap.values()) {
-                dataNodeInfoList.add(dataNodeInfo);
+                if (!dataNodeInfo.equals(sourceDataNode) && !dataNodeInfo.equals(deadDataNode)) {
+                    dataNodeInfoList.add(dataNodeInfo);
+                }
             }
             Collections.sort(dataNodeInfoList);
             DataNodeInfo selectedDataNode = null;
-            if (dataNodeInfoList.size() >= 1) {
+            if (!dataNodeInfoList.isEmpty()) {
                 selectedDataNode = dataNodeInfoList.get(0);
                 dataNodeInfoList.get(0).addStoredDataSize(fileSize);
             }
@@ -152,7 +159,6 @@ public class DataNodeManager {
 
                             dataNodeMap.remove(toRemoveDataNode.getId());
                             System.out.println("datanodes: " + toRemoveDataNode + ", hearbeat is down....");
-
 
                             fsNameSystem.removeDeadDataNode(toRemoveDataNode);
                         }

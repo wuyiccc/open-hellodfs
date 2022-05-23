@@ -39,7 +39,7 @@ public class DataNode {
             System.out.println("already register, don't need to report all storage info...");
         }
 
-        this.replicateManager = new ReplicateManager();
+        this.replicateManager = new ReplicateManager(this.nameNodeRpcClient);
 
         this.heartBeatManager = new HeartBeatManager(this.nameNodeRpcClient, this.storageManager, this.replicateManager);
         this.heartBeatManager.start();

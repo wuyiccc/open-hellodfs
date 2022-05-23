@@ -57,6 +57,7 @@ public class HeartBeatManager {
                     System.out.println("heartbeat thread accept namenode response data: " + response.getStatus());
 
                     if (SUCCESS.equals(response.getStatus())) {
+                        System.out.println("commands: " + response.getCommands());
                         JSONArray commands = JSON.parseArray(response.getCommands());
 
                         if (commands.size() > 0) {
