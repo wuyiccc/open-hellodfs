@@ -360,6 +360,11 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
         responseObserver.onCompleted();
     }
 
+    @Override
+    public void rebalance(RebalanceRequest request, StreamObserver<RebalanceResponse> responseObserver) {
+
+    }
+
 
     /**
      * @param flushedTxId startTxId_endTxId

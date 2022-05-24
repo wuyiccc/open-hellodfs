@@ -25,7 +25,7 @@ public final class NameNodeServer {
     java.lang.String[] descriptorData = {
       "\n\027NameNodeRpcServer.proto\022!com.wuyiccc.h" +
       "ellodfs.namenode.rpc\032\026NameNodeRpcModel.p" +
-      "roto2\375\014\n\017NameNodeService\022s\n\010register\0222.c" +
+      "roto2\365\r\n\017NameNodeService\022s\n\010register\0222.c" +
       "om.wuyiccc.hellodfs.namenode.rpc.Registe" +
       "rRequest\0323.com.wuyiccc.hellodfs.namenode" +
       ".rpc.RegisterResponse\022v\n\theartBeat\0223.com" +
@@ -66,7 +66,10 @@ public final class NameNodeServer {
       "\022\221\001\n\022reallocateDataNode\022<.com.wuyiccc.he" +
       "llodfs.namenode.rpc.ReallocateDataNodeRe" +
       "quest\032=.com.wuyiccc.hellodfs.namenode.rp" +
-      "c.ReallocateDataNodeResponseB=\n)com.wuyi" +
+      "c.ReallocateDataNodeResponse\022v\n\trebalanc" +
+      "e\0223.com.wuyiccc.hellodfs.namenode.rpc.Re" +
+      "balanceRequest\0324.com.wuyiccc.hellodfs.na" +
+      "menode.rpc.RebalanceResponseB=\n)com.wuyi" +
       "ccc.hellodfs.namenode.rpc.serviceB\016NameN" +
       "odeServerP\001b\006proto3"
     };

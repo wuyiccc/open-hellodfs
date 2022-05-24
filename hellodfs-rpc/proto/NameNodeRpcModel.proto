@@ -115,3 +115,9 @@ message ReallocateDataNodeResponse {
   string dataNodeInfo = 1;
 }
 
+message RebalanceRequest {
+}
+
+message RebalanceResponse {
+  int32 status = 1;
+}
