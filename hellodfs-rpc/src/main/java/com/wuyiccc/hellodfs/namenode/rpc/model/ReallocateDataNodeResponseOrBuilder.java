@@ -8,7 +8,12 @@ public interface ReallocateDataNodeResponseOrBuilder extends
     com.google.protobuf.MessageOrBuilder {
 
   /**
-   * <code>optional int32 status = 1;</code>
+   * <code>optional string dataNodeInfo = 1;</code>
    */
-  int getStatus();
+  java.lang.String getDataNodeInfo();
+  /**
+   * <code>optional string dataNodeInfo = 1;</code>
+   */
+  com.google.protobuf.ByteString
+      getDataNodeInfoBytes();
 }

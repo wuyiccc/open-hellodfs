@@ -17,7 +17,7 @@ public  final class ReallocateDataNodeRequest extends
   private ReallocateDataNodeRequest() {
     filename_ = "";
     fileSize_ = 0L;
-    excludedDataNode_ = "";
+    excludedDataNodeId_ = "";
   }
 
   @java.lang.Override
@@ -59,7 +59,7 @@ public  final class ReallocateDataNodeRequest extends
           case 26: {
             java.lang.String s = input.readStringRequireUtf8();
 
-            excludedDataNode_ = s;
+            excludedDataNodeId_ = s;
             break;
           }
         }
@@ -128,34 +128,34 @@ public  final class ReallocateDataNodeRequest extends
     return fileSize_;
   }
 
-  public static final int EXCLUDEDDATANODE_FIELD_NUMBER = 3;
-  private volatile java.lang.Object excludedDataNode_;
+  public static final int EXCLUDEDDATANODEID_FIELD_NUMBER = 3;
+  private volatile java.lang.Object excludedDataNodeId_;
   /**
-   * <code>optional string excludedDataNode = 3;</code>
+   * <code>optional string excludedDataNodeId = 3;</code>
    */
-  public java.lang.String getExcludedDataNode() {
-    java.lang.Object ref = excludedDataNode_;
+  public java.lang.String getExcludedDataNodeId() {
+    java.lang.Object ref = excludedDataNodeId_;
     if (ref instanceof java.lang.String) {
       return (java.lang.String) ref;
     } else {
       com.google.protobuf.ByteString bs = 
           (com.google.protobuf.ByteString) ref;
       java.lang.String s = bs.toStringUtf8();
-      excludedDataNode_ = s;
+      excludedDataNodeId_ = s;
       return s;
     }
   }
   /**
-   * <code>optional string excludedDataNode = 3;</code>
+   * <code>optional string excludedDataNodeId = 3;</code>
    */
   public com.google.protobuf.ByteString
-      getExcludedDataNodeBytes() {
-    java.lang.Object ref = excludedDataNode_;
+      getExcludedDataNodeIdBytes() {
+    java.lang.Object ref = excludedDataNodeId_;
     if (ref instanceof java.lang.String) {
       com.google.protobuf.ByteString b = 
           com.google.protobuf.ByteString.copyFromUtf8(
               (java.lang.String) ref);
-      excludedDataNode_ = b;
+      excludedDataNodeId_ = b;
       return b;
     } else {
       return (com.google.protobuf.ByteString) ref;
@@ -180,8 +180,8 @@ public  final class ReallocateDataNodeRequest extends
     if (fileSize_ != 0L) {
       output.writeInt64(2, fileSize_);
     }
-    if (!getExcludedDataNodeBytes().isEmpty()) {
-      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, excludedDataNode_);
+    if (!getExcludedDataNodeIdBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 3, excludedDataNodeId_);
     }
   }
 
@@ -197,8 +197,8 @@ public  final class ReallocateDataNodeRequest extends
       size += com.google.protobuf.CodedOutputStream
         .computeInt64Size(2, fileSize_);
     }
-    if (!getExcludedDataNodeBytes().isEmpty()) {
-      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, excludedDataNode_);
+    if (!getExcludedDataNodeIdBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, excludedDataNodeId_);
     }
     memoizedSize = size;
     return size;
@@ -220,8 +220,8 @@ public  final class ReallocateDataNodeRequest extends
         .equals(other.getFilename());
     result = result && (getFileSize()
         == other.getFileSize());
-    result = result && getExcludedDataNode()
-        .equals(other.getExcludedDataNode());
+    result = result && getExcludedDataNodeId()
+        .equals(other.getExcludedDataNodeId());
     return result;
   }
 
@@ -237,8 +237,8 @@ public  final class ReallocateDataNodeRequest extends
     hash = (37 * hash) + FILESIZE_FIELD_NUMBER;
     hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
         getFileSize());
-    hash = (37 * hash) + EXCLUDEDDATANODE_FIELD_NUMBER;
-    hash = (53 * hash) + getExcludedDataNode().hashCode();
+    hash = (37 * hash) + EXCLUDEDDATANODEID_FIELD_NUMBER;
+    hash = (53 * hash) + getExcludedDataNodeId().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -361,7 +361,7 @@ public  final class ReallocateDataNodeRequest extends
 
       fileSize_ = 0L;
 
-      excludedDataNode_ = "";
+      excludedDataNodeId_ = "";
 
       return this;
     }
@@ -387,7 +387,7 @@ public  final class ReallocateDataNodeRequest extends
       com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeRequest result = new com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeRequest(this);
       result.filename_ = filename_;
       result.fileSize_ = fileSize_;
-      result.excludedDataNode_ = excludedDataNode_;
+      result.excludedDataNodeId_ = excludedDataNodeId_;
       onBuilt();
       return result;
     }
@@ -436,8 +436,8 @@ public  final class ReallocateDataNodeRequest extends
       if (other.getFileSize() != 0L) {
         setFileSize(other.getFileSize());
       }
-      if (!other.getExcludedDataNode().isEmpty()) {
-        excludedDataNode_ = other.excludedDataNode_;
+      if (!other.getExcludedDataNodeId().isEmpty()) {
+        excludedDataNodeId_ = other.excludedDataNodeId_;
         onChanged();
       }
       onChanged();
@@ -561,71 +561,71 @@ public  final class ReallocateDataNodeRequest extends
       return this;
     }
 
-    private java.lang.Object excludedDataNode_ = "";
+    private java.lang.Object excludedDataNodeId_ = "";
     /**
-     * <code>optional string excludedDataNode = 3;</code>
+     * <code>optional string excludedDataNodeId = 3;</code>
      */
-    public java.lang.String getExcludedDataNode() {
-      java.lang.Object ref = excludedDataNode_;
+    public java.lang.String getExcludedDataNodeId() {
+      java.lang.Object ref = excludedDataNodeId_;
       if (!(ref instanceof java.lang.String)) {
         com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        excludedDataNode_ = s;
+        excludedDataNodeId_ = s;
         return s;
       } else {
         return (java.lang.String) ref;
       }
     }
     /**
-     * <code>optional string excludedDataNode = 3;</code>
+     * <code>optional string excludedDataNodeId = 3;</code>
      */
     public com.google.protobuf.ByteString
-        getExcludedDataNodeBytes() {
-      java.lang.Object ref = excludedDataNode_;
+        getExcludedDataNodeIdBytes() {
+      java.lang.Object ref = excludedDataNodeId_;
       if (ref instanceof String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        excludedDataNode_ = b;
+        excludedDataNodeId_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
     /**
-     * <code>optional string excludedDataNode = 3;</code>
+     * <code>optional string excludedDataNodeId = 3;</code>
      */
-    public Builder setExcludedDataNode(
+    public Builder setExcludedDataNodeId(
         java.lang.String value) {
       if (value == null) {
     throw new NullPointerException();
   }
   
-      excludedDataNode_ = value;
+      excludedDataNodeId_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional string excludedDataNode = 3;</code>
+     * <code>optional string excludedDataNodeId = 3;</code>
      */
-    public Builder clearExcludedDataNode() {
+    public Builder clearExcludedDataNodeId() {
       
-      excludedDataNode_ = getDefaultInstance().getExcludedDataNode();
+      excludedDataNodeId_ = getDefaultInstance().getExcludedDataNodeId();
       onChanged();
       return this;
     }
     /**
-     * <code>optional string excludedDataNode = 3;</code>
+     * <code>optional string excludedDataNodeId = 3;</code>
      */
-    public Builder setExcludedDataNodeBytes(
+    public Builder setExcludedDataNodeIdBytes(
         com.google.protobuf.ByteString value) {
       if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
       
-      excludedDataNode_ = value;
+      excludedDataNodeId_ = value;
       onChanged();
       return this;
     }

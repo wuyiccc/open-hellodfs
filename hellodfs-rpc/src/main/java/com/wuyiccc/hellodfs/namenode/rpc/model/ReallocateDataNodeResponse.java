@@ -15,7 +15,7 @@ public  final class ReallocateDataNodeResponse extends
     super(builder);
   }
   private ReallocateDataNodeResponse() {
-    status_ = 0;
+    dataNodeInfo_ = "";
   }
 
   @java.lang.Override
@@ -43,9 +43,10 @@ public  final class ReallocateDataNodeResponse extends
             }
             break;
           }
-          case 8: {
+          case 10: {
+            java.lang.String s = input.readStringRequireUtf8();
 
-            status_ = input.readInt32();
+            dataNodeInfo_ = s;
             break;
           }
         }
@@ -71,13 +72,38 @@ public  final class ReallocateDataNodeResponse extends
             com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeResponse.class, com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeResponse.Builder.class);
   }
 
-  public static final int STATUS_FIELD_NUMBER = 1;
-  private int status_;
+  public static final int DATANODEINFO_FIELD_NUMBER = 1;
+  private volatile java.lang.Object dataNodeInfo_;
   /**
-   * <code>optional int32 status = 1;</code>
+   * <code>optional string dataNodeInfo = 1;</code>
    */
-  public int getStatus() {
-    return status_;
+  public java.lang.String getDataNodeInfo() {
+    java.lang.Object ref = dataNodeInfo_;
+    if (ref instanceof java.lang.String) {
+      return (java.lang.String) ref;
+    } else {
+      com.google.protobuf.ByteString bs = 
+          (com.google.protobuf.ByteString) ref;
+      java.lang.String s = bs.toStringUtf8();
+      dataNodeInfo_ = s;
+      return s;
+    }
+  }
+  /**
+   * <code>optional string dataNodeInfo = 1;</code>
+   */
+  public com.google.protobuf.ByteString
+      getDataNodeInfoBytes() {
+    java.lang.Object ref = dataNodeInfo_;
+    if (ref instanceof java.lang.String) {
+      com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString.copyFromUtf8(
+              (java.lang.String) ref);
+      dataNodeInfo_ = b;
+      return b;
+    } else {
+      return (com.google.protobuf.ByteString) ref;
+    }
   }
 
   private byte memoizedIsInitialized = -1;
@@ -92,8 +118,8 @@ public  final class ReallocateDataNodeResponse extends
 
   public void writeTo(com.google.protobuf.CodedOutputStream output)
                       throws java.io.IOException {
-    if (status_ != 0) {
-      output.writeInt32(1, status_);
+    if (!getDataNodeInfoBytes().isEmpty()) {
+      com.google.protobuf.GeneratedMessageV3.writeString(output, 1, dataNodeInfo_);
     }
   }
 
@@ -102,9 +128,8 @@ public  final class ReallocateDataNodeResponse extends
     if (size != -1) return size;
 
     size = 0;
-    if (status_ != 0) {
-      size += com.google.protobuf.CodedOutputStream
-        .computeInt32Size(1, status_);
+    if (!getDataNodeInfoBytes().isEmpty()) {
+      size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, dataNodeInfo_);
     }
     memoizedSize = size;
     return size;
@@ -122,8 +147,8 @@ public  final class ReallocateDataNodeResponse extends
     com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeResponse other = (com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeResponse) obj;
 
     boolean result = true;
-    result = result && (getStatus()
-        == other.getStatus());
+    result = result && getDataNodeInfo()
+        .equals(other.getDataNodeInfo());
     return result;
   }
 
@@ -134,8 +159,8 @@ public  final class ReallocateDataNodeResponse extends
     }
     int hash = 41;
     hash = (19 * hash) + getDescriptorForType().hashCode();
-    hash = (37 * hash) + STATUS_FIELD_NUMBER;
-    hash = (53 * hash) + getStatus();
+    hash = (37 * hash) + DATANODEINFO_FIELD_NUMBER;
+    hash = (53 * hash) + getDataNodeInfo().hashCode();
     hash = (29 * hash) + unknownFields.hashCode();
     memoizedHashCode = hash;
     return hash;
@@ -254,7 +279,7 @@ public  final class ReallocateDataNodeResponse extends
     }
     public Builder clear() {
       super.clear();
-      status_ = 0;
+      dataNodeInfo_ = "";
 
       return this;
     }
@@ -278,7 +303,7 @@ public  final class ReallocateDataNodeResponse extends
 
     public com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeResponse buildPartial() {
       com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeResponse result = new com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeResponse(this);
-      result.status_ = status_;
+      result.dataNodeInfo_ = dataNodeInfo_;
       onBuilt();
       return result;
     }
@@ -320,8 +345,9 @@ public  final class ReallocateDataNodeResponse extends
 
     public Builder mergeFrom(com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeResponse other) {
       if (other == com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeResponse.getDefaultInstance()) return this;
-      if (other.getStatus() != 0) {
-        setStatus(other.getStatus());
+      if (!other.getDataNodeInfo().isEmpty()) {
+        dataNodeInfo_ = other.dataNodeInfo_;
+        onChanged();
       }
       onChanged();
       return this;
@@ -349,28 +375,71 @@ public  final class ReallocateDataNodeResponse extends
       return this;
     }
 
-    private int status_ ;
+    private java.lang.Object dataNodeInfo_ = "";
     /**
-     * <code>optional int32 status = 1;</code>
+     * <code>optional string dataNodeInfo = 1;</code>
      */
-    public int getStatus() {
-      return status_;
+    public java.lang.String getDataNodeInfo() {
+      java.lang.Object ref = dataNodeInfo_;
+      if (!(ref instanceof java.lang.String)) {
+        com.google.protobuf.ByteString bs =
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        dataNodeInfo_ = s;
+        return s;
+      } else {
+        return (java.lang.String) ref;
+      }
     }
     /**
-     * <code>optional int32 status = 1;</code>
+     * <code>optional string dataNodeInfo = 1;</code>
      */
-    public Builder setStatus(int value) {
-      
-      status_ = value;
+    public com.google.protobuf.ByteString
+        getDataNodeInfoBytes() {
+      java.lang.Object ref = dataNodeInfo_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        dataNodeInfo_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    /**
+     * <code>optional string dataNodeInfo = 1;</code>
+     */
+    public Builder setDataNodeInfo(
+        java.lang.String value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  
+      dataNodeInfo_ = value;
       onChanged();
       return this;
     }
     /**
-     * <code>optional int32 status = 1;</code>
+     * <code>optional string dataNodeInfo = 1;</code>
      */
-    public Builder clearStatus() {
+    public Builder clearDataNodeInfo() {
       
-      status_ = 0;
+      dataNodeInfo_ = getDefaultInstance().getDataNodeInfo();
+      onChanged();
+      return this;
+    }
+    /**
+     * <code>optional string dataNodeInfo = 1;</code>
+     */
+    public Builder setDataNodeInfoBytes(
+        com.google.protobuf.ByteString value) {
+      if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+      
+      dataNodeInfo_ = value;
       onChanged();
       return this;
     }

@@ -23,12 +23,12 @@ public interface ReallocateDataNodeRequestOrBuilder extends
   long getFileSize();
 
   /**
-   * <code>optional string excludedDataNode = 3;</code>
+   * <code>optional string excludedDataNodeId = 3;</code>
    */
-  java.lang.String getExcludedDataNode();
+  java.lang.String getExcludedDataNodeId();
   /**
-   * <code>optional string excludedDataNode = 3;</code>
+   * <code>optional string excludedDataNodeId = 3;</code>
    */
   com.google.protobuf.ByteString
-      getExcludedDataNodeBytes();
+      getExcludedDataNodeIdBytes();
 }
