@@ -81,8 +81,11 @@ public class FileSystemImpl implements FileSystem {
         return true;
     }
 
-    private String reallocateDataNode(String filename, long fileSize, String excludeHostname) {
-        return null;
+    private String reallocateDataNode(String filename, long fileSize, String excludedDataNodeId) {
+        ReallocateDataNodeRequest request = ReallocateDataNodeRequest.newBuilder().setFileSize(fileSize).setExcludedDataNodeId(excludedDataNodeId).build();
+
+        ReallocateDataNodeResponse response = this.nameNode.reallocateDataNode(request);
+        return response.getDataNodeInfo();
     }
 
     /**

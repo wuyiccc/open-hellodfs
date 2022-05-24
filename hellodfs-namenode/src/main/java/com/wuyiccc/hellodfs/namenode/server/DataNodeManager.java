@@ -88,6 +88,29 @@ public class DataNodeManager {
         dataNodeInfo.setStoredDataSize(storedDataSize);
     }
 
+    public DataNodeInfo reallocateDataNode(long fileSize, String excludedDataNodeId) {
+        synchronized (this) {
+
+            DataNodeInfo excludedDataNodeInfo = this.dataNodeMap.get(excludedDataNodeId);
+            excludedDataNodeInfo.addStoredDataSize(-fileSize);
+
+            List<DataNodeInfo> dataNodeList = new ArrayList<>();
+            for(DataNodeInfo dataNodeInfo : dataNodeMap.values()) {
+                if(!excludedDataNodeInfo.equals(dataNodeInfo)) {
+                    dataNodeList.add(dataNodeInfo);
+                }
+            }
+
+            Collections.sort(dataNodeList);
+            DataNodeInfo selectedDatanode = null;
+            if(dataNodeList.size() >= 1) {
+                selectedDatanode = dataNodeList.get(0);
+                dataNodeList.get(0).addStoredDataSize(fileSize);
+            }
+            return selectedDatanode;
+        }
+    }
+
     public void createLostReplicaTask(DataNodeInfo dataNodeInfo) {
         List<String> files = this.fsNameSystem.getFilesByDataNode(dataNodeInfo.getIp(), dataNodeInfo.getHostname());
 

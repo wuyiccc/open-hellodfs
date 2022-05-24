@@ -11,7 +11,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * @author wuyiccc
@@ -101,7 +100,7 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
 
             RemoveReplicaTask removeReplicaTask = null;
 
-            while((removeReplicaTask = dataNodeInfo.pollRemoveReplicaTask()) != null) {
+            while ((removeReplicaTask = dataNodeInfo.pollRemoveReplicaTask()) != null) {
                 Command removeReplicaCommand = new Command(Command.REMOVE_REPLICA);
                 removeReplicaCommand.setContent(JSONObject.toJSONString(removeReplicaTask));
                 commandList.add(removeReplicaCommand);
@@ -351,7 +350,13 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
 
     @Override
     public void reallocateDataNode(ReallocateDataNodeRequest request, StreamObserver<ReallocateDataNodeResponse> responseObserver) {
+        long fileSize = request.getFileSize();
+        String excludeDataNodeId = request.getExcludedDataNodeId();
+        DataNodeInfo dataNodeInfo = this.dataNodeManager.reallocateDataNode(fileSize, excludeDataNodeId);
 
+        ReallocateDataNodeResponse response = ReallocateDataNodeResponse.newBuilder().setDataNodeInfo(JSONObject.toJSONString(dataNodeInfo)).build();
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
     }
 
 
