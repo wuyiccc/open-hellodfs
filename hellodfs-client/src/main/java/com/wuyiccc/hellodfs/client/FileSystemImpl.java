@@ -120,8 +120,8 @@ public class FileSystemImpl implements FileSystem {
     }
 
     private JSONObject getDataNodeForFile(String filename, String excludedDataNodeId) throws Exception {
-        GetDataNodeForFileRequest request = GetDataNodeForFileRequest.newBuilder().setFilename(filename).build();
-        GetDataNodeForFileResponse response = this.nameNode.getDataNodeForFile(request);
+        ChooseDataNodeFromReplicasRequest request = ChooseDataNodeFromReplicasRequest.newBuilder().setFilename(filename).build();
+        ChooseDataNodeFromReplicasResponse response = this.nameNode.chooseDataNodeFromReplicas(request);
         return JSONObject.parseObject(response.getDataNodeInfo());
     }
 

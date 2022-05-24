@@ -4,17 +4,17 @@
 package com.wuyiccc.hellodfs.namenode.rpc.model;
 
 /**
- * Protobuf type {@code com.wuyiccc.hellodfs.namenode.rpc.GetDataNodeForFileResponse}
+ * Protobuf type {@code com.wuyiccc.hellodfs.namenode.rpc.ChooseDataNodeFromReplicasResponse}
  */
-public  final class GetDataNodeForFileResponse extends
+public  final class ChooseDataNodeFromReplicasResponse extends
     com.google.protobuf.GeneratedMessageV3 implements
-    // @@protoc_insertion_point(message_implements:com.wuyiccc.hellodfs.namenode.rpc.GetDataNodeForFileResponse)
-    GetDataNodeForFileResponseOrBuilder {
-  // Use GetDataNodeForFileResponse.newBuilder() to construct.
-  private GetDataNodeForFileResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+    // @@protoc_insertion_point(message_implements:com.wuyiccc.hellodfs.namenode.rpc.ChooseDataNodeFromReplicasResponse)
+    ChooseDataNodeFromReplicasResponseOrBuilder {
+  // Use ChooseDataNodeFromReplicasResponse.newBuilder() to construct.
+  private ChooseDataNodeFromReplicasResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
     super(builder);
   }
-  private GetDataNodeForFileResponse() {
+  private ChooseDataNodeFromReplicasResponse() {
     dataNodeInfo_ = "";
   }
 
@@ -23,7 +23,7 @@ public  final class GetDataNodeForFileResponse extends
   getUnknownFields() {
     return com.google.protobuf.UnknownFieldSet.getDefaultInstance();
   }
-  private GetDataNodeForFileResponse(
+  private ChooseDataNodeFromReplicasResponse(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
@@ -62,14 +62,14 @@ public  final class GetDataNodeForFileResponse extends
   }
   public static final com.google.protobuf.Descriptors.Descriptor
       getDescriptor() {
-    return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_GetDataNodeForFileResponse_descriptor;
+    return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_ChooseDataNodeFromReplicasResponse_descriptor;
   }
 
   protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internalGetFieldAccessorTable() {
-    return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_GetDataNodeForFileResponse_fieldAccessorTable
+    return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_ChooseDataNodeFromReplicasResponse_fieldAccessorTable
         .ensureFieldAccessorsInitialized(
-            com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse.class, com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse.Builder.class);
+            com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse.class, com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse.Builder.class);
   }
 
   public static final int DATANODEINFO_FIELD_NUMBER = 1;
@@ -141,10 +141,10 @@ public  final class GetDataNodeForFileResponse extends
     if (obj == this) {
      return true;
     }
-    if (!(obj instanceof com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse)) {
+    if (!(obj instanceof com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse)) {
       return super.equals(obj);
     }
-    com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse other = (com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse) obj;
+    com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse other = (com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse) obj;
 
     boolean result = true;
     result = result && getDataNodeInfo()
@@ -166,58 +166,58 @@ public  final class GetDataNodeForFileResponse extends
     return hash;
   }
 
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse parseFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse parseFrom(
       com.google.protobuf.ByteString data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse parseFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse parseFrom(
       com.google.protobuf.ByteString data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse parseFrom(byte[] data)
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse parseFrom(byte[] data)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse parseFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse parseFrom(
       byte[] data,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws com.google.protobuf.InvalidProtocolBufferException {
     return PARSER.parseFrom(data, extensionRegistry);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse parseFrom(java.io.InputStream input)
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse parseFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse parseFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse parseFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse parseDelimitedFrom(java.io.InputStream input)
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse parseDelimitedFrom(java.io.InputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse parseDelimitedFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse parseDelimitedFrom(
       java.io.InputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse parseFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse parseFrom(
       com.google.protobuf.CodedInputStream input)
       throws java.io.IOException {
     return com.google.protobuf.GeneratedMessageV3
         .parseWithIOException(PARSER, input);
   }
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse parseFrom(
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse parseFrom(
       com.google.protobuf.CodedInputStream input,
       com.google.protobuf.ExtensionRegistryLite extensionRegistry)
       throws java.io.IOException {
@@ -229,7 +229,7 @@ public  final class GetDataNodeForFileResponse extends
   public static Builder newBuilder() {
     return DEFAULT_INSTANCE.toBuilder();
   }
-  public static Builder newBuilder(com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse prototype) {
+  public static Builder newBuilder(com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse prototype) {
     return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
   }
   public Builder toBuilder() {
@@ -244,25 +244,25 @@ public  final class GetDataNodeForFileResponse extends
     return builder;
   }
   /**
-   * Protobuf type {@code com.wuyiccc.hellodfs.namenode.rpc.GetDataNodeForFileResponse}
+   * Protobuf type {@code com.wuyiccc.hellodfs.namenode.rpc.ChooseDataNodeFromReplicasResponse}
    */
   public static final class Builder extends
       com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-      // @@protoc_insertion_point(builder_implements:com.wuyiccc.hellodfs.namenode.rpc.GetDataNodeForFileResponse)
-      com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponseOrBuilder {
+      // @@protoc_insertion_point(builder_implements:com.wuyiccc.hellodfs.namenode.rpc.ChooseDataNodeFromReplicasResponse)
+      com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponseOrBuilder {
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_GetDataNodeForFileResponse_descriptor;
+      return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_ChooseDataNodeFromReplicasResponse_descriptor;
     }
 
     protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_GetDataNodeForFileResponse_fieldAccessorTable
+      return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_ChooseDataNodeFromReplicasResponse_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
-              com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse.class, com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse.Builder.class);
+              com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse.class, com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse.Builder.class);
     }
 
-    // Construct using com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse.newBuilder()
+    // Construct using com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse.newBuilder()
     private Builder() {
       maybeForceBuilderInitialization();
     }
@@ -286,23 +286,23 @@ public  final class GetDataNodeForFileResponse extends
 
     public com.google.protobuf.Descriptors.Descriptor
         getDescriptorForType() {
-      return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_GetDataNodeForFileResponse_descriptor;
+      return com.wuyiccc.hellodfs.namenode.rpc.model.NameNodeRpcModel.internal_static_com_wuyiccc_hellodfs_namenode_rpc_ChooseDataNodeFromReplicasResponse_descriptor;
     }
 
-    public com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse getDefaultInstanceForType() {
-      return com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse.getDefaultInstance();
+    public com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse getDefaultInstanceForType() {
+      return com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse.getDefaultInstance();
     }
 
-    public com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse build() {
-      com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse result = buildPartial();
+    public com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse build() {
+      com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse result = buildPartial();
       if (!result.isInitialized()) {
         throw newUninitializedMessageException(result);
       }
       return result;
     }
 
-    public com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse buildPartial() {
-      com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse result = new com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse(this);
+    public com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse buildPartial() {
+      com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse result = new com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse(this);
       result.dataNodeInfo_ = dataNodeInfo_;
       onBuilt();
       return result;
@@ -335,16 +335,16 @@ public  final class GetDataNodeForFileResponse extends
       return (Builder) super.addRepeatedField(field, value);
     }
     public Builder mergeFrom(com.google.protobuf.Message other) {
-      if (other instanceof com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse) {
-        return mergeFrom((com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse)other);
+      if (other instanceof com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse) {
+        return mergeFrom((com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse)other);
       } else {
         super.mergeFrom(other);
         return this;
       }
     }
 
-    public Builder mergeFrom(com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse other) {
-      if (other == com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse.getDefaultInstance()) return this;
+    public Builder mergeFrom(com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse other) {
+      if (other == com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse.getDefaultInstance()) return this;
       if (!other.getDataNodeInfo().isEmpty()) {
         dataNodeInfo_ = other.dataNodeInfo_;
         onChanged();
@@ -361,11 +361,11 @@ public  final class GetDataNodeForFileResponse extends
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
-      com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse parsedMessage = null;
+      com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse parsedMessage = null;
       try {
         parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        parsedMessage = (com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse) e.getUnfinishedMessage();
+        parsedMessage = (com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse) e.getUnfinishedMessage();
         throw e.unwrapIOException();
       } finally {
         if (parsedMessage != null) {
@@ -454,39 +454,39 @@ public  final class GetDataNodeForFileResponse extends
     }
 
 
-    // @@protoc_insertion_point(builder_scope:com.wuyiccc.hellodfs.namenode.rpc.GetDataNodeForFileResponse)
+    // @@protoc_insertion_point(builder_scope:com.wuyiccc.hellodfs.namenode.rpc.ChooseDataNodeFromReplicasResponse)
   }
 
-  // @@protoc_insertion_point(class_scope:com.wuyiccc.hellodfs.namenode.rpc.GetDataNodeForFileResponse)
-  private static final com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse DEFAULT_INSTANCE;
+  // @@protoc_insertion_point(class_scope:com.wuyiccc.hellodfs.namenode.rpc.ChooseDataNodeFromReplicasResponse)
+  private static final com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse DEFAULT_INSTANCE;
   static {
-    DEFAULT_INSTANCE = new com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse();
+    DEFAULT_INSTANCE = new com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse();
   }
 
-  public static com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse getDefaultInstance() {
+  public static com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse getDefaultInstance() {
     return DEFAULT_INSTANCE;
   }
 
-  private static final com.google.protobuf.Parser<GetDataNodeForFileResponse>
-      PARSER = new com.google.protobuf.AbstractParser<GetDataNodeForFileResponse>() {
-    public GetDataNodeForFileResponse parsePartialFrom(
+  private static final com.google.protobuf.Parser<ChooseDataNodeFromReplicasResponse>
+      PARSER = new com.google.protobuf.AbstractParser<ChooseDataNodeFromReplicasResponse>() {
+    public ChooseDataNodeFromReplicasResponse parsePartialFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
-        return new GetDataNodeForFileResponse(input, extensionRegistry);
+        return new ChooseDataNodeFromReplicasResponse(input, extensionRegistry);
     }
   };
 
-  public static com.google.protobuf.Parser<GetDataNodeForFileResponse> parser() {
+  public static com.google.protobuf.Parser<ChooseDataNodeFromReplicasResponse> parser() {
     return PARSER;
   }
 
   @java.lang.Override
-  public com.google.protobuf.Parser<GetDataNodeForFileResponse> getParserForType() {
+  public com.google.protobuf.Parser<ChooseDataNodeFromReplicasResponse> getParserForType() {
     return PARSER;
   }
 
-  public com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse getDefaultInstanceForType() {
+  public com.wuyiccc.hellodfs.namenode.rpc.model.ChooseDataNodeFromReplicasResponse getDefaultInstanceForType() {
     return DEFAULT_INSTANCE;
   }
 

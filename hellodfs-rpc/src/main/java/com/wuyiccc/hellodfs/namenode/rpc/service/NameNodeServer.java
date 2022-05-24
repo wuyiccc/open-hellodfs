@@ -25,7 +25,7 @@ public final class NameNodeServer {
     java.lang.String[] descriptorData = {
       "\n\027NameNodeRpcServer.proto\022!com.wuyiccc.h" +
       "ellodfs.namenode.rpc\032\026NameNodeRpcModel.p" +
-      "roto2\345\014\n\017NameNodeService\022s\n\010register\0222.c" +
+      "roto2\375\014\n\017NameNodeService\022s\n\010register\0222.c" +
       "om.wuyiccc.hellodfs.namenode.rpc.Registe" +
       "rRequest\0323.com.wuyiccc.hellodfs.namenode" +
       ".rpc.RegisterResponse\022v\n\theartBeat\0223.com" +
@@ -58,16 +58,17 @@ public final class NameNodeServer {
       "eportAllStorageInfo\022>.com.wuyiccc.hellod" +
       "fs.namenode.rpc.ReportAllStorageInfoRequ" +
       "est\032?.com.wuyiccc.hellodfs.namenode.rpc." +
-      "ReportAllStorageInfoResponse\022\221\001\n\022getData" +
-      "NodeForFile\022<.com.wuyiccc.hellodfs.namen" +
-      "ode.rpc.GetDataNodeForFileRequest\032=.com." +
-      "wuyiccc.hellodfs.namenode.rpc.GetDataNod" +
-      "eForFileResponse\022\221\001\n\022reallocateDataNode\022",
-      "<.com.wuyiccc.hellodfs.namenode.rpc.Real" +
-      "locateDataNodeRequest\032=.com.wuyiccc.hell" +
-      "odfs.namenode.rpc.ReallocateDataNodeResp" +
-      "onseB=\n)com.wuyiccc.hellodfs.namenode.rp" +
-      "c.serviceB\016NameNodeServerP\001b\006proto3"
+      "ReportAllStorageInfoResponse\022\251\001\n\032chooseD" +
+      "ataNodeFromReplicas\022D.com.wuyiccc.hellod" +
+      "fs.namenode.rpc.ChooseDataNodeFromReplic" +
+      "asRequest\032E.com.wuyiccc.hellodfs.namenod" +
+      "e.rpc.ChooseDataNodeFromReplicasResponse",
+      "\022\221\001\n\022reallocateDataNode\022<.com.wuyiccc.he" +
+      "llodfs.namenode.rpc.ReallocateDataNodeRe" +
+      "quest\032=.com.wuyiccc.hellodfs.namenode.rp" +
+      "c.ReallocateDataNodeResponseB=\n)com.wuyi" +
+      "ccc.hellodfs.namenode.rpc.serviceB\016NameN" +
+      "odeServerP\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

@@ -115,15 +115,15 @@ public final class NameNodeRpcModel {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_wuyiccc_hellodfs_namenode_rpc_ReportAllStorageInfoResponse_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_wuyiccc_hellodfs_namenode_rpc_GetDataNodeForFileRequest_descriptor;
+    internal_static_com_wuyiccc_hellodfs_namenode_rpc_ChooseDataNodeFromReplicasRequest_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_wuyiccc_hellodfs_namenode_rpc_GetDataNodeForFileRequest_fieldAccessorTable;
+      internal_static_com_wuyiccc_hellodfs_namenode_rpc_ChooseDataNodeFromReplicasRequest_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_com_wuyiccc_hellodfs_namenode_rpc_GetDataNodeForFileResponse_descriptor;
+    internal_static_com_wuyiccc_hellodfs_namenode_rpc_ChooseDataNodeFromReplicasResponse_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_com_wuyiccc_hellodfs_namenode_rpc_GetDataNodeForFileResponse_fieldAccessorTable;
+      internal_static_com_wuyiccc_hellodfs_namenode_rpc_ChooseDataNodeFromReplicasResponse_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_com_wuyiccc_hellodfs_namenode_rpc_ReallocateDataNodeRequest_descriptor;
   static final 
@@ -169,15 +169,16 @@ public final class NameNodeRpcModel {
       "tAllStorageInfoRequest\022\n\n\002ip\030\001 \001(\t\022\020\n\010ho" +
       "stname\030\002 \001(\t\022\030\n\020filenameListJson\030\003 \001(\t\022\026" +
       "\n\016storedDataSize\030\004 \001(\003\".\n\034ReportAllStora" +
-      "geInfoResponse\022\016\n\006status\030\001 \001(\005\"-\n\031GetDat" +
-      "aNodeForFileRequest\022\020\n\010filename\030\001 \001(\t\"2\n" +
-      "\032GetDataNodeForFileResponse\022\024\n\014dataNodeI" +
-      "nfo\030\001 \001(\t\"[\n\031ReallocateDataNodeRequest\022\020",
-      "\n\010filename\030\001 \001(\t\022\020\n\010fileSize\030\002 \001(\003\022\032\n\022ex" +
-      "cludedDataNodeId\030\003 \001(\t\"2\n\032ReallocateData" +
-      "NodeResponse\022\024\n\014dataNodeInfo\030\001 \001(\tB=\n\'co" +
-      "m.wuyiccc.hellodfs.namenode.rpc.modelB\020N" +
-      "ameNodeRpcModelP\001b\006proto3"
+      "geInfoResponse\022\016\n\006status\030\001 \001(\005\"Q\n!Choose" +
+      "DataNodeFromReplicasRequest\022\020\n\010filename\030" +
+      "\001 \001(\t\022\032\n\022excludedDataNodeId\030\002 \001(\t\":\n\"Cho" +
+      "oseDataNodeFromReplicasResponse\022\024\n\014dataN",
+      "odeInfo\030\001 \001(\t\"[\n\031ReallocateDataNodeReque" +
+      "st\022\020\n\010filename\030\001 \001(\t\022\020\n\010fileSize\030\002 \001(\003\022\032" +
+      "\n\022excludedDataNodeId\030\003 \001(\t\"2\n\032Reallocate" +
+      "DataNodeResponse\022\024\n\014dataNodeInfo\030\001 \001(\tB=" +
+      "\n\'com.wuyiccc.hellodfs.namenode.rpc.mode" +
+      "lB\020NameNodeRpcModelP\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -311,17 +312,17 @@ public final class NameNodeRpcModel {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_wuyiccc_hellodfs_namenode_rpc_ReportAllStorageInfoResponse_descriptor,
         new java.lang.String[] { "Status", });
-    internal_static_com_wuyiccc_hellodfs_namenode_rpc_GetDataNodeForFileRequest_descriptor =
+    internal_static_com_wuyiccc_hellodfs_namenode_rpc_ChooseDataNodeFromReplicasRequest_descriptor =
       getDescriptor().getMessageTypes().get(20);
-    internal_static_com_wuyiccc_hellodfs_namenode_rpc_GetDataNodeForFileRequest_fieldAccessorTable = new
+    internal_static_com_wuyiccc_hellodfs_namenode_rpc_ChooseDataNodeFromReplicasRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_wuyiccc_hellodfs_namenode_rpc_GetDataNodeForFileRequest_descriptor,
-        new java.lang.String[] { "Filename", });
-    internal_static_com_wuyiccc_hellodfs_namenode_rpc_GetDataNodeForFileResponse_descriptor =
+        internal_static_com_wuyiccc_hellodfs_namenode_rpc_ChooseDataNodeFromReplicasRequest_descriptor,
+        new java.lang.String[] { "Filename", "ExcludedDataNodeId", });
+    internal_static_com_wuyiccc_hellodfs_namenode_rpc_ChooseDataNodeFromReplicasResponse_descriptor =
       getDescriptor().getMessageTypes().get(21);
-    internal_static_com_wuyiccc_hellodfs_namenode_rpc_GetDataNodeForFileResponse_fieldAccessorTable = new
+    internal_static_com_wuyiccc_hellodfs_namenode_rpc_ChooseDataNodeFromReplicasResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_com_wuyiccc_hellodfs_namenode_rpc_GetDataNodeForFileResponse_descriptor,
+        internal_static_com_wuyiccc_hellodfs_namenode_rpc_ChooseDataNodeFromReplicasResponse_descriptor,
         new java.lang.String[] { "DataNodeInfo", });
     internal_static_com_wuyiccc_hellodfs_namenode_rpc_ReallocateDataNodeRequest_descriptor =
       getDescriptor().getMessageTypes().get(22);

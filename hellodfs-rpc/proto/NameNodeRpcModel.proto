@@ -96,11 +96,12 @@ message ReportAllStorageInfoResponse {
   int32 status = 1;
 }
 
-message GetDataNodeForFileRequest {
+message ChooseDataNodeFromReplicasRequest {
   string filename = 1;
+  string excludedDataNodeId = 2;
 }
 
-message GetDataNodeForFileResponse {
+message ChooseDataNodeFromReplicasResponse {
   string dataNodeInfo = 1;
 }
 

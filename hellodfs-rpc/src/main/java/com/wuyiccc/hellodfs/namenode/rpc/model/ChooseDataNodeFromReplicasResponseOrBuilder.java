@@ -3,8 +3,8 @@
 
 package com.wuyiccc.hellodfs.namenode.rpc.model;
 
-public interface GetDataNodeForFileResponseOrBuilder extends
-    // @@protoc_insertion_point(interface_extends:com.wuyiccc.hellodfs.namenode.rpc.GetDataNodeForFileResponse)
+public interface ChooseDataNodeFromReplicasResponseOrBuilder extends
+    // @@protoc_insertion_point(interface_extends:com.wuyiccc.hellodfs.namenode.rpc.ChooseDataNodeFromReplicasResponse)
     com.google.protobuf.MessageOrBuilder {
 
   /**
