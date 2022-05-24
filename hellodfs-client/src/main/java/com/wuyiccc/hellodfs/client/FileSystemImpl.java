@@ -66,10 +66,11 @@ public class FileSystemImpl implements FileSystem {
         for (int i = 0; i < dataNodeListArray.size(); i++) {
             JSONObject dataNode = dataNodeListArray.getJSONObject(i);
             String hostname = dataNode.getString("hostname");
+            String ip = dataNode.getString("ip");
             int nioPort = dataNode.getIntValue("nioPort");
 
             if (!this.nioClient.sendFile(hostname, nioPort, file, filename, fileSize)) {
-                dataNode = JSONObject.parseObject(reallocateDataNode(filename, fileSize, hostname));
+                dataNode = JSONObject.parseObject(reallocateDataNode(filename, fileSize, ip + "-" + hostname));
                 hostname = dataNode.getString("hostname");
                 nioPort = dataNode.getIntValue("nioPort");
                 if (!nioClient.sendFile(hostname, nioPort, file, filename, fileSize)) {

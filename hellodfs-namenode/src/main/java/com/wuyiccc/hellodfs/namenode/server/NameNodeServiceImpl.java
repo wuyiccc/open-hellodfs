@@ -349,6 +349,11 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
         responseObserver.onCompleted();
     }
 
+    @Override
+    public void reallocateDataNode(ReallocateDataNodeRequest request, StreamObserver<ReallocateDataNodeResponse> responseObserver) {
+
+    }
+
 
     /**
      * @param flushedTxId startTxId_endTxId

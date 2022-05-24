@@ -120,6 +120,15 @@ public class NameNodeServiceGrpc {
               "com.wuyiccc.hellodfs.namenode.rpc.NameNodeService", "getDataNodeForFile"),
           io.grpc.protobuf.ProtoUtils.marshaller(com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileRequest.getDefaultInstance()),
           io.grpc.protobuf.ProtoUtils.marshaller(com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse.getDefaultInstance()));
+  @io.grpc.ExperimentalApi
+  public static final io.grpc.MethodDescriptor<com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeRequest,
+      com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeResponse> METHOD_REALLOCATE_DATA_NODE =
+      io.grpc.MethodDescriptor.create(
+          io.grpc.MethodDescriptor.MethodType.UNARY,
+          generateFullMethodName(
+              "com.wuyiccc.hellodfs.namenode.rpc.NameNodeService", "reallocateDataNode"),
+          io.grpc.protobuf.ProtoUtils.marshaller(com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeRequest.getDefaultInstance()),
+          io.grpc.protobuf.ProtoUtils.marshaller(com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeResponse.getDefaultInstance()));
 
   public static NameNodeServiceStub newStub(io.grpc.Channel channel) {
     return new NameNodeServiceStub(channel);
@@ -169,6 +178,9 @@ public class NameNodeServiceGrpc {
 
     public void getDataNodeForFile(com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileRequest request,
         io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse> responseObserver);
+
+    public void reallocateDataNode(com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeRequest request,
+        io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeResponse> responseObserver);
   }
 
   public static interface NameNodeServiceBlockingClient {
@@ -194,6 +206,8 @@ public class NameNodeServiceGrpc {
     public com.wuyiccc.hellodfs.namenode.rpc.model.ReportAllStorageInfoResponse reportAllStorageInfo(com.wuyiccc.hellodfs.namenode.rpc.model.ReportAllStorageInfoRequest request);
 
     public com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse getDataNodeForFile(com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileRequest request);
+
+    public com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeResponse reallocateDataNode(com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeRequest request);
   }
 
   public static interface NameNodeServiceFutureClient {
@@ -230,6 +244,9 @@ public class NameNodeServiceGrpc {
 
     public com.google.common.util.concurrent.ListenableFuture<com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse> getDataNodeForFile(
         com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileRequest request);
+
+    public com.google.common.util.concurrent.ListenableFuture<com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeResponse> reallocateDataNode(
+        com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeRequest request);
   }
 
   public static class NameNodeServiceStub extends io.grpc.stub.AbstractStub<NameNodeServiceStub>
@@ -325,6 +342,13 @@ public class NameNodeServiceGrpc {
       asyncUnaryCall(
           getChannel().newCall(METHOD_GET_DATA_NODE_FOR_FILE, getCallOptions()), request, responseObserver);
     }
+
+    @java.lang.Override
+    public void reallocateDataNode(com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeRequest request,
+        io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_REALLOCATE_DATA_NODE, getCallOptions()), request, responseObserver);
+    }
   }
 
   public static class NameNodeServiceBlockingStub extends io.grpc.stub.AbstractStub<NameNodeServiceBlockingStub>
@@ -408,6 +432,12 @@ public class NameNodeServiceGrpc {
     public com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse getDataNodeForFile(com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileRequest request) {
       return blockingUnaryCall(
           getChannel(), METHOD_GET_DATA_NODE_FOR_FILE, getCallOptions(), request);
+    }
+
+    @java.lang.Override
+    public com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeResponse reallocateDataNode(com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeRequest request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_REALLOCATE_DATA_NODE, getCallOptions(), request);
     }
   }
 
@@ -504,6 +534,13 @@ public class NameNodeServiceGrpc {
       return futureUnaryCall(
           getChannel().newCall(METHOD_GET_DATA_NODE_FOR_FILE, getCallOptions()), request);
     }
+
+    @java.lang.Override
+    public com.google.common.util.concurrent.ListenableFuture<com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeResponse> reallocateDataNode(
+        com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeRequest request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_REALLOCATE_DATA_NODE, getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_REGISTER = 0;
@@ -517,6 +554,7 @@ public class NameNodeServiceGrpc {
   private static final int METHODID_INFORM_REPLICA_RECEIVED = 8;
   private static final int METHODID_REPORT_ALL_STORAGE_INFO = 9;
   private static final int METHODID_GET_DATA_NODE_FOR_FILE = 10;
+  private static final int METHODID_REALLOCATE_DATA_NODE = 11;
 
   private static class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -577,6 +615,10 @@ public class NameNodeServiceGrpc {
         case METHODID_GET_DATA_NODE_FOR_FILE:
           serviceImpl.getDataNodeForFile((com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileRequest) request,
               (io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse>) responseObserver);
+          break;
+        case METHODID_REALLOCATE_DATA_NODE:
+          serviceImpl.reallocateDataNode((com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeRequest) request,
+              (io.grpc.stub.StreamObserver<com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -673,6 +715,13 @@ public class NameNodeServiceGrpc {
               com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileRequest,
               com.wuyiccc.hellodfs.namenode.rpc.model.GetDataNodeForFileResponse>(
                 serviceImpl, METHODID_GET_DATA_NODE_FOR_FILE)))
+        .addMethod(
+          METHOD_REALLOCATE_DATA_NODE,
+          asyncUnaryCall(
+            new MethodHandlers<
+              com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeRequest,
+              com.wuyiccc.hellodfs.namenode.rpc.model.ReallocateDataNodeResponse>(
+                serviceImpl, METHODID_REALLOCATE_DATA_NODE)))
         .build();
   }
 }
