@@ -148,7 +148,7 @@ public class DataNodeManager {
 
                     while (dataNodeInfoIterator.hasNext()) {
                         dataNodeInfo = dataNodeInfoIterator.next();
-                        if (System.currentTimeMillis() - dataNodeInfo.getLastHeartBeatTime() > 90 * 1000) {
+                        if (System.currentTimeMillis() - dataNodeInfo.getLastHeartBeatTime() > 60 * 1000) {
                             toRemoveDataNodes.add(dataNodeInfo);
                         }
                     }

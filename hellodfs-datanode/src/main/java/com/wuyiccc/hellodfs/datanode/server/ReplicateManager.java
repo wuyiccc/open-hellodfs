@@ -62,6 +62,7 @@ public class ReplicateManager {
                     ByteBuffer fileBuffer = ByteBuffer.wrap(file);
 
                     String absoluteFilename = FileUtils.getAbsoluteFilename(filename);
+                    System.out.println("absoluteFilename: " + absoluteFilename);
 
                     imageOut = new FileOutputStream(absoluteFilename);
                     imageChannel = imageOut.getChannel();
