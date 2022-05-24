@@ -331,17 +331,32 @@ public class FSNameSystem {
         }
     }
 
-    public DataNodeInfo getDataNodeForFile(String filename) {
+    public DataNodeInfo chooseDataNodeFromReplicas(String filename, String excludedDataNodeId) {
         try {
             replicasLock.readLock().lock();
 
+            DataNodeInfo excludedDataNodeInfo = this.dataNodeManager.getDataNodeInfo(excludedDataNodeId);
+
             List<DataNodeInfo> dataNodeInfoList = replicasByFilenameMap.get(filename);
+
+            if (dataNodeInfoList.size() == 1) {
+                if (dataNodeInfoList.get(0).equals(excludedDataNodeInfo)) {
+                    return null;
+                }
+            }
+
             int size = dataNodeInfoList.size();
 
             Random random = new Random();
-            int index = random.nextInt(size);
 
-            return dataNodeInfoList.get(index);
+            while (true) {
+
+                int index = random.nextInt(size);
+                DataNodeInfo dataNodeInfo = dataNodeInfoList.get(index);
+                if (!dataNodeInfo.equals(excludedDataNodeInfo)) {
+                    return dataNodeInfo;
+                }
+            }
         } finally {
             replicasLock.readLock().unlock();
         }
@@ -361,7 +376,7 @@ public class FSNameSystem {
             replicasLock.writeLock().lock();
 
             List<String> filenames = this.filesByDataNodeMap.get(dataNodeInfo.getId());
-            for(String filename : filenames) {
+            for (String filename : filenames) {
                 List<DataNodeInfo> replicas = this.replicasByFilenameMap.get(filename.split("_")[0]);
                 replicas.remove(dataNodeInfo);
             }
@@ -382,7 +397,7 @@ public class FSNameSystem {
             List<DataNodeInfo> replicas = replicasByFilenameMap.get(filename);
 
             for (DataNodeInfo replica : replicas) {
-                if(!replica.equals(deadDataNode)) {
+                if (!replica.equals(deadDataNode)) {
                     replicateSource = replica;
                 }
             }

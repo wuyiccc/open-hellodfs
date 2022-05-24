@@ -93,8 +93,7 @@ public class FileSystemImpl implements FileSystem {
      */
     @Override
     public byte[] download(String filename) throws Exception {
-        JSONObject datanode = getDataNodeForFile(filename, "");
-
+        JSONObject datanode = chooseDataNodeFromReplicas(filename, "");
 
 
         String hostname = datanode.getString("hostname");
@@ -106,7 +105,7 @@ public class FileSystemImpl implements FileSystem {
         try {
             file = nioClient.readFile(hostname, nioPort, filename);
         } catch (Exception e) {
-            datanode = getDataNodeForFile(filename, ip + "-" + hostname);
+            datanode = chooseDataNodeFromReplicas(filename, ip + "-" + hostname);
             hostname = datanode.getString("hostname");
             nioPort = datanode.getInteger("nioPort");
 
@@ -119,8 +118,12 @@ public class FileSystemImpl implements FileSystem {
         return file;
     }
 
-    private JSONObject getDataNodeForFile(String filename, String excludedDataNodeId) throws Exception {
-        ChooseDataNodeFromReplicasRequest request = ChooseDataNodeFromReplicasRequest.newBuilder().setFilename(filename).build();
+    private JSONObject chooseDataNodeFromReplicas(String filename, String excludedDataNodeId) throws Exception {
+        ChooseDataNodeFromReplicasRequest request = ChooseDataNodeFromReplicasRequest
+                .newBuilder()
+                .setFilename(filename)
+                .setExcludedDataNodeId(excludedDataNodeId)
+                .build();
         ChooseDataNodeFromReplicasResponse response = this.nameNode.chooseDataNodeFromReplicas(request);
         return JSONObject.parseObject(response.getDataNodeInfo());
     }

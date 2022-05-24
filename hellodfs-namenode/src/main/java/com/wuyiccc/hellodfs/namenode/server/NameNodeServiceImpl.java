@@ -338,7 +338,8 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
     public void chooseDataNodeFromReplicas(ChooseDataNodeFromReplicasRequest request, StreamObserver<ChooseDataNodeFromReplicasResponse> responseObserver) {
 
         String filename = request.getFilename();
-        DataNodeInfo dataNodeInfo = this.fsNameSystem.getDataNodeForFile(filename);
+        String excludedDataNodeId = request.getExcludedDataNodeId();
+        DataNodeInfo dataNodeInfo = this.fsNameSystem.chooseDataNodeFromReplicas(filename, excludedDataNodeId);
 
         ChooseDataNodeFromReplicasResponse response = ChooseDataNodeFromReplicasResponse.newBuilder()
                 .setDataNodeInfo(JSONObject.toJSONString(dataNodeInfo))

@@ -81,6 +81,10 @@ public class DataNodeManager {
         return dataNodeMap.get(ip + "-" + hostname);
     }
 
+    public DataNodeInfo getDataNodeInfo(String id) {
+        return dataNodeMap.get(id);
+    }
+
 
     public void setStoredDataSize(String ip, String hostname, Long storedDataSize) {
         // datanode registration takes precedence over report
