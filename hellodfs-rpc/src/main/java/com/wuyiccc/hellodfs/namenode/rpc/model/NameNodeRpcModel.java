@@ -134,6 +134,16 @@ public final class NameNodeRpcModel {
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_com_wuyiccc_hellodfs_namenode_rpc_ReallocateDataNodeResponse_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_wuyiccc_hellodfs_namenode_rpc_RebalanceRequest_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_wuyiccc_hellodfs_namenode_rpc_RebalanceRequest_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_com_wuyiccc_hellodfs_namenode_rpc_RebalanceResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_com_wuyiccc_hellodfs_namenode_rpc_RebalanceResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -176,9 +186,11 @@ public final class NameNodeRpcModel {
       "odeInfo\030\001 \001(\t\"[\n\031ReallocateDataNodeReque" +
       "st\022\020\n\010filename\030\001 \001(\t\022\020\n\010fileSize\030\002 \001(\003\022\032" +
       "\n\022excludedDataNodeId\030\003 \001(\t\"2\n\032Reallocate" +
-      "DataNodeResponse\022\024\n\014dataNodeInfo\030\001 \001(\tB=" +
-      "\n\'com.wuyiccc.hellodfs.namenode.rpc.mode" +
-      "lB\020NameNodeRpcModelP\001b\006proto3"
+      "DataNodeResponse\022\024\n\014dataNodeInfo\030\001 \001(\t\"\022" +
+      "\n\020RebalanceRequest\"#\n\021RebalanceResponse\022" +
+      "\016\n\006status\030\001 \001(\005B=\n\'com.wuyiccc.hellodfs." +
+      "namenode.rpc.modelB\020NameNodeRpcModelP\001b\006" +
+      "proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -336,6 +348,18 @@ public final class NameNodeRpcModel {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_wuyiccc_hellodfs_namenode_rpc_ReallocateDataNodeResponse_descriptor,
         new java.lang.String[] { "DataNodeInfo", });
+    internal_static_com_wuyiccc_hellodfs_namenode_rpc_RebalanceRequest_descriptor =
+      getDescriptor().getMessageTypes().get(24);
+    internal_static_com_wuyiccc_hellodfs_namenode_rpc_RebalanceRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_wuyiccc_hellodfs_namenode_rpc_RebalanceRequest_descriptor,
+        new java.lang.String[] { });
+    internal_static_com_wuyiccc_hellodfs_namenode_rpc_RebalanceResponse_descriptor =
+      getDescriptor().getMessageTypes().get(25);
+    internal_static_com_wuyiccc_hellodfs_namenode_rpc_RebalanceResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_com_wuyiccc_hellodfs_namenode_rpc_RebalanceResponse_descriptor,
+        new java.lang.String[] { "Status", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
