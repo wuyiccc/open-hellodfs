@@ -93,16 +93,33 @@ public class FileSystemImpl implements FileSystem {
      */
     @Override
     public byte[] download(String filename) throws Exception {
-        JSONObject datanode = getDataNodeForFile(filename);
+        JSONObject datanode = getDataNodeForFile(filename, "");
+
 
 
         String hostname = datanode.getString("hostname");
+        String ip = datanode.getString("ip");
         Integer nioPort = datanode.getInteger("nioPort");
 
-        return nioClient.readFile(hostname, nioPort, filename);
+        byte[] file = null;
+
+        try {
+            file = nioClient.readFile(hostname, nioPort, filename);
+        } catch (Exception e) {
+            datanode = getDataNodeForFile(filename, ip + "-" + hostname);
+            hostname = datanode.getString("hostname");
+            nioPort = datanode.getInteger("nioPort");
+
+            try {
+                file = nioClient.readFile(hostname, nioPort, filename);
+            } catch (Exception e2) {
+                throw e2;
+            }
+        }
+        return file;
     }
 
-    private JSONObject getDataNodeForFile(String filename) throws Exception {
+    private JSONObject getDataNodeForFile(String filename, String excludedDataNodeId) throws Exception {
         GetDataNodeForFileRequest request = GetDataNodeForFileRequest.newBuilder().setFilename(filename).build();
         GetDataNodeForFileResponse response = this.nameNode.getDataNodeForFile(request);
         return JSONObject.parseObject(response.getDataNodeInfo());

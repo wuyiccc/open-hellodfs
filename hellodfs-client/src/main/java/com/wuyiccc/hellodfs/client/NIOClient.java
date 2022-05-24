@@ -129,7 +129,7 @@ public class NIOClient {
     }
 
 
-    public byte[] readFile(String hostname, int nioPort, String filename) {
+    public byte[] readFile(String hostname, int nioPort, String filename) throws IOException {
 
         ByteBuffer fileLengthBuffer = null;
         Long fileLength = null;
@@ -213,7 +213,7 @@ public class NIOClient {
             }
             return file;
         } catch (Exception e) {
-            e.printStackTrace();
+            throw e;
         } finally {
             if (channel != null) {
                 try {
@@ -231,7 +231,6 @@ public class NIOClient {
                 }
             }
         }
-        return null;
     }
 
 
