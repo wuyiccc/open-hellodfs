@@ -172,12 +172,12 @@ public final class NameNodeRpcModel {
       "geInfoResponse\022\016\n\006status\030\001 \001(\005\"-\n\031GetDat" +
       "aNodeForFileRequest\022\020\n\010filename\030\001 \001(\t\"2\n" +
       "\032GetDataNodeForFileResponse\022\024\n\014dataNodeI" +
-      "nfo\030\001 \001(\t\"Y\n\031ReallocateDataNodeRequest\022\020",
-      "\n\010filename\030\001 \001(\t\022\020\n\010fileSize\030\002 \001(\003\022\030\n\020ex" +
-      "cludedDataNode\030\003 \001(\t\",\n\032ReallocateDataNo" +
-      "deResponse\022\016\n\006status\030\001 \001(\005B=\n\'com.wuyicc" +
-      "c.hellodfs.namenode.rpc.modelB\020NameNodeR" +
-      "pcModelP\001b\006proto3"
+      "nfo\030\001 \001(\t\"[\n\031ReallocateDataNodeRequest\022\020",
+      "\n\010filename\030\001 \001(\t\022\020\n\010fileSize\030\002 \001(\003\022\032\n\022ex" +
+      "cludedDataNodeId\030\003 \001(\t\"2\n\032ReallocateData" +
+      "NodeResponse\022\024\n\014dataNodeInfo\030\001 \001(\tB=\n\'co" +
+      "m.wuyiccc.hellodfs.namenode.rpc.modelB\020N" +
+      "ameNodeRpcModelP\001b\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -328,13 +328,13 @@ public final class NameNodeRpcModel {
     internal_static_com_wuyiccc_hellodfs_namenode_rpc_ReallocateDataNodeRequest_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_wuyiccc_hellodfs_namenode_rpc_ReallocateDataNodeRequest_descriptor,
-        new java.lang.String[] { "Filename", "FileSize", "ExcludedDataNode", });
+        new java.lang.String[] { "Filename", "FileSize", "ExcludedDataNodeId", });
     internal_static_com_wuyiccc_hellodfs_namenode_rpc_ReallocateDataNodeResponse_descriptor =
       getDescriptor().getMessageTypes().get(23);
     internal_static_com_wuyiccc_hellodfs_namenode_rpc_ReallocateDataNodeResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_com_wuyiccc_hellodfs_namenode_rpc_ReallocateDataNodeResponse_descriptor,
-        new java.lang.String[] { "Status", });
+        new java.lang.String[] { "DataNodeInfo", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
