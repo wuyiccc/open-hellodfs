@@ -19,7 +19,7 @@ public class NIOClient {
 
     public static final Integer READ_FILE = 2;
 
-    public void sendFile(String hostname, int nioPort, byte[] file, String filename, long fileSize) {
+    public Boolean sendFile(String hostname, int nioPort, byte[] file, String filename, long fileSize) {
         SocketChannel channel = null;
         Selector selector = null;
         ByteBuffer buffer = null;
@@ -107,6 +107,7 @@ public class NIOClient {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         } finally {
             if (channel != null) {
                 try {
@@ -124,6 +125,7 @@ public class NIOClient {
                 }
             }
         }
+        return true;
     }
 
 
