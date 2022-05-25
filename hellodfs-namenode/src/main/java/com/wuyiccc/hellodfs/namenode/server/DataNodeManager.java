@@ -1,6 +1,5 @@
 package com.wuyiccc.hellodfs.namenode.server;
 
-import javax.xml.crypto.Data;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -13,6 +12,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class DataNodeManager {
 
+    /**
+     * ip-hostname:
+     */
     private Map<String, DataNodeInfo> dataNodeMap = new ConcurrentHashMap<>();
 
     private FSNameSystem fsNameSystem;
@@ -99,15 +101,15 @@ public class DataNodeManager {
             excludedDataNodeInfo.addStoredDataSize(-fileSize);
 
             List<DataNodeInfo> dataNodeList = new ArrayList<>();
-            for(DataNodeInfo dataNodeInfo : dataNodeMap.values()) {
-                if(!excludedDataNodeInfo.equals(dataNodeInfo)) {
+            for (DataNodeInfo dataNodeInfo : dataNodeMap.values()) {
+                if (!excludedDataNodeInfo.equals(dataNodeInfo)) {
                     dataNodeList.add(dataNodeInfo);
                 }
             }
 
             Collections.sort(dataNodeList);
             DataNodeInfo selectedDatanode = null;
-            if(dataNodeList.size() >= 1) {
+            if (dataNodeList.size() >= 1) {
                 selectedDatanode = dataNodeList.get(0);
                 dataNodeList.get(0).addStoredDataSize(fileSize);
             }
@@ -115,10 +117,10 @@ public class DataNodeManager {
         }
     }
 
-    public void createLostReplicaTask(DataNodeInfo dataNodeInfo) {
+    public void createReplicaTask(DataNodeInfo dataNodeInfo) {
         List<String> files = this.fsNameSystem.getFilesByDataNode(dataNodeInfo.getIp(), dataNodeInfo.getHostname());
 
-        for(String file : files) {
+        for (String file : files) {
             System.out.println("need replica filename: " + file);
             String filename = file.split("_")[0];
             Long fileLength = Long.valueOf(file.split("_")[1]);
@@ -156,6 +158,110 @@ public class DataNodeManager {
         }
     }
 
+    public void createRebalanceTasks() {
+        synchronized (this) {
+
+            long totalStoredDataSize = 0;
+            for (DataNodeInfo datanode : this.dataNodeMap.values()) {
+                totalStoredDataSize += datanode.getStoredDataSize();
+            }
+            long averageStoredDataSize = totalStoredDataSize / this.dataNodeMap.size();
+
+            List<DataNodeInfo> sourceDataNodeInfoList = new ArrayList<>();
+            List<DataNodeInfo> destDataNodeInfoList = new ArrayList<>();
+
+            for (DataNodeInfo dataNodeInfo : this.dataNodeMap.values()) {
+
+                if (dataNodeInfo.getStoredDataSize() > averageStoredDataSize) {
+                    sourceDataNodeInfoList.add(dataNodeInfo);
+                }
+
+                if (dataNodeInfo.getStoredDataSize() < averageStoredDataSize) {
+                    destDataNodeInfoList.add(dataNodeInfo);
+                }
+            }
+
+
+            List<RemoveReplicaTask> removeReplicaTasks = new ArrayList<>();
+
+            for (DataNodeInfo sourceDataNodeInfo : sourceDataNodeInfoList) {
+
+                long toRemoveDataSize = sourceDataNodeInfo.getStoredDataSize() - averageStoredDataSize;
+
+                for (DataNodeInfo destDataNodeInfo : destDataNodeInfoList) {
+
+                    if (destDataNodeInfo.getStoredDataSize() + toRemoveDataSize <= averageStoredDataSize) {
+                        createRebalanceTasks(sourceDataNodeInfo, destDataNodeInfo, removeReplicaTasks, toRemoveDataSize);
+                        break;
+                    } else if (destDataNodeInfo.getStoredDataSize() < averageStoredDataSize) {
+                        long maxRemoveDataSize = averageStoredDataSize - destDataNodeInfo.getStoredDataSize();
+                        long removedDataSize = createRebalanceTasks(sourceDataNodeInfo, destDataNodeInfo, removeReplicaTasks, maxRemoveDataSize);
+                        toRemoveDataSize -= removedDataSize;
+                    }
+                }
+            }
+            new DelayRemoveReplicaThread(removeReplicaTasks).start();
+        }
+    }
+
+    private long createRebalanceTasks(DataNodeInfo sourceDataNode, DataNodeInfo destDataNode, List<RemoveReplicaTask> removeReplicaTasks, long maxRemoveDataSize) {
+        List<String> files = this.fsNameSystem.getFilesByDataNodeInfo(sourceDataNode.getIp(), sourceDataNode.getHostname());
+
+        long removedDataSize = 0;
+
+        for (String file : files) {
+            String filename = file.split("_")[0];
+            long fileLength = Long.parseLong(file.split("_")[1]);
+
+            if (removedDataSize + fileLength >= maxRemoveDataSize) {
+                break;
+            }
+
+            ReplicateTask replicateTask = new ReplicateTask(filename, fileLength, sourceDataNode, destDataNode);
+            destDataNode.addReplicateTask(replicateTask);
+            destDataNode.addStoredDataSize(fileLength);
+
+            sourceDataNode.addStoredDataSize(-fileLength);
+            this.fsNameSystem.removeReplicaFromDataNode(sourceDataNode.getId(), file);
+            RemoveReplicaTask removeReplicaTask = new RemoveReplicaTask(filename, sourceDataNode);
+            removeReplicaTasks.add(removeReplicaTask);
+            removedDataSize += fileLength;
+        }
+
+        return removedDataSize;
+    }
+
+    class DelayRemoveReplicaThread extends Thread {
+
+        private List<RemoveReplicaTask> removeReplicaTasks;
+
+        public DelayRemoveReplicaThread(List<RemoveReplicaTask> removeReplicaTasks) {
+            this.removeReplicaTasks = removeReplicaTasks;
+        }
+
+        @Override
+        public void run() {
+            long start = System.currentTimeMillis();
+
+            while (true) {
+                try {
+                    long now = System.currentTimeMillis();
+
+                    // 24h
+                    if (now - start > 24 * 60 * 60 * 1000) {
+                        for (RemoveReplicaTask removeReplicaTask : removeReplicaTasks) {
+                            removeReplicaTask.getDataNodeInfo().addRemoveReplicaTask(removeReplicaTask);
+                        }
+                        break;
+                    }
+                    TimeUnit.SECONDS.sleep(60);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+    }
 
     /**
      * check datanode is alive
@@ -182,7 +288,7 @@ public class DataNodeManager {
                     if (!toRemoveDataNodes.isEmpty()) {
                         for (DataNodeInfo toRemoveDataNode : toRemoveDataNodes) {
 
-                            createLostReplicaTask(toRemoveDataNode);
+                            createReplicaTask(toRemoveDataNode);
 
                             dataNodeMap.remove(toRemoveDataNode.getId());
                             System.out.println("datanodes: " + toRemoveDataNode + ", hearbeat is down....");

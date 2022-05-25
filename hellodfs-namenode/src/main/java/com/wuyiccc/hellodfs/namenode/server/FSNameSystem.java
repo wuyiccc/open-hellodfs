@@ -35,8 +35,14 @@ public class FSNameSystem {
      */
     private long checkpointTxId = 0;
 
+    /**
+     * filename:
+     */
     private Map<String, List<DataNodeInfo>> replicasByFilenameMap = new HashMap<>();
 
+    /**
+     * ip-hostname:List<filename_fileLength>
+     */
     private Map<String, List<String>> filesByDataNodeMap = new HashMap<>();
 
     private DataNodeManager dataNodeManager;
@@ -406,5 +412,33 @@ public class FSNameSystem {
         }
 
         return replicateSource;
+    }
+
+    public List<String> getFilesByDataNodeInfo(String ip, String hostname) {
+        try {
+            replicasLock.readLock().lock();
+            return this.filesByDataNodeMap.get(ip + "-" + hostname);
+        } finally {
+            replicasLock.readLock().unlock();
+        }
+    }
+
+    public void removeReplicaFromDataNode(String id, String file) {
+        try {
+            replicasLock.writeLock().lock();
+
+            this.filesByDataNodeMap.get(id).remove(file);
+
+            Iterator<DataNodeInfo> replicasIterator =
+                    this.replicasByFilenameMap.get(file.split("_")[0]).iterator();
+            while (replicasIterator.hasNext()) {
+                DataNodeInfo replicaDataNodeInfo = replicasIterator.next();
+                if (replicaDataNodeInfo.getId().equals(id)) {
+                    replicasIterator.remove();
+                }
+            }
+        } finally {
+            replicasLock.writeLock().unlock();
+        }
     }
 }

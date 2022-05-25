@@ -362,7 +362,13 @@ public class NameNodeServiceImpl implements NameNodeServiceGrpc.NameNodeService 
 
     @Override
     public void rebalance(RebalanceRequest request, StreamObserver<RebalanceResponse> responseObserver) {
+        this.dataNodeManager.createRebalanceTasks();
 
+        RebalanceResponse response = RebalanceResponse.newBuilder()
+                .setStatus(STATUS_SUCCESS)
+                .build();
+        responseObserver.onNext(response);
+        responseObserver.onCompleted();
     }
 
 
