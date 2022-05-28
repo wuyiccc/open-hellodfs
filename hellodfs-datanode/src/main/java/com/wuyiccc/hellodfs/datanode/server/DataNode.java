@@ -42,6 +42,7 @@ public class DataNode {
         this.heartBeatManager.start();
 
         NIOServer nioServer = new NIOServer(this.nameNodeRpcClient);
+        nioServer.init();
         nioServer.start();
     }
 

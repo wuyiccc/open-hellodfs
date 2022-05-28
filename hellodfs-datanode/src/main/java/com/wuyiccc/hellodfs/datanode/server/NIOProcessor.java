@@ -111,6 +111,7 @@ public class NIOProcessor extends Thread {
                             if (request.hasCompletedRead()) {
                                 request.setProcessorId(processorId);
                                 request.setClient(client);
+
                                 NetworkRequestQueue.getInstance().offer(request);
 
                                 cachedKeys.put(client, key);

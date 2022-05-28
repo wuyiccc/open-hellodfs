@@ -70,8 +70,12 @@ public class IOThread extends Thread {
             NetworkResponseQueues responseQueues = NetworkResponseQueues.getInstance();
             responseQueues.offer(request.getProcessorId(), response);
         } finally {
-            localFileChannel.close();
-            localFileOut.close();
+            if (localFileChannel != null) {
+                localFileChannel.close();
+            }
+            if (localFileOut != null) {
+                localFileOut.close();
+            }
         }
     }
 
