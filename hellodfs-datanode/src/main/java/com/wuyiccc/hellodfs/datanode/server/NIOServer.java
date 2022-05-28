@@ -84,10 +84,14 @@ public class NIOServer extends Thread {
             System.out.println("NIOServer is starting, begin to listen port：" + DataNodeConfig.NIO_PORT);
 
 
+
+            NetworkResponseQueue responseQueue = NetworkResponseQueue.getInstance();
+
             for (int i = 0; i < PROCESSOR_THREAD_NUM; i++) {
-                NIOProcessor processor = new NIOProcessor();
+                NIOProcessor processor = new NIOProcessor(i);
                 processorList.add(processor);
                 processor.start();
+                responseQueue.initResponseQueue(i);
             }
 
             for (int i = 0; i < IO_THREAD_NUM; i++) {

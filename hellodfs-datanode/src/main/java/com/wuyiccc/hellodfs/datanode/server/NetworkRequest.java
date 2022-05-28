@@ -14,6 +14,8 @@ public class NetworkRequest {
     public static final Integer REQUEST_SEND_FILE = 1;
     public static final Integer REQUEST_READ_FILE = 2;
 
+    private Integer processorId;
+
     private SelectionKey key;
 
     private SocketChannel channel;
@@ -44,6 +46,13 @@ public class NetworkRequest {
         this.channel = channel;
     }
 
+    public Integer getProcessorId() {
+        return processorId;
+    }
+
+    public void setProcessorId(Integer processorId) {
+        this.processorId = processorId;
+    }
 
     public Boolean hasCompletedRead() {
         return cachedRequest.hasCompletedRead;

@@ -20,18 +20,29 @@ public class NIOProcessor extends Thread {
     public static final Long POLL_BLOCK_MAX_TIME = 1000L;
 
 
+    private Integer processorId;
+
     private ConcurrentLinkedQueue<SocketChannel> channelQueue = new ConcurrentLinkedQueue<>();
 
     private Selector selector;
 
     private Map<String, NetworkRequest> cachedRequests = new HashMap<>();
 
-    public NIOProcessor() {
+    public NIOProcessor(Integer processorId) {
         try {
+            this.processorId = processorId;
             this.selector = Selector.open();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Integer getProcessorId() {
+        return processorId;
+    }
+
+    public void setProcessorId(Integer processorId) {
+        this.processorId = processorId;
     }
 
     public void addChannel(SocketChannel channel) {
@@ -90,6 +101,7 @@ public class NIOProcessor extends Thread {
                             request.read();
 
                             if (request.hasCompletedRead()) {
+                                request.setProcessorId(processorId);
                                 NetworkRequestQueue.getInstance().offer(request);
                                 key.interestOps(key.interestOps() & ~SelectionKey.OP_READ);
                             } else {

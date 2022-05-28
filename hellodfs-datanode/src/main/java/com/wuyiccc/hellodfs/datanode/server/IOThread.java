@@ -62,6 +62,12 @@ public class IOThread extends Thread {
             // /image/product/iphone.jpg
             nameNode.informReplicaReceived(request.getRelativeFilename() + "_" + request.getFileLength());
             System.out.println("datanode begin informReplicaReceived...");
+
+            NetworkResponse response = new NetworkResponse();
+            response.setBuffer(ByteBuffer.wrap("SUCCESS".getBytes()));
+
+            NetworkResponseQueue responseQueues = NetworkResponseQueue.getInstance();
+            responseQueues.offer(request.getProcessorId(), response);
         } finally {
             localFileChannel.close();
             localFileOut.close();
@@ -85,6 +91,12 @@ public class IOThread extends Thread {
             System.out.println("already read" + hasReadImageLength + " bytes data from local disk");
 
             buffer.rewind();
+
+            NetworkResponse response = new NetworkResponse();
+            response.setBuffer(buffer);
+
+            NetworkResponseQueue responseQueues = NetworkResponseQueue.getInstance();
+            responseQueues.offer(request.getProcessorId(), response);
         } finally {
             if (localFileChannel != null) {
                 localFileChannel.close();
