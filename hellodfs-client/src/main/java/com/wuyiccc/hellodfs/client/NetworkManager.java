@@ -5,7 +5,6 @@ import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
-import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -37,6 +36,10 @@ public class NetworkManager {
 
     private Selector selector;
 
+    /**
+     * the status of each connection (already completed connect and wait to connect)
+     */
+    private Map<String, Integer> connectState;
 
     /**
      * A machine waiting to establish a connection
@@ -44,19 +47,22 @@ public class NetworkManager {
     private ConcurrentLinkedQueue<Host> waitingConnectHosts;
 
     /**
-     * all connect
+     * all connect (already completed connected)
      */
     private Map<String, SocketChannel> connections;
 
-    /**
-     * the status of each connection
-     */
-    private Map<String, Integer> connectState;
 
     /**
+     * wait to send request
      * key: hostname
      */
     private Map<String, ConcurrentLinkedQueue<NetworkRequest>> waitingRequests;
+
+    /**
+     * prepare to send request
+     * key: hostname
+     */
+    private Map<String, NetworkRequest> toSendRequests;
 
     private Map<String, Integer> finishedResponses;
 
@@ -118,6 +124,7 @@ public class NetworkManager {
         public void run() {
             while (true) {
                 tryConnect();
+                prepareRequests();
                 poll();
             }
         }
@@ -138,6 +145,16 @@ public class NetworkManager {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+        }
+
+        private void prepareRequests() {
+            for (String hostname : waitingRequests.keySet()) {
+                ConcurrentLinkedQueue<NetworkRequest> requestQueue = waitingRequests.get(hostname);
+                if (!requestQueue.isEmpty() && !toSendRequests.containsKey(hostname)) {
+                    NetworkRequest request = requestQueue.poll();
+                    toSendRequests.put(hostname, request);
+                }
             }
         }
 
