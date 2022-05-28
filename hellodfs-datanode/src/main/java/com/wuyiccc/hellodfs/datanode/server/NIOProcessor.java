@@ -89,6 +89,8 @@ public class NIOProcessor extends Thread {
                             request.read();
 
                             if (request.hasCompletedRead()) {
+                                NetworkRequestQueue.getInstance().offer(request);
+                                key.interestOps(key.interestOps() & ~SelectionKey.OP_READ);
                             } else {
                                 cachedRequests.put(client, request);
                             }
