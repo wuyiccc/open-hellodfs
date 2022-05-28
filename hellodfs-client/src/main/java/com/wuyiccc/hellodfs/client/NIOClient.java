@@ -46,6 +46,7 @@ public class NIOClient {
 
         NetworkRequest request = this.createSendFileRequest(hostname, nioPort, file, filename, fileLength);
 
+        this.networkManager.sendRequest(request);
         return true;
     }
 

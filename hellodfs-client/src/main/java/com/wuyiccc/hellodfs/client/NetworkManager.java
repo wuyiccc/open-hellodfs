@@ -48,6 +48,11 @@ public class NetworkManager {
      */
     private Map<String, Integer> connectState;
 
+    /**
+     * key: hostname
+     */
+    private Map<String, ConcurrentLinkedQueue<NetworkRequest>> waitingRequests;
+
 
     public NetworkManager() {
         try {
@@ -59,6 +64,7 @@ public class NetworkManager {
         this.connections = new ConcurrentHashMap<>();
         this.connectState = new ConcurrentHashMap<>();
         this.waitingConnectHosts = new ConcurrentLinkedQueue<>();
+        this.waitingRequests = new ConcurrentHashMap<>();
 
         new NetworkPollThread().start();
     }
@@ -76,6 +82,11 @@ public class NetworkManager {
                 wait(100);
             }
         }
+    }
+
+    public void sendRequest(NetworkRequest request) {
+        ConcurrentLinkedQueue<NetworkRequest> requestQueue = waitingRequests.get(request.getHostname());
+        requestQueue.offer(request);
     }
 
 
@@ -135,6 +146,7 @@ public class NetworkManager {
 
                         InetSocketAddress remoteAddress = (InetSocketAddress) channel.getRemoteAddress();
                         // refresh cache
+                        waitingRequests.put(remoteAddress.getHostName(), new ConcurrentLinkedQueue<>());
                         connectState.put(remoteAddress.getHostName(), CONNECTED);
                         connections.put(remoteAddress.getHostName(), channel);
                     }
