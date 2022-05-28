@@ -41,7 +41,7 @@ public class DataNode {
         this.heartBeatManager = new HeartBeatManager(this.nameNodeRpcClient, this.storageManager, this.replicateManager);
         this.heartBeatManager.start();
 
-        DataNodeNIOServer nioServer = new DataNodeNIOServer(this.nameNodeRpcClient);
+        NIOServer nioServer = new NIOServer(this.nameNodeRpcClient);
         nioServer.start();
     }
 

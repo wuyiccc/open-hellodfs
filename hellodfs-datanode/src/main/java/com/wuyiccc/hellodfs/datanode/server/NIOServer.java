@@ -6,13 +6,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -20,7 +16,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @author wuyiccc
  * @date 2022/5/15 11:31
  */
-public class DataNodeNIOServer extends Thread {
+public class NIOServer extends Thread {
 
     public static final Integer SEND_FILE = 1;
 
@@ -28,7 +24,12 @@ public class DataNodeNIOServer extends Thread {
 
     public static final Integer NIO_BUFFER_SIZE = 10 * 1024;
 
+    public static final Integer PROCESSOR_THREAD_NUM = 10;
+
     private Selector selector;
+
+
+    private List<NIOProcessor> processorList = new ArrayList<>();
 
     private NameNodeRpcClient nameNodeRpcClient;
 
@@ -61,7 +62,7 @@ public class DataNodeNIOServer extends Thread {
      */
     private Map<String, ByteBuffer> fileByClient = new ConcurrentHashMap<>();
 
-    public DataNodeNIOServer(NameNodeRpcClient nameNodeRpcClient) {
+    public NIOServer(NameNodeRpcClient nameNodeRpcClient) {
         this.nameNodeRpcClient = nameNodeRpcClient;
 
     }
@@ -79,6 +80,13 @@ public class DataNodeNIOServer extends Thread {
 
 
             System.out.println("NIOServer is starting, begin to listen port：" + DataNodeConfig.NIO_PORT);
+
+
+            for (int i = 0; i < PROCESSOR_THREAD_NUM; i++) {
+                NIOProcessor processor = new NIOProcessor();
+                processorList.add(processor);
+                processor.start();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -102,6 +110,11 @@ public class DataNodeNIOServer extends Thread {
                         SocketChannel channel = serverSocketChannel.accept();
                         if (channel != null) {
                             channel.configureBlocking(false);
+
+                            Integer processorIndex = new Random().nextInt(PROCESSOR_THREAD_NUM);
+                            NIOProcessor processor = processorList.get(processorIndex);
+                            processor.addChannel(channel);
+
                         }
                     }
 
