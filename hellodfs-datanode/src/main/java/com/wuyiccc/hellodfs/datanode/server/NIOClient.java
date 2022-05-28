@@ -126,21 +126,6 @@ public class NIOClient {
         return null;
     }
 
-    public static void main(String[] args) throws Exception {
-
-        FileOutputStream imageOut = null;
-        FileChannel imageChannel = null;
-
-        byte[] file = new NIOClient().readFile("datanode01", 9301, "/image/product/lingyu.jpg");
-        ByteBuffer fileBuffer = ByteBuffer.wrap(file);
-
-        String absoluteFilename = FileUtils.getAbsoluteFilename("/image/product/lingyu.jpg");
-
-        imageOut = new FileOutputStream(absoluteFilename);
-        imageChannel = imageOut.getChannel();
-
-        imageChannel.write(fileBuffer);
-    }
 
 
 }
