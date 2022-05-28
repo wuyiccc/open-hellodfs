@@ -318,5 +318,21 @@ public class NetworkRequest {
         }
     }
 
+    public Integer getRequestType() {
+        return cachedRequest.requestType;
+    }
+    public String getAbsoluteFilename() {
+        return cachedRequest.filename.absoluteFilename;
+    }
+    public String getRelativeFilename() {
+        return cachedRequest.filename.relativeFilename;
+    }
+    public ByteBuffer getFile() {
+        return cachedRequest.file;
+    }
+    public Long getFileLength() {
+        return cachedRequest.fileLength;
+    }
+
 
 }

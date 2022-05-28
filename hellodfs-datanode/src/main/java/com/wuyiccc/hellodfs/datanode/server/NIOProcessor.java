@@ -19,6 +19,7 @@ public class NIOProcessor extends Thread {
 
     public static final Long POLL_BLOCK_MAX_TIME = 1000L;
 
+
     private ConcurrentLinkedQueue<SocketChannel> channelQueue = new ConcurrentLinkedQueue<>();
 
     private Selector selector;

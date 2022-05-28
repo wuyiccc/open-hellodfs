@@ -26,6 +26,8 @@ public class NIOServer extends Thread {
 
     public static final Integer PROCESSOR_THREAD_NUM = 10;
 
+    public static final Integer IO_THREAD_NUM = 10;
+
     private Selector selector;
 
 
@@ -87,6 +89,11 @@ public class NIOServer extends Thread {
                 processorList.add(processor);
                 processor.start();
             }
+
+            for (int i = 0; i < IO_THREAD_NUM; i++) {
+                new IOThread(this.nameNodeRpcClient).start();
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
