@@ -2,6 +2,7 @@ package com.wuyiccc.hellodfs.client;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
@@ -28,11 +29,11 @@ public class NetworkManager {
      */
     public static final Integer CONNECTED = 2;
 
-    public static final Long POLL_TIMEOUT = 500L;
-
     public static final Integer RESPONSE_SUCCESS = 1;
 
     public static final Integer RESPONSE_FAILURE = 2;
+
+    public static final Long POLL_TIMEOUT = 500L;
 
     private Selector selector;
 
@@ -49,7 +50,7 @@ public class NetworkManager {
     /**
      * all connect (already completed connected)
      */
-    private Map<String, SocketChannel> connections;
+    private Map<String, SelectionKey> connections;
 
 
     /**
@@ -77,6 +78,7 @@ public class NetworkManager {
         this.connectState = new ConcurrentHashMap<>();
         this.waitingConnectHosts = new ConcurrentLinkedQueue<>();
         this.waitingRequests = new ConcurrentHashMap<>();
+        this.toSendRequests = new ConcurrentHashMap<>();
         this.finishedResponses = new ConcurrentHashMap<>();
 
         new NetworkPollThread().start();
@@ -154,6 +156,9 @@ public class NetworkManager {
                 if (!requestQueue.isEmpty() && !toSendRequests.containsKey(hostname)) {
                     NetworkRequest request = requestQueue.poll();
                     toSendRequests.put(hostname, request);
+
+                    SelectionKey key = connections.get(hostname);
+                    key.interestOps(SelectionKey.OP_WRITE);
                 }
             }
         }
@@ -173,21 +178,11 @@ public class NetworkManager {
                     SelectionKey key = keysIterator.next();
                     keysIterator.remove();
 
+                    channel = (SocketChannel) key.channel();
                     if (key.isConnectable()) {
-                        channel = (SocketChannel) key.channel();
-                        if (channel.isConnectionPending()) {
-                            while (!channel.finishConnect()) {
-                                TimeUnit.MILLISECONDS.sleep(100);
-                            }
-                        }
-
-                        System.out.println("completed connect with server......");
-
-                        InetSocketAddress remoteAddress = (InetSocketAddress) channel.getRemoteAddress();
-                        // refresh cache
-                        waitingRequests.put(remoteAddress.getHostName(), new ConcurrentLinkedQueue<>());
-                        connectState.put(remoteAddress.getHostName(), CONNECTED);
-                        connections.put(remoteAddress.getHostName(), channel);
+                        finishConnect(key, channel);
+                    } else if (key.isWritable()) {
+                        sendRequest(key, channel);
                     }
                 }
             } catch (Exception e) {
@@ -204,6 +199,39 @@ public class NetworkManager {
         }
 
     }
+
+    private void finishConnect(SelectionKey key, SocketChannel channel) throws Exception {
+        if (channel.isConnectionPending()) {
+            while (!channel.finishConnect()) {
+                TimeUnit.MILLISECONDS.sleep(100);
+            }
+        }
+
+        System.out.println("completed connect with server......");
+
+        InetSocketAddress remoteAddress = (InetSocketAddress) channel.getRemoteAddress();
+        // refresh cache
+        waitingRequests.put(remoteAddress.getHostName(), new ConcurrentLinkedQueue<>());
+        connections.put(remoteAddress.getHostName(), key);
+        connectState.put(remoteAddress.getHostName(), CONNECTED);
+    }
+
+    private void sendRequest(SelectionKey key, SocketChannel channel) throws Exception {
+        InetSocketAddress remoteAddress = (InetSocketAddress) channel.getRemoteAddress();
+        String hostname = remoteAddress.getHostName();
+
+        NetworkRequest request = toSendRequests.get(hostname);
+        ByteBuffer buffer = request.getBuffer();
+
+        channel.write(buffer);
+        while (buffer.hasRemaining()) {
+            channel.write(buffer);
+        }
+
+        System.out.println("current request send completed......");
+        key.interestOps(SelectionKey.OP_READ);
+    }
+
 
     /**
      * represent a machine
