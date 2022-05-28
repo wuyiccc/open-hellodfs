@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.util.ArrayList;
@@ -28,7 +29,6 @@ public class DataNodeNIOServer extends Thread {
     public static final Integer NIO_BUFFER_SIZE = 10 * 1024;
 
     private Selector selector;
-    private List<LinkedBlockingQueue<SelectionKey>> queueList = new ArrayList<>();
 
     private NameNodeRpcClient nameNodeRpcClient;
 
@@ -62,10 +62,13 @@ public class DataNodeNIOServer extends Thread {
     private Map<String, ByteBuffer> fileByClient = new ConcurrentHashMap<>();
 
     public DataNodeNIOServer(NameNodeRpcClient nameNodeRpcClient) {
-        ServerSocketChannel serverSocketChannel = null;
+        this.nameNodeRpcClient = nameNodeRpcClient;
 
+    }
+
+    public void init() {
+        ServerSocketChannel serverSocketChannel = null;
         try {
-            this.nameNodeRpcClient = nameNodeRpcClient;
 
             selector = Selector.open();
 
@@ -74,15 +77,6 @@ public class DataNodeNIOServer extends Thread {
             serverSocketChannel.socket().bind(new InetSocketAddress(DataNodeConfig.NIO_PORT), 100);
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
-            // 1. register 3 queues and worker threads to listen for connections respectively
-            // 1.1 register 3 queues
-            for (int i = 0; i < 3; i++) {
-                queueList.add(new LinkedBlockingQueue<>());
-            }
-            // 1.2 each worker thread is responsible for listening to a queue
-            for (int i = 0; i < 3; i++) {
-                new Worker(queueList.get(i)).start();
-            }
 
             System.out.println("NIOServer is starting, begin to listen port：" + DataNodeConfig.NIO_PORT);
         } catch (IOException e) {
@@ -92,6 +86,8 @@ public class DataNodeNIOServer extends Thread {
 
     @Override
     public void run() {
+
+
         while (true) {
             try {
                 selector.select();
@@ -100,35 +96,18 @@ public class DataNodeNIOServer extends Thread {
                 while (keysIterator.hasNext()) {
                     SelectionKey key = keysIterator.next();
                     keysIterator.remove();
-                    handleEvents(key);
+
+                    if (key.isAcceptable()) {
+                        ServerSocketChannel serverSocketChannel = (ServerSocketChannel) key.channel();
+                        SocketChannel channel = serverSocketChannel.accept();
+                        if (channel != null) {
+                            channel.configureBlocking(false);
+                        }
+                    }
+
                 }
             } catch (Throwable t) {
                 t.printStackTrace();
-            }
-        }
-    }
-
-    private void handleEvents(SelectionKey key) throws IOException {
-        SocketChannel channel = null;
-
-        try {
-            if (key.isAcceptable()) {
-                ServerSocketChannel serverSocketChannel = (ServerSocketChannel) key.channel();
-                channel = serverSocketChannel.accept();
-                if (channel != null) {
-                    channel.configureBlocking(false);
-                    channel.register(selector, SelectionKey.OP_READ);
-                }
-            } else if (key.isReadable()) {
-                channel = (SocketChannel) key.channel();
-                String client = channel.getRemoteAddress().toString();
-                int queueIndex = client.hashCode() % this.queueList.size();
-                this.queueList.get(queueIndex).put(key);
-            }
-        } catch (Throwable t) {
-            t.printStackTrace();
-            if (channel != null) {
-                channel.close();
             }
         }
     }
