@@ -5,6 +5,7 @@ import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.sql.Timestamp;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -30,6 +31,10 @@ public class NetworkManager {
 
     public static final Long POLL_TIMEOUT = 500L;
 
+    public static final Integer RESPONSE_SUCCESS = 1;
+
+    public static final Integer RESPONSE_FAILURE = 2;
+
     private Selector selector;
 
 
@@ -53,6 +58,7 @@ public class NetworkManager {
      */
     private Map<String, ConcurrentLinkedQueue<NetworkRequest>> waitingRequests;
 
+    private Map<String, Integer> finishedResponses;
 
     public NetworkManager() {
         try {
@@ -65,6 +71,7 @@ public class NetworkManager {
         this.connectState = new ConcurrentHashMap<>();
         this.waitingConnectHosts = new ConcurrentLinkedQueue<>();
         this.waitingRequests = new ConcurrentHashMap<>();
+        this.finishedResponses = new ConcurrentHashMap<>();
 
         new NetworkPollThread().start();
     }
@@ -87,6 +94,21 @@ public class NetworkManager {
     public void sendRequest(NetworkRequest request) {
         ConcurrentLinkedQueue<NetworkRequest> requestQueue = waitingRequests.get(request.getHostname());
         requestQueue.offer(request);
+    }
+
+    public Boolean waitResponse(String requestId) throws InterruptedException {
+        Integer response = null;
+
+        while ((response = finishedResponses.get(requestId)) == null) {
+            TimeUnit.MILLISECONDS.sleep(100);
+        }
+
+        if (response.equals(RESPONSE_SUCCESS)) {
+            return true;
+        } else if (response.equals(RESPONSE_FAILURE)) {
+            return false;
+        }
+        return false;
     }
 
 

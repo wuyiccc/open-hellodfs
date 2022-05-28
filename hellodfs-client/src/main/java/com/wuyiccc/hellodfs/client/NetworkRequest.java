@@ -8,11 +8,21 @@ import java.nio.ByteBuffer;
  */
 public class NetworkRequest {
 
+    private String id;
+
     private String hostname;
 
     private Integer nioPort;
 
     private ByteBuffer buffer;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getHostname() {
         return hostname;

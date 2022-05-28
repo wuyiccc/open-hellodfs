@@ -7,6 +7,7 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.Iterator;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -47,7 +48,7 @@ public class NIOClient {
         NetworkRequest request = this.createSendFileRequest(hostname, nioPort, file, filename, fileLength);
 
         this.networkManager.sendRequest(request);
-        return true;
+        return this.networkManager.waitResponse(request.getId())
     }
 
     private NetworkRequest createSendFileRequest(String hostname, Integer nioPort, byte[] file, String filename, long fileLength) {
@@ -65,6 +66,7 @@ public class NIOClient {
         buffer.put(file);
         buffer.rewind();
 
+        request.setId(UUID.randomUUID().toString());
         request.setHostname(hostname);
         request.setNioPort(nioPort);
         request.setBuffer(buffer);
