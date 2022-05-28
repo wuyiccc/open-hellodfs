@@ -5,6 +5,7 @@ import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -13,6 +14,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
  */
 public class NIOProcessor extends Thread {
 
+
+    public static final Long POLL_BLOCK_MAX_TIME = 1000L;
 
     private ConcurrentLinkedQueue<SocketChannel> channelQueue = new ConcurrentLinkedQueue<>();
 
@@ -28,6 +31,7 @@ public class NIOProcessor extends Thread {
 
     public void addChannel(SocketChannel channel) {
         this.channelQueue.offer(channel);
+        selector.wakeup();
     }
 
 
@@ -36,6 +40,7 @@ public class NIOProcessor extends Thread {
         while (true) {
             try {
                 registerQueuedClients();
+                poll();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -50,6 +55,26 @@ public class NIOProcessor extends Thread {
             } catch (ClosedChannelException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void poll() {
+        try {
+            int keys = selector.select(POLL_BLOCK_MAX_TIME);
+
+            if (keys > 0) {
+                Iterator<SelectionKey> keyIterator = selector.selectedKeys().iterator();
+                while (keyIterator.hasNext()) {
+                    SelectionKey key = keyIterator.next();
+                    keyIterator.remove();
+
+                    if (key.isReadable()) {
+                        SocketChannel channel = (SocketChannel) key.channel();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
