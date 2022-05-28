@@ -73,22 +73,14 @@ public class NIOClient {
                         System.out.println("already send: " + sentData + " bytes data");
 
 
-                        if (buffer.hasRemaining()) {
+                        while (buffer.hasRemaining()) {
                             System.out.println("If the packet is not sent this time, send it next time");
                             // continue to write
-                            key.interestOps(SelectionKey.OP_WRITE);
-                        } else {
-                            System.out.println("The local data packet is sent and the server is ready to read the response");
-                            key.interestOps(SelectionKey.OP_READ);
+                            channel.write(buffer);
                         }
+                        System.out.println("The local data packet is sent and the server is ready to read the response");
+                        key.interestOps(SelectionKey.OP_READ);
 
-                    } else if (key.isWritable()) {
-                        channel = (SocketChannel) key.channel();
-                        channel.write(buffer);
-                        System.out.println("last sent data packet has not send finished, now continue to send data in this time");
-                        if (!buffer.hasRemaining()) {
-                            key.interestOps(SelectionKey.OP_READ);
-                        }
                     } else if (key.isReadable()) {
                         channel = (SocketChannel) key.channel();
 
@@ -105,7 +97,8 @@ public class NIOClient {
                     }
                 }
             }
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             e.printStackTrace();
             return false;
         } finally {
