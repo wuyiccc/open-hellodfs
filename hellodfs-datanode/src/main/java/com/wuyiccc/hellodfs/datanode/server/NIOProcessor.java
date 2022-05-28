@@ -60,8 +60,8 @@ public class NIOProcessor extends Thread {
         while (true) {
             try {
                 registerQueuedClients();
-                poll();
                 cacheQueuedResponse();
+                poll();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -90,9 +90,12 @@ public class NIOProcessor extends Thread {
                         SelectionKey key = keyIterator.next();
                         keyIterator.remove();
 
+
+                        SocketChannel channel = (SocketChannel) key.channel();
+                        String client = channel.getRemoteAddress().toString();
+
                         if (key.isReadable()) {
-                            SocketChannel channel = (SocketChannel) key.channel();
-                            String client = channel.getRemoteAddress().toString();
+
 
                             NetworkRequest request = null;
                             if (cachedRequests.get(client) != null) {
@@ -111,11 +114,20 @@ public class NIOProcessor extends Thread {
                                 NetworkRequestQueue.getInstance().offer(request);
 
                                 cachedKeys.put(client, key);
+                                cachedRequests.remove(client);
 
                                 key.interestOps(key.interestOps() & ~SelectionKey.OP_READ);
                             } else {
                                 cachedRequests.put(client, request);
                             }
+                        } else if (key.isWritable()) {
+                            NetworkResponse response = cachedResponses.get(client);
+                            channel.write(response.getBuffer());
+
+                            cachedResponses.remove(client);
+                            cachedKeys.remove(client);
+
+                            key.interestOps(key.interestOps() & ~SelectionKey.OP_WRITE);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
