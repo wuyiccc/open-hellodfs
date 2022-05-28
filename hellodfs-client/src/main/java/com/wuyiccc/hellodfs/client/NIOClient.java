@@ -19,120 +19,57 @@ public class NIOClient {
 
     public static final Integer READ_FILE = 2;
 
+    /**
+     * store requestType need 4 bytes (int)
+     */
+    public static final Integer REQUEST_TYPE = 4;
+
+    /**
+     * store filename length need 4 bytes (int)
+     */
+    public static final Integer FILENAME_LENGTH = 4;
+
+    /**
+     * store file length need 8 bytes (long)
+     */
+    public static final Integer FILE_LENGTH = 8;
+
     private NetworkManager networkManager;
 
     public NIOClient() {
         this.networkManager = new NetworkManager();
     }
 
-    public Boolean sendFile(String hostname, int nioPort, byte[] file, String filename, long fileSize) throws Exception {
+    public Boolean sendFile(String hostname, int nioPort, byte[] file, String filename, long fileLength) throws Exception {
 
         this.networkManager.maybeConnect(hostname, nioPort);
 
-        SocketChannel channel = null;
-        Selector selector = null;
-        ByteBuffer buffer = null;
+        NetworkRequest request = this.createSendFileRequest(hostname, nioPort, file, filename, fileLength);
 
-        try {
-            selector = Selector.open();
-
-            channel = SocketChannel.open();
-            channel.configureBlocking(false);
-            channel.connect(new InetSocketAddress(hostname, nioPort));
-            channel.register(selector, SelectionKey.OP_CONNECT);
-
-            boolean sending = true;
-
-            while (sending) {
-                selector.select();
-
-                Iterator<SelectionKey> keysIterator = selector.selectedKeys().iterator();
-
-                while (keysIterator.hasNext()) {
-                    SelectionKey key = keysIterator.next();
-                    keysIterator.remove();
-
-                    if (key.isConnectable()) {
-                        channel = (SocketChannel) key.channel();
-
-                        if (channel.isConnectionPending()) {
-                            while (!channel.finishConnect()) {
-                                TimeUnit.MILLISECONDS.sleep(100);
-                            }
-                        }
-
-                        System.out.println("finished connect with nioserver");
-
-                        byte[] filenameBytes = filename.getBytes();
-
-                        // 4 bytes(type data) + 4 bytes(filename length data) + some bytes(filename data) + 8 bytes(file length data) + some bytes(file data)
-                        buffer = ByteBuffer.allocate(4 + 4 + filenameBytes.length + 8 + (int) fileSize);
-
-                        buffer.putInt(SEND_FILE);
-                        // set filename
-                        buffer.putInt(filenameBytes.length);
-                        buffer.put(filenameBytes);
-
-                        // set fileSize in transport stream header, the long type need 8 bytes
-                        buffer.putLong(fileSize);
-                        buffer.put(file);
-                        buffer.rewind();
-
-
-                        // buffer: header(request type + filenameLength + filename + fileSize) + file
-                        int sentData = channel.write(buffer);
-
-                        System.out.println("already send: " + sentData + " bytes data");
-
-
-                        while (buffer.hasRemaining()) {
-                            System.out.println("If the packet is not sent this time, send it next time");
-                            // continue to write
-                            channel.write(buffer);
-                        }
-                        System.out.println("The local data packet is sent and the server is ready to read the response");
-                        key.interestOps(SelectionKey.OP_READ);
-
-                    } else if (key.isReadable()) {
-                        channel = (SocketChannel) key.channel();
-
-                        buffer = ByteBuffer.allocate(1024);
-                        int len = channel.read(buffer);
-
-                        buffer.flip();
-
-                        if (len > 0) {
-                            System.out.println("[" + Thread.currentThread().getName()
-                                    + "]receive response：" + new String(buffer.array(), 0, len));
-                            sending = false;
-                        }
-                    }
-                }
-            }
-        } catch (
-                Exception e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            if (channel != null) {
-                try {
-                    channel.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (selector != null) {
-                try {
-                    selector.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
         return true;
     }
 
+    private NetworkRequest createSendFileRequest(String hostname, Integer nioPort, byte[] file, String filename, long fileLength) {
+        NetworkRequest request = new NetworkRequest();
+
+
+        // 4 bytes(type data) + 4 bytes(filename length data) + some bytes(filename data) + 8 bytes(file length data) + some bytes(file data)
+        ByteBuffer buffer = ByteBuffer.allocate(REQUEST_TYPE + FILENAME_LENGTH + filename.getBytes().length + FILE_LENGTH + (int) fileLength);
+        buffer.putInt(SEND_FILE);
+        buffer.putInt(filename.getBytes().length);
+        // set filename
+        buffer.put(filename.getBytes());
+        // set fileSize in transport stream header, the long type need 8 bytes
+        buffer.putLong(fileLength);
+        buffer.put(file);
+        buffer.rewind();
+
+        request.setHostname(hostname);
+        request.setNioPort(nioPort);
+        request.setBuffer(buffer);
+
+        return request;
+    }
 
     public byte[] readFile(String hostname, int nioPort, String filename) throws IOException {
 
