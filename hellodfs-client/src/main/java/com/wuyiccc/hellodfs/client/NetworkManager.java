@@ -29,6 +29,8 @@ public class NetworkManager {
      */
     public static final Integer CONNECTED = 2;
 
+    public static final Integer DISCONNECTED = 3;
+
     public static final Integer RESPONSE_SUCCESS = 1;
 
     public static final Integer RESPONSE_FAILURE = 2;
@@ -65,7 +67,7 @@ public class NetworkManager {
      */
     private Map<String, NetworkRequest> toSendRequests;
 
-    private Map<String, Integer> finishedResponses;
+    private Map<String, NetworkResponse> finishedResponses;
 
     public NetworkManager() {
         try {
@@ -87,15 +89,26 @@ public class NetworkManager {
     /**
      * Attempt to connect to the specified dataNode
      */
-    public void maybeConnect(String hostname, Integer nioPort) throws Exception {
+    public Boolean maybeConnect(String hostname, Integer nioPort) {
         synchronized (this) {
-            if (!connectState.containsKey(hostname)) {
+            if (!connectState.containsKey(hostname) || connectState.get(hostname).equals(DISCONNECTED)) {
                 connectState.put(hostname, CONNECTING);
                 waitingConnectHosts.offer(new Host(hostname, nioPort));
             }
+
             while (connectState.get(hostname).equals(CONNECTING)) {
-                wait(100);
+                try {
+                    wait(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
+
+            if (connectState.get(hostname).equals(DISCONNECTED)) {
+                return false;
+            }
+
+            return true;
         }
     }
 
@@ -104,19 +117,17 @@ public class NetworkManager {
         requestQueue.offer(request);
     }
 
-    public Boolean waitResponse(String requestId) throws InterruptedException {
-        Integer response = null;
+    public NetworkResponse waitResponse(String requestId) throws InterruptedException {
+        NetworkResponse response = null;
 
         while ((response = finishedResponses.get(requestId)) == null) {
             TimeUnit.MILLISECONDS.sleep(100);
         }
 
-        if (response.equals(RESPONSE_SUCCESS)) {
-            return true;
-        } else if (response.equals(RESPONSE_FAILURE)) {
-            return false;
-        }
-        return false;
+        toSendRequests.remove(response.getHostname());
+        finishedResponses.remove(requestId);
+
+        return response;
     }
 
 
@@ -135,9 +146,9 @@ public class NetworkManager {
          * Attempt to initiate a connection request from the queued machine
          */
         private void tryConnect() {
+            Host host = null;
+            SocketChannel channel = null;
             try {
-                Host host = null;
-                SocketChannel channel = null;
 
                 while ((host = waitingConnectHosts.poll()) != null) {
                     channel = SocketChannel.open();
@@ -147,6 +158,7 @@ public class NetworkManager {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+                connectState.put(host.hostname, DISCONNECTED);
             }
         }
 
@@ -183,6 +195,8 @@ public class NetworkManager {
                         finishConnect(key, channel);
                     } else if (key.isWritable()) {
                         sendRequest(key, channel);
+                    } else if (key.isReadable()) {
+                        readResponse(key, channel);
                     }
                 }
             } catch (Exception e) {
@@ -198,40 +212,83 @@ public class NetworkManager {
             }
         }
 
-    }
+        private void finishConnect(SelectionKey key, SocketChannel channel) throws Exception {
 
-    private void finishConnect(SelectionKey key, SocketChannel channel) throws Exception {
-        if (channel.isConnectionPending()) {
-            while (!channel.finishConnect()) {
-                TimeUnit.MILLISECONDS.sleep(100);
+            InetSocketAddress remoteAddress = null;
+
+            try {
+
+                remoteAddress = (InetSocketAddress) channel.getRemoteAddress();
+
+                if (channel.isConnectionPending()) {
+                    while (!channel.finishConnect()) {
+                        TimeUnit.MILLISECONDS.sleep(100);
+                    }
+                }
+
+                System.out.println("completed connect with server......");
+
+                // refresh cache
+                waitingRequests.put(remoteAddress.getHostName(), new ConcurrentLinkedQueue<>());
+                connections.put(remoteAddress.getHostName(), key);
+                connectState.put(remoteAddress.getHostName(), CONNECTED);
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (remoteAddress != null) {
+                    connectState.put(remoteAddress.getHostName(), DISCONNECTED);
+                }
             }
         }
 
-        System.out.println("completed connect with server......");
+        private void sendRequest(SelectionKey key, SocketChannel channel) throws Exception {
+            InetSocketAddress remoteAddress = (InetSocketAddress) channel.getRemoteAddress();
+            String hostname = remoteAddress.getHostName();
 
-        InetSocketAddress remoteAddress = (InetSocketAddress) channel.getRemoteAddress();
-        // refresh cache
-        waitingRequests.put(remoteAddress.getHostName(), new ConcurrentLinkedQueue<>());
-        connections.put(remoteAddress.getHostName(), key);
-        connectState.put(remoteAddress.getHostName(), CONNECTED);
-    }
+            NetworkRequest request = toSendRequests.get(hostname);
+            ByteBuffer buffer = request.getBuffer();
 
-    private void sendRequest(SelectionKey key, SocketChannel channel) throws Exception {
-        InetSocketAddress remoteAddress = (InetSocketAddress) channel.getRemoteAddress();
-        String hostname = remoteAddress.getHostName();
-
-        NetworkRequest request = toSendRequests.get(hostname);
-        ByteBuffer buffer = request.getBuffer();
-
-        channel.write(buffer);
-        while (buffer.hasRemaining()) {
             channel.write(buffer);
+            while (buffer.hasRemaining()) {
+                channel.write(buffer);
+            }
+
+            System.out.println("current request send completed......");
+            key.interestOps(SelectionKey.OP_READ);
         }
 
-        System.out.println("current request send completed......");
-        key.interestOps(SelectionKey.OP_READ);
-    }
+        private void readResponse(SelectionKey key, SocketChannel channel) throws Exception {
+            InetSocketAddress remoteAddress = (InetSocketAddress) channel.getRemoteAddress();
+            String hostname = remoteAddress.getHostName();
 
+            NetworkRequest request = toSendRequests.get(hostname);
+            NetworkResponse response = null;
+
+            if (request.getRequestType().equals(NetworkRequest.REQUEST_SEND_FILE)) {
+                response = readSendFileResponse(request.getId(), hostname, channel);
+            }
+
+            if (request.needResponse()) {
+                finishedResponses.put(request.getId(), response);
+            } else {
+                toSendRequests.remove(hostname);
+            }
+        }
+
+        private NetworkResponse readSendFileResponse(String requestId, String hostname, SocketChannel channel) throws Exception {
+            ByteBuffer buffer = ByteBuffer.allocate(1024);
+            channel.read(buffer);
+            buffer.flip();
+
+            NetworkResponse response = new NetworkResponse();
+            response.setRequestId(requestId);
+            response.setHostname(hostname);
+            response.setBuffer(buffer);
+
+            return response;
+        }
+
+
+    }
 
     /**
      * represent a machine
