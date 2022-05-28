@@ -5,7 +5,9 @@ import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -20,6 +22,8 @@ public class NIOProcessor extends Thread {
     private ConcurrentLinkedQueue<SocketChannel> channelQueue = new ConcurrentLinkedQueue<>();
 
     private Selector selector;
+
+    private Map<String, NetworkRequest> cachedRequests = new HashMap<>();
 
     public NIOProcessor() {
         try {
@@ -65,11 +69,32 @@ public class NIOProcessor extends Thread {
             if (keys > 0) {
                 Iterator<SelectionKey> keyIterator = selector.selectedKeys().iterator();
                 while (keyIterator.hasNext()) {
-                    SelectionKey key = keyIterator.next();
-                    keyIterator.remove();
+                    try {
+                        SelectionKey key = keyIterator.next();
+                        keyIterator.remove();
 
-                    if (key.isReadable()) {
-                        SocketChannel channel = (SocketChannel) key.channel();
+                        if (key.isReadable()) {
+                            SocketChannel channel = (SocketChannel) key.channel();
+                            String client = channel.getRemoteAddress().toString();
+
+                            NetworkRequest request = null;
+                            if (cachedRequests.get(client) != null) {
+                                request = cachedRequests.get(client);
+                            } else {
+                                request = new NetworkRequest();
+                            }
+
+                            request.setChannel(channel);
+                            request.setKey(key);
+                            request.read();
+
+                            if (request.hasCompletedRead()) {
+                            } else {
+                                cachedRequests.put(client, request);
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
             }
