@@ -19,15 +19,26 @@ public class NIOClient {
 
     public static final Integer READ_FILE = 2;
 
-    public Boolean sendFile(String hostname, int nioPort, byte[] file, String filename, long fileSize) {
+    private NetworkManager networkManager;
+
+    public NIOClient() {
+        this.networkManager = new NetworkManager();
+    }
+
+    public Boolean sendFile(String hostname, int nioPort, byte[] file, String filename, long fileSize) throws Exception {
+
+        this.networkManager.maybeConnect(hostname, nioPort);
+
         SocketChannel channel = null;
         Selector selector = null;
         ByteBuffer buffer = null;
+
         try {
+            selector = Selector.open();
+
             channel = SocketChannel.open();
             channel.configureBlocking(false);
             channel.connect(new InetSocketAddress(hostname, nioPort));
-            selector = Selector.open();
             channel.register(selector, SelectionKey.OP_CONNECT);
 
             boolean sending = true;
@@ -36,6 +47,7 @@ public class NIOClient {
                 selector.select();
 
                 Iterator<SelectionKey> keysIterator = selector.selectedKeys().iterator();
+
                 while (keysIterator.hasNext()) {
                     SelectionKey key = keysIterator.next();
                     keysIterator.remove();
