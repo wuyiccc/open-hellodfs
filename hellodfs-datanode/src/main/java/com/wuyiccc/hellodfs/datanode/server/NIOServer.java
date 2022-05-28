@@ -111,10 +111,9 @@ public class NIOServer extends Thread {
                         if (channel != null) {
                             channel.configureBlocking(false);
 
-                            Integer processorIndex = new Random().nextInt(PROCESSOR_THREAD_NUM);
+                            int processorIndex = new Random().nextInt(PROCESSOR_THREAD_NUM);
                             NIOProcessor processor = processorList.get(processorIndex);
                             processor.addChannel(channel);
-
                         }
                     }
 
