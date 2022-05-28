@@ -85,7 +85,7 @@ public class NIOServer extends Thread {
 
 
 
-            NetworkResponseQueue responseQueue = NetworkResponseQueue.getInstance();
+            NetworkResponseQueues responseQueue = NetworkResponseQueues.getInstance();
 
             for (int i = 0; i < PROCESSOR_THREAD_NUM; i++) {
                 NIOProcessor processor = new NIOProcessor(i);

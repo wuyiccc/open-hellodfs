@@ -28,6 +28,10 @@ public class NIOProcessor extends Thread {
 
     private Map<String, NetworkRequest> cachedRequests = new HashMap<>();
 
+    private Map<String, NetworkResponse> cachedResponses = new HashMap<>();
+
+    private Map<String, SelectionKey> cachedKeys = new HashMap<>();
+
     public NIOProcessor(Integer processorId) {
         try {
             this.processorId = processorId;
@@ -57,6 +61,7 @@ public class NIOProcessor extends Thread {
             try {
                 registerQueuedClients();
                 poll();
+                cacheQueuedResponse();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -102,7 +107,11 @@ public class NIOProcessor extends Thread {
 
                             if (request.hasCompletedRead()) {
                                 request.setProcessorId(processorId);
+                                request.setClient(client);
                                 NetworkRequestQueue.getInstance().offer(request);
+
+                                cachedKeys.put(client, key);
+
                                 key.interestOps(key.interestOps() & ~SelectionKey.OP_READ);
                             } else {
                                 cachedRequests.put(client, request);
@@ -115,6 +124,17 @@ public class NIOProcessor extends Thread {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    private void cacheQueuedResponse() {
+        NetworkResponseQueues responseQueues = NetworkResponseQueues.getInstance();
+        NetworkResponse response = null;
+
+        while ((response = responseQueues.poll(processorId)) != null) {
+            String client = response.getClient();
+            cachedResponses.put(client, response);
+            cachedKeys.get(client).interestOps(SelectionKey.OP_WRITE);
         }
     }
 }

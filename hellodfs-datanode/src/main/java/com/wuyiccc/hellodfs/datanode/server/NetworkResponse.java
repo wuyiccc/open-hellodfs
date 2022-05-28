@@ -10,6 +10,16 @@ public class NetworkResponse {
 
     private ByteBuffer buffer;
 
+    private String client;
+
+    public String getClient() {
+        return client;
+    }
+
+    public void setClient(String client) {
+        this.client = client;
+    }
+
     public ByteBuffer getBuffer() {
         return buffer;
     }

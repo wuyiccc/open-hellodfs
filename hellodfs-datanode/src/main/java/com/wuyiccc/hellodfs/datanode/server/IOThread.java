@@ -64,9 +64,10 @@ public class IOThread extends Thread {
             System.out.println("datanode begin informReplicaReceived...");
 
             NetworkResponse response = new NetworkResponse();
+            response.setClient(request.getClient());
             response.setBuffer(ByteBuffer.wrap("SUCCESS".getBytes()));
 
-            NetworkResponseQueue responseQueues = NetworkResponseQueue.getInstance();
+            NetworkResponseQueues responseQueues = NetworkResponseQueues.getInstance();
             responseQueues.offer(request.getProcessorId(), response);
         } finally {
             localFileChannel.close();
@@ -93,9 +94,10 @@ public class IOThread extends Thread {
             buffer.rewind();
 
             NetworkResponse response = new NetworkResponse();
+            response.setClient(request.getClient());
             response.setBuffer(buffer);
 
-            NetworkResponseQueue responseQueues = NetworkResponseQueue.getInstance();
+            NetworkResponseQueues responseQueues = NetworkResponseQueues.getInstance();
             responseQueues.offer(request.getProcessorId(), response);
         } finally {
             if (localFileChannel != null) {

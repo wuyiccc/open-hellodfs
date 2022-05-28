@@ -16,6 +16,8 @@ public class NetworkRequest {
 
     private Integer processorId;
 
+    private String client;
+
     private SelectionKey key;
 
     private SocketChannel channel;
@@ -52,6 +54,15 @@ public class NetworkRequest {
 
     public void setProcessorId(Integer processorId) {
         this.processorId = processorId;
+    }
+
+
+    public String getClient() {
+        return client;
+    }
+
+    public void setClient(String client) {
+        this.client = client;
     }
 
     public Boolean hasCompletedRead() {
