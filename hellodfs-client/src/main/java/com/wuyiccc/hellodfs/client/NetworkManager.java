@@ -37,6 +37,10 @@ public class NetworkManager {
 
     public static final Long POLL_TIMEOUT = 500L;
 
+    public static final long REQUEST_TIMEOUT_CHECK_INTERVAL = 1000;
+
+    public static final long REQUEST_TIMEOUT = 30 * 1000;
+
     private Selector selector;
 
     /**
@@ -84,6 +88,7 @@ public class NetworkManager {
         this.finishedResponses = new ConcurrentHashMap<>();
 
         new NetworkPollThread().start();
+        new RequestTimeoutCheckThread().start();
     }
 
     /**
@@ -256,18 +261,19 @@ public class NetworkManager {
                 }
 
                 System.out.println("current request send completed......");
+                request.setSendTime(System.currentTimeMillis());
                 key.interestOps(SelectionKey.OP_READ);
             } catch (Exception e) {
                 e.printStackTrace();
 
                 key.interestOps(key.interestOps() & ~SelectionKey.OP_WRITE);
 
-                if(remoteAddress != null) {
+                if (remoteAddress != null) {
                     String hostname = remoteAddress.getHostName();
 
                     NetworkRequest request = toSendRequests.get(hostname);
 
-                    if(request.needResponse()) {
+                    if (request.needResponse()) {
                         NetworkResponse response = new NetworkResponse();
                         response.setHostname(hostname);
                         response.setRequestId(request.getId());
@@ -327,6 +333,40 @@ public class NetworkManager {
             this.hostname = hostname;
             this.nioPort = nioPort;
         }
+    }
+
+    class RequestTimeoutCheckThread extends Thread {
+
+        @Override
+        public void run() {
+            while(true) {
+                try {
+                    long now = System.currentTimeMillis();
+
+                    for(NetworkRequest request : toSendRequests.values()) {
+                        // if request time out
+                        if(now - request.getSendTime() > REQUEST_TIMEOUT) {
+                            String hostname = request.getHostname();
+
+                            if(request.needResponse()) {
+                                NetworkResponse response = new NetworkResponse();
+                                response.setHostname(hostname);
+                                response.setRequestId(request.getId());
+                                response.setError(true);
+
+                                finishedResponses.put(request.getId(), response);
+                            } else {
+                                toSendRequests.remove(hostname);
+                            }
+                        }
+                    }
+                    TimeUnit.MILLISECONDS.sleep(REQUEST_TIMEOUT_CHECK_INTERVAL);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
 
 }

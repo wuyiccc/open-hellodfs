@@ -40,6 +40,8 @@ public class NetworkRequest {
 
     private Boolean needResponse;
 
+    private long sendTime;
+
     public Integer getRequestType() {
         return requestType;
     }
@@ -75,5 +77,13 @@ public class NetworkRequest {
     }
     public void setNeedResponse(Boolean needResponse) {
         this.needResponse = needResponse;
+    }
+
+    public long getSendTime() {
+        return sendTime;
+    }
+
+    public void setSendTime(long sendTime) {
+        this.sendTime = sendTime;
     }
 }
