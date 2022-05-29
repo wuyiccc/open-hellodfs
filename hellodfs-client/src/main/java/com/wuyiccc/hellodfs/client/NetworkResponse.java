@@ -12,9 +12,18 @@ public class NetworkResponse {
 
     private String requestId;
     private String hostname;
+    private String ip;
     private ByteBuffer buffer;
     private Boolean error;
 
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
 
     public String getRequestId() {
         return requestId;

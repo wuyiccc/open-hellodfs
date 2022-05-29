@@ -48,15 +48,15 @@ public class FileSystemImpl implements FileSystem {
     }
 
     @Override
-    public Boolean upload(byte[] file, String filename, long fileSize) throws Exception {
+    public Boolean upload(FileInfo fileInfo, ResponseCallback callback) throws Exception {
 
-        if (!createFile(filename)) {
+        if (!createFile(fileInfo.getFilename())) {
             return false;
         }
 
         System.out.println("success create file in fileDirectory");
 
-        String dataNodeListJson = allocateDataNodeList(filename, fileSize);
+        String dataNodeListJson = allocateDataNodeList(fileInfo.getFilename(), fileInfo.getFileLength());
         System.out.println(dataNodeListJson);
 
         JSONArray dataNodeListArray = JSONArray.parseArray(dataNodeListJson);
@@ -64,28 +64,31 @@ public class FileSystemImpl implements FileSystem {
         System.out.println("apply two datanode: " + dataNodeListArray);
 
         for (int i = 0; i < dataNodeListArray.size(); i++) {
-            JSONObject dataNode = dataNodeListArray.getJSONObject(i);
-            String hostname = dataNode.getString("hostname");
-            String ip = dataNode.getString("ip");
-            int nioPort = dataNode.getIntValue("nioPort");
+            Host host = getHost(dataNodeListArray.getJSONObject(i));
 
-            if (!this.nioClient.sendFile(hostname, nioPort, file, filename, fileSize)) {
-                dataNode = JSONObject.parseObject(reallocateDataNode(filename, fileSize, ip + "-" + hostname));
-                hostname = dataNode.getString("hostname");
-                nioPort = dataNode.getIntValue("nioPort");
-                if (!nioClient.sendFile(hostname, nioPort, file, filename, fileSize)) {
-                    throw new Exception("file upload failed...");
-                }
+
+            if(!nioClient.sendFile(fileInfo, host, callback)) {
+                host = reallocateDataNode(fileInfo, host.getId());
+                nioClient.sendFile(fileInfo, host, null);
             }
         }
         return true;
     }
 
-    private String reallocateDataNode(String filename, long fileSize, String excludedDataNodeId) {
-        ReallocateDataNodeRequest request = ReallocateDataNodeRequest.newBuilder().setFileSize(fileSize).setExcludedDataNodeId(excludedDataNodeId).build();
+    @Override
+    public Boolean retryUpload(FileInfo fileInfo, Host excludedHost) throws Exception {
+        Host host = reallocateDataNode(fileInfo, excludedHost.getId());
+        nioClient.sendFile(fileInfo, host, null);
+        return true;
+    }
 
-        ReallocateDataNodeResponse response = this.nameNode.reallocateDataNode(request);
-        return response.getDataNodeInfo();
+
+    private Host getHost(JSONObject dataNode) {
+        Host host = new Host();
+        host.setHostname(dataNode.getString("hostname"));
+        host.setIp(dataNode.getString("ip"));
+        host.setNioPort(dataNode.getInteger("nioPort"));
+        return host;
     }
 
     /**
@@ -138,11 +141,21 @@ public class FileSystemImpl implements FileSystem {
         return false;
     }
 
-    private String allocateDataNodeList(String filename, long fileSize) {
-        AllocateDataNodesRequest request = AllocateDataNodesRequest.newBuilder().setFilename(filename).setFileSize(fileSize)
-                .build();
+    public String allocateDataNodeList(String filename, long fileSize) {
+        AllocateDataNodesRequest request = AllocateDataNodesRequest.newBuilder().setFilename(filename).setFileSize(fileSize).build();
         AllocateDataNodesResponse response = this.nameNode.allocateDataNodes(request);
 
         return response.getDataNodes();
+    }
+
+
+    public Host reallocateDataNode(FileInfo fileInfo, String excludedHostId) {
+        ReallocateDataNodeRequest request = ReallocateDataNodeRequest.newBuilder()
+                .setFilename(fileInfo.getFilename())
+                .setFileSize(fileInfo.getFileLength())
+                .setExcludedDataNodeId(excludedHostId)
+                .build();
+        ReallocateDataNodeResponse response = this.nameNode.reallocateDataNode(request);
+        return getHost(JSONObject.parseObject(response.getDataNodeInfo()));
     }
 }

@@ -21,61 +21,48 @@ public class NIOClient {
         this.networkManager = new NetworkManager();
     }
 
-    public Boolean sendFile(String hostname, int nioPort, byte[] file, String filename, long fileLength) {
+    public Boolean sendFile(FileInfo fileInfo, Host host, ResponseCallback callback) {
 
-        try {
-            if (!networkManager.maybeConnect(hostname, nioPort)) {
-                return false;
-            }
-
-            NetworkRequest request = createSendFileRequest(hostname, nioPort, file, filename, fileLength);
-            networkManager.sendRequest(request);
-
-            NetworkResponse response = networkManager.waitResponse(request.getId());
-
-            if (response.getError()) {
-                return false;
-            }
-
-            ByteBuffer buffer = response.getBuffer();
-            String responseStatus = new String(buffer.array(), 0, buffer.remaining());
-
-            System.out.println("[" + Thread.currentThread().getName() + "]received" + hostname + "'s response：" + responseStatus);
-
-            if (responseStatus.equals(NetworkResponse.RESPONSE_SUCCESS)) {
-                return true;
-            } else {
-                return false;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!networkManager.maybeConnect(host.getHostname(), host.getNioPort())) {
+            return false;
         }
-        return false;
+
+        NetworkRequest request = createSendFileRequest(fileInfo, host, callback);
+        networkManager.sendRequest(request);
+
+        return true;
     }
 
-    private NetworkRequest createSendFileRequest(String hostname, Integer nioPort, byte[] file, String filename, long fileLength) {
-
+    private NetworkRequest createSendFileRequest(FileInfo fileInfo, Host host, ResponseCallback callback) {
         NetworkRequest request = new NetworkRequest();
 
         // 4 bytes(type data) + 4 bytes(filename length data) + some bytes(filename data) + 8 bytes(file length data) + some bytes(file data)
-        ByteBuffer buffer = ByteBuffer.allocate(NetworkRequest.REQUEST_TYPE + NetworkRequest.FILENAME_LENGTH + filename.getBytes().length + NetworkRequest.FILE_LENGTH + (int) fileLength);
+        ByteBuffer buffer = ByteBuffer.allocate(
+                NetworkRequest.REQUEST_TYPE
+                        + NetworkRequest.FILENAME_LENGTH
+                        + fileInfo.getFilename().getBytes().length
+                        + NetworkRequest.FILE_LENGTH
+                        + (int) fileInfo.getFileLength());
         buffer.putInt(NetworkRequest.REQUEST_SEND_FILE);
-        buffer.putInt(filename.getBytes().length);
+        buffer.putInt(fileInfo.getFilename().getBytes().length);
         // set filename
-        buffer.put(filename.getBytes());
+        buffer.put(fileInfo.getFilename().getBytes());
         // set fileSize in transport stream header, the long type need 8 bytes
-        buffer.putLong(fileLength);
-        buffer.put(file);
+        buffer.putLong(fileInfo.getFileLength());
+        buffer.put(fileInfo.getFile());
         buffer.rewind();
 
         request.setId(UUID.randomUUID().toString());
-        request.setHostname(hostname);
-        request.setNioPort(nioPort);
+        request.setHostname(host.getHostname());
+        request.setIp(host.getIp());
+        request.setNioPort(host.getNioPort());
         request.setBuffer(buffer);
-        request.setNeedResponse(true);
+        request.setNeedResponse(false);
+        request.setCallback(callback);
 
         return request;
     }
+
 
     public byte[] readFile(String hostname, int nioPort, String filename) throws IOException {
 

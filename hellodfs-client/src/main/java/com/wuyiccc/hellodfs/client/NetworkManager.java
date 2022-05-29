@@ -157,11 +157,11 @@ public class NetworkManager {
                 try {
                     channel = SocketChannel.open();
                     channel.configureBlocking(false);
-                    channel.connect(new InetSocketAddress(host.hostname, host.nioPort));
+                    channel.connect(new InetSocketAddress(host.getHostname(), host.getNioPort()));
                     channel.register(selector, SelectionKey.OP_CONNECT);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    connectState.put(host.hostname, DISCONNECTED);
+                    connectState.put(host.getHostname(), DISCONNECTED);
                 }
             }
         }
@@ -273,14 +273,19 @@ public class NetworkManager {
 
                     NetworkRequest request = toSendRequests.get(hostname);
 
-                    if (request.needResponse()) {
-                        NetworkResponse response = new NetworkResponse();
-                        response.setHostname(hostname);
-                        response.setRequestId(request.getId());
-                        response.setError(true);
 
+                    NetworkResponse response = new NetworkResponse();
+                    response.setHostname(hostname);
+                    response.setRequestId(request.getId());
+                    response.setIp(request.getIp());
+                    response.setError(true);
+
+                    if (request.getNeedResponse()) {
                         finishedResponses.put(request.getId(), response);
                     } else {
+                        if (request.getCallback() != null) {
+                            request.getCallback().process(response);
+                        }
                         toSendRequests.remove(hostname);
                     }
                 }
@@ -299,9 +304,14 @@ public class NetworkManager {
                 response = readSendFileResponse(request.getId(), hostname, channel);
             }
 
-            if (request.needResponse()) {
+            key.interestOps(key.interestOps() & ~SelectionKey.OP_READ);
+
+            if (request.getNeedResponse()) {
                 finishedResponses.put(request.getId(), response);
             } else {
+                if (request.getCallback() != null) {
+                    request.getCallback().process(response);
+                }
                 toSendRequests.remove(hostname);
             }
         }
@@ -321,41 +331,32 @@ public class NetworkManager {
         }
     }
 
-    /**
-     * represent a machine
-     */
-    class Host {
-
-        String hostname;
-        Integer nioPort;
-
-        public Host(String hostname, Integer nioPort) {
-            this.hostname = hostname;
-            this.nioPort = nioPort;
-        }
-    }
 
     class RequestTimeoutCheckThread extends Thread {
 
         @Override
         public void run() {
-            while(true) {
+            while (true) {
                 try {
                     long now = System.currentTimeMillis();
 
-                    for(NetworkRequest request : toSendRequests.values()) {
+                    for (NetworkRequest request : toSendRequests.values()) {
                         // if request time out
-                        if(now - request.getSendTime() > REQUEST_TIMEOUT) {
+                        if (now - request.getSendTime() > REQUEST_TIMEOUT) {
                             String hostname = request.getHostname();
 
-                            if(request.needResponse()) {
-                                NetworkResponse response = new NetworkResponse();
-                                response.setHostname(hostname);
-                                response.setRequestId(request.getId());
-                                response.setError(true);
+                            NetworkResponse response = new NetworkResponse();
+                            response.setHostname(hostname);
+                            response.setIp(request.getIp());
+                            response.setRequestId(request.getId());
+                            response.setError(true);
 
+                            if (request.getNeedResponse()) {
                                 finishedResponses.put(request.getId(), response);
                             } else {
+                                if (request.getCallback() != null) {
+                                    request.getCallback().process(response);
+                                }
                                 toSendRequests.remove(hostname);
                             }
                         }

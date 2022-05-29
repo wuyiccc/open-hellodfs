@@ -43,24 +43,45 @@ public class FileSystemTest {
 
     private static void testCreateFile() throws Exception {
         File image = new File("E:\\code_learn\\031-opensource\\06-hellodfs\\hellodfs\\test\\lingyu.jpg");
-        long imageLength = image.length();
+        long fileLength = image.length();
 
-        System.out.println("upload file size: " + imageLength + " bytes");
+        System.out.println("upload file size: " + fileLength + " bytes");
 
-        ByteBuffer buffer = ByteBuffer.allocate((int)imageLength);
+        ByteBuffer buffer = ByteBuffer.allocate((int)fileLength);
 
         FileInputStream imageIn = new FileInputStream(image);
         FileChannel imageChannel = imageIn.getChannel();
         int hasRead = imageChannel.read(buffer);
-
-
+        buffer.flip();
 
         System.out.println("already read: " + hasRead + " bytes data into memory.");
 
-        buffer.flip();
-        byte[] imageBytes = buffer.array();
+        String filename = "/image/product/lingyu.jpg";
+        byte[] file = buffer.array();
 
-        fileSystem.upload(imageBytes, "/image/product/lingyu.jpg", imageLength);
+        FileInfo fileInfo = new FileInfo();
+        fileInfo.setFilename(filename);
+        fileInfo.setFileLength(fileLength);
+        fileInfo.setFile(file);
+
+        fileSystem.upload(fileInfo, response -> {
+            if(response.getError()) {
+                Host excludedHost = new Host();
+                excludedHost.setHostname(response.getHostname());
+                excludedHost.setIp(response.getIp());
+
+                try {
+                    fileSystem.retryUpload(fileInfo, excludedHost);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                ByteBuffer buffer1 = response.getBuffer();
+                String responseStatus = new String(buffer1.array(), 0, buffer1.remaining());
+                System.out.println("file upload completed, response: " + responseStatus);
+            }
+        });
+
 
         imageIn.close();
         imageChannel.close();

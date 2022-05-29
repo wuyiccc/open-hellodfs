@@ -34,6 +34,8 @@ public class NetworkRequest {
 
     private String hostname;
 
+    private String ip;
+
     private Integer nioPort;
 
     private ByteBuffer buffer;
@@ -42,39 +44,61 @@ public class NetworkRequest {
 
     private long sendTime;
 
+    private ResponseCallback callback;
+
+
     public Integer getRequestType() {
         return requestType;
     }
+
     public void setRequestType(Integer requestType) {
         this.requestType = requestType;
     }
+
     public String getId() {
         return id;
     }
+
     public void setId(String id) {
         this.id = id;
     }
+
     public String getHostname() {
         return hostname;
     }
+
     public void setHostname(String hostname) {
         this.hostname = hostname;
     }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
+    }
+
     public Integer getNioPort() {
         return nioPort;
     }
+
     public void setNioPort(Integer nioPort) {
         this.nioPort = nioPort;
     }
+
     public ByteBuffer getBuffer() {
         return buffer;
     }
+
     public void setBuffer(ByteBuffer buffer) {
         this.buffer = buffer;
     }
-    public Boolean needResponse() {
+
+    public Boolean getNeedResponse() {
         return needResponse;
     }
+
     public void setNeedResponse(Boolean needResponse) {
         this.needResponse = needResponse;
     }
@@ -85,5 +109,13 @@ public class NetworkRequest {
 
     public void setSendTime(long sendTime) {
         this.sendTime = sendTime;
+    }
+
+    public ResponseCallback getCallback() {
+        return callback;
+    }
+
+    public void setCallback(ResponseCallback callback) {
+        this.callback = callback;
     }
 }
