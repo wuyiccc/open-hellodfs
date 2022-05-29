@@ -56,16 +56,13 @@ public class FileSystemImpl implements FileSystem {
 
         System.out.println("success create file in fileDirectory");
 
-        String dataNodeListJson = allocateDataNodeList(fileInfo.getFilename(), fileInfo.getFileLength());
-        System.out.println(dataNodeListJson);
+        JSONArray dataNodeListArray = allocateDataNodeList(fileInfo.getFilename(), fileInfo.getFileLength());
 
-        JSONArray dataNodeListArray = JSONArray.parseArray(dataNodeListJson);
 
         System.out.println("apply two datanode: " + dataNodeListArray);
 
         for (int i = 0; i < dataNodeListArray.size(); i++) {
             Host host = getHost(dataNodeListArray.getJSONObject(i));
-
 
             if (!nioClient.sendFile(fileInfo, host, callback)) {
                 host = reallocateDataNode(fileInfo, host.getId());
@@ -134,11 +131,11 @@ public class FileSystemImpl implements FileSystem {
         return false;
     }
 
-    public String allocateDataNodeList(String filename, long fileSize) {
+    public JSONArray allocateDataNodeList(String filename, long fileSize) {
         AllocateDataNodesRequest request = AllocateDataNodesRequest.newBuilder().setFilename(filename).setFileSize(fileSize).build();
         AllocateDataNodesResponse response = this.nameNode.allocateDataNodes(request);
 
-        return response.getDataNodes();
+        return JSONArray.parseArray(response.getDataNodes());
     }
 
 
