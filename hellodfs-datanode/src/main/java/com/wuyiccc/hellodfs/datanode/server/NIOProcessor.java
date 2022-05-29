@@ -128,7 +128,7 @@ public class NIOProcessor extends Thread {
                             cachedResponses.remove(client);
                             cachedKeys.remove(client);
 
-                            key.interestOps(key.interestOps() & ~SelectionKey.OP_WRITE);
+                            key.interestOps(SelectionKey.OP_READ);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
