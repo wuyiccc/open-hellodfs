@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author wuyiccc
@@ -62,6 +63,7 @@ public class NIOProcessor extends Thread {
                 registerQueuedClients();
                 cacheQueuedResponse();
                 poll();
+                TimeUnit.SECONDS.sleep(1);
             } catch (Exception e) {
                 e.printStackTrace();
             }

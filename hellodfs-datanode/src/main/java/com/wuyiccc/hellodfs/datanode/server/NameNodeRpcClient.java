@@ -22,7 +22,7 @@ public class NameNodeRpcClient {
 
 
     public NameNodeRpcClient() {
-        ManagedChannel channel = NettyChannelBuilder.forAddress(DataNodeConfig.NAMENODE_HOSTNAME, DataNodeConfig.NAMENODE_PORT)
+        ManagedChannel channel = NettyChannelBuilder.forAddress(DataNodeConfig.getInstance().NAMENODE_HOSTNAME, DataNodeConfig.getInstance().NAMENODE_PORT)
                 .negotiationType(NegotiationType.PLAINTEXT)
                 .build();
         this.nameNode = NameNodeServiceGrpc.newBlockingStub(channel);
@@ -37,9 +37,9 @@ public class NameNodeRpcClient {
         System.out.println("send rpc request to namenode for register.......");
 
         RegisterRequest request = RegisterRequest.newBuilder()
-                .setIp(DataNodeConfig.DATANODE_IP)
-                .setHostname(DataNodeConfig.DATANODE_HOSTNAME)
-                .setNioPort(DataNodeConfig.NIO_PORT)
+                .setIp(DataNodeConfig.getInstance().DATANODE_IP)
+                .setHostname(DataNodeConfig.getInstance().DATANODE_HOSTNAME)
+                .setNioPort(DataNodeConfig.getInstance().NIO_PORT)
                 .build();
         RegisterResponse response = this.nameNode.register(request);
 
@@ -54,9 +54,9 @@ public class NameNodeRpcClient {
 
     public HeartBeatResponse heartBeat() throws Exception{
         HeartBeatRequest request = HeartBeatRequest.newBuilder()
-                .setIp(DataNodeConfig.DATANODE_IP)
-                .setHostname(DataNodeConfig.DATANODE_HOSTNAME)
-                .setNioPort(DataNodeConfig.NIO_PORT)
+                .setIp(DataNodeConfig.getInstance().DATANODE_IP)
+                .setHostname(DataNodeConfig.getInstance().DATANODE_HOSTNAME)
+                .setNioPort(DataNodeConfig.getInstance().NIO_PORT)
                 .build();
         return this.nameNode.heartBeat(request);
     }
@@ -69,8 +69,8 @@ public class NameNodeRpcClient {
         }
 
         ReportAllStorageInfoRequest request = ReportAllStorageInfoRequest.newBuilder()
-                .setIp(DataNodeConfig.DATANODE_IP)
-                .setHostname(DataNodeConfig.DATANODE_HOSTNAME)
+                .setIp(DataNodeConfig.getInstance().DATANODE_IP)
+                .setHostname(DataNodeConfig.getInstance().DATANODE_HOSTNAME)
                 .setFilenameListJson(JSONArray.toJSONString(storageInfo.getFilenameList()))
                 .setStoredDataSize(storageInfo.getStoredDataSize())
                 .build();
@@ -83,8 +83,8 @@ public class NameNodeRpcClient {
      */
     public void informReplicaReceived(String filename) throws Exception {
         InformReplicaReceivedRequest request = InformReplicaReceivedRequest.newBuilder()
-                .setHostname(DataNodeConfig.DATANODE_HOSTNAME)
-                .setIp(DataNodeConfig.DATANODE_IP)
+                .setHostname(DataNodeConfig.getInstance().DATANODE_HOSTNAME)
+                .setIp(DataNodeConfig.getInstance().DATANODE_IP)
                 .setFilename(filename)
                 .build();
         this.nameNode.informReplicaReceived(request);

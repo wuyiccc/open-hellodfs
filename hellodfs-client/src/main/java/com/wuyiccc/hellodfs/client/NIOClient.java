@@ -81,6 +81,7 @@ public class NIOClient {
         request.setBuffer(buffer);
         request.setNeedResponse(false);
         request.setCallback(callback);
+        request.setRequestType(NetworkRequest.REQUEST_SEND_FILE);
 
         return request;
     }
@@ -110,6 +111,7 @@ public class NIOClient {
         request.setBuffer(buffer);
         request.setNeedResponse(true);
         request.setCallback(callback);
+        request.setRequestType(NetworkRequest.REQUEST_READ_FILE);
 
         return request;
     }

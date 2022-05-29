@@ -41,11 +41,11 @@ public class NIOServer extends Thread {
 
             serverSocketChannel = ServerSocketChannel.open();
             serverSocketChannel.configureBlocking(false);
-            serverSocketChannel.socket().bind(new InetSocketAddress(DataNodeConfig.NIO_PORT), 100);
+            serverSocketChannel.socket().bind(new InetSocketAddress(DataNodeConfig.getInstance().NIO_PORT), 100);
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
 
-            System.out.println("NIOServer is starting, begin to listen port：" + DataNodeConfig.NIO_PORT);
+            System.out.println("NIOServer is starting, begin to listen port：" + DataNodeConfig.getInstance().NIO_PORT);
 
             NetworkResponseQueues responseQueue = NetworkResponseQueues.getInstance();
 

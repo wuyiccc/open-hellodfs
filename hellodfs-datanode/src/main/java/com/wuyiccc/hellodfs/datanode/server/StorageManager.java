@@ -11,7 +11,7 @@ public class StorageManager {
     public StorageInfo getStorageInfo() {
         StorageInfo storageInfo = new StorageInfo();
 
-        File parentDataDir = new File(DataNodeConfig.DATA_DIR);
+        File parentDataDir = new File(DataNodeConfig.getInstance().DATA_DIR);
         File[] children = parentDataDir.listFiles();
         if (children == null || children.length == 0) {
             return null;
@@ -26,7 +26,7 @@ public class StorageManager {
     public void scanFiles(File dir, StorageInfo storageInfo) {
         if (dir.isFile()) {
             String path = dir.getPath();
-            path = path.substring(DataNodeConfig.DATA_DIR.length());
+            path = path.substring(DataNodeConfig.getInstance().DATA_DIR.length());
             path = path.replace("\\", "/");
 
             storageInfo.addFilename(path + "_" + dir.length());
