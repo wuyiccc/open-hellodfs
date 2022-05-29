@@ -32,6 +32,11 @@ public class NIOClient {
             networkManager.sendRequest(request);
 
             NetworkResponse response = networkManager.waitResponse(request.getId());
+
+            if (response.getError()) {
+                return false;
+            }
+
             ByteBuffer buffer = response.getBuffer();
             String responseStatus = new String(buffer.array(), 0, buffer.remaining());
 

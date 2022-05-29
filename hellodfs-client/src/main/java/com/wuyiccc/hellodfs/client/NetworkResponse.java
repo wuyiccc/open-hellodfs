@@ -13,6 +13,7 @@ public class NetworkResponse {
     private String requestId;
     private String hostname;
     private ByteBuffer buffer;
+    private Boolean error;
 
 
     public String getRequestId() {
@@ -39,12 +40,22 @@ public class NetworkResponse {
         this.buffer = buffer;
     }
 
+    public Boolean getError() {
+        return error;
+    }
+
+    public void setError(Boolean error) {
+        this.error = error;
+    }
+
+
     @Override
     public String toString() {
         return "NetworkResponse{" +
                 "requestId='" + requestId + '\'' +
                 ", hostname='" + hostname + '\'' +
                 ", buffer=" + buffer +
+                ", error=" + error +
                 '}';
     }
 }

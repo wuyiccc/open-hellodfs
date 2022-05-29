@@ -148,17 +148,16 @@ public class NetworkManager {
         private void tryConnect() {
             Host host = null;
             SocketChannel channel = null;
-            try {
-
-                while ((host = waitingConnectHosts.poll()) != null) {
+            while ((host = waitingConnectHosts.poll()) != null) {
+                try {
                     channel = SocketChannel.open();
                     channel.configureBlocking(false);
                     channel.connect(new InetSocketAddress(host.hostname, host.nioPort));
                     channel.register(selector, SelectionKey.OP_CONNECT);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    connectState.put(host.hostname, DISCONNECTED);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-                connectState.put(host.hostname, DISCONNECTED);
             }
         }
 
@@ -191,6 +190,7 @@ public class NetworkManager {
                     keysIterator.remove();
 
                     channel = (SocketChannel) key.channel();
+
                     if (key.isConnectable()) {
                         finishConnect(key, channel);
                     } else if (key.isWritable()) {
@@ -241,19 +241,45 @@ public class NetworkManager {
         }
 
         private void sendRequest(SelectionKey key, SocketChannel channel) throws Exception {
-            InetSocketAddress remoteAddress = (InetSocketAddress) channel.getRemoteAddress();
-            String hostname = remoteAddress.getHostName();
+            InetSocketAddress remoteAddress = null;
 
-            NetworkRequest request = toSendRequests.get(hostname);
-            ByteBuffer buffer = request.getBuffer();
+            try {
+                remoteAddress = (InetSocketAddress) channel.getRemoteAddress();
+                String hostname = remoteAddress.getHostName();
 
-            channel.write(buffer);
-            while (buffer.hasRemaining()) {
+                NetworkRequest request = toSendRequests.get(hostname);
+                ByteBuffer buffer = request.getBuffer();
+
                 channel.write(buffer);
+                while (buffer.hasRemaining()) {
+                    channel.write(buffer);
+                }
+
+                System.out.println("current request send completed......");
+                key.interestOps(SelectionKey.OP_READ);
+            } catch (Exception e) {
+                e.printStackTrace();
+
+                key.interestOps(key.interestOps() & ~SelectionKey.OP_WRITE);
+
+                if(remoteAddress != null) {
+                    String hostname = remoteAddress.getHostName();
+
+                    NetworkRequest request = toSendRequests.get(hostname);
+
+                    if(request.needResponse()) {
+                        NetworkResponse response = new NetworkResponse();
+                        response.setHostname(hostname);
+                        response.setRequestId(request.getId());
+                        response.setError(true);
+
+                        finishedResponses.put(request.getId(), response);
+                    } else {
+                        toSendRequests.remove(hostname);
+                    }
+                }
             }
 
-            System.out.println("current request send completed......");
-            key.interestOps(SelectionKey.OP_READ);
         }
 
         private void readResponse(SelectionKey key, SocketChannel channel) throws Exception {
@@ -283,11 +309,10 @@ public class NetworkManager {
             response.setRequestId(requestId);
             response.setHostname(hostname);
             response.setBuffer(buffer);
+            response.setError(false);
 
             return response;
         }
-
-
     }
 
     /**
