@@ -67,7 +67,7 @@ public class FileSystemImpl implements FileSystem {
             Host host = getHost(dataNodeListArray.getJSONObject(i));
 
 
-            if(!nioClient.sendFile(fileInfo, host, callback)) {
+            if (!nioClient.sendFile(fileInfo, host, callback)) {
                 host = reallocateDataNode(fileInfo, host.getId());
                 nioClient.sendFile(fileInfo, host, null);
             }
@@ -96,39 +96,32 @@ public class FileSystemImpl implements FileSystem {
      */
     @Override
     public byte[] download(String filename) throws Exception {
-        JSONObject datanode = chooseDataNodeFromReplicas(filename, "");
-
-
-        String hostname = datanode.getString("hostname");
-        String ip = datanode.getString("ip");
-        Integer nioPort = datanode.getInteger("nioPort");
+        Host datanode = chooseDataNodeFromReplicas(filename, "");
 
         byte[] file = null;
 
         try {
-            file = nioClient.readFile(hostname, nioPort, filename);
+            file = nioClient.readFile(datanode, filename, true);
         } catch (Exception e) {
-            datanode = chooseDataNodeFromReplicas(filename, ip + "-" + hostname);
-            hostname = datanode.getString("hostname");
-            nioPort = datanode.getInteger("nioPort");
-
+            datanode = chooseDataNodeFromReplicas(filename, datanode.getId());
             try {
-                file = nioClient.readFile(hostname, nioPort, filename);
+                file = nioClient.readFile(datanode, filename, false);
             } catch (Exception e2) {
                 throw e2;
             }
         }
+
         return file;
     }
 
-    private JSONObject chooseDataNodeFromReplicas(String filename, String excludedDataNodeId) throws Exception {
+    private Host chooseDataNodeFromReplicas(String filename, String excludedDataNodeId) throws Exception {
         ChooseDataNodeFromReplicasRequest request = ChooseDataNodeFromReplicasRequest
                 .newBuilder()
                 .setFilename(filename)
                 .setExcludedDataNodeId(excludedDataNodeId)
                 .build();
         ChooseDataNodeFromReplicasResponse response = this.nameNode.chooseDataNodeFromReplicas(request);
-        return JSONObject.parseObject(response.getDataNodeInfo());
+        return getHost(JSONObject.parseObject(response.getDataNodeInfo()));
     }
 
     private Boolean createFile(String filename) {

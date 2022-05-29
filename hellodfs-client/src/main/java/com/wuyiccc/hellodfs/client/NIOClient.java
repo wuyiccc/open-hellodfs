@@ -33,6 +33,28 @@ public class NIOClient {
         return true;
     }
 
+    public byte[] readFile(Host host, String filename, Boolean retry) throws Exception {
+        if (!networkManager.maybeConnect(host.getHostname(), host.getNioPort())) {
+            if (retry) {
+                throw new Exception();
+            }
+        }
+
+        NetworkRequest request = createReadFileRequest(host, filename, null);
+        networkManager.sendRequest(request);
+
+        NetworkResponse response = networkManager.waitResponse(request.getId());
+
+        if (response.getError()) {
+            if (retry) {
+                throw new Exception();
+            }
+        }
+
+        return response.getBuffer().array();
+    }
+
+
     private NetworkRequest createSendFileRequest(FileInfo fileInfo, Host host, ResponseCallback callback) {
         NetworkRequest request = new NetworkRequest();
 
@@ -64,109 +86,32 @@ public class NIOClient {
     }
 
 
-    public byte[] readFile(String hostname, int nioPort, String filename) throws IOException {
+    private NetworkRequest createReadFileRequest(Host host, String filename, ResponseCallback callback) {
 
-        ByteBuffer fileLengthBuffer = null;
-        Long fileLength = null;
-        ByteBuffer fileBuffer = null;
+        NetworkRequest request = new NetworkRequest();
 
-        byte[] file = null;
+        byte[] filenameBytes = filename.getBytes();
 
-        SocketChannel channel = null;
-        Selector selector = null;
+        // int 4 bytes(oper type), int 4 bytes(filename length), filename.length
+        ByteBuffer buffer = ByteBuffer.allocate(NetworkRequest.REQUEST_TYPE + NetworkRequest.FILENAME_LENGTH + filenameBytes.length);
 
-        try {
-            channel = SocketChannel.open();
-            channel.configureBlocking(false);
-            channel.connect(new InetSocketAddress(hostname, nioPort));
+        // oper type data
+        buffer.putInt(NetworkRequest.REQUEST_READ_FILE);
+        // filename length data
+        buffer.putInt(filenameBytes.length);
+        // filename data
+        buffer.put(filenameBytes);
+        buffer.rewind();
 
-            selector = Selector.open();
-            channel.register(selector, SelectionKey.OP_CONNECT);
+        request.setId(UUID.randomUUID().toString());
+        request.setHostname(host.getHostname());
+        request.setIp(host.getIp());
+        request.setNioPort(host.getNioPort());
+        request.setBuffer(buffer);
+        request.setNeedResponse(true);
+        request.setCallback(callback);
 
-            boolean reading = true;
-
-            while (reading) {
-                selector.select();
-
-                Iterator<SelectionKey> keysIterator = selector.selectedKeys().iterator();
-                while (keysIterator.hasNext()) {
-                    SelectionKey key = keysIterator.next();
-                    keysIterator.remove();
-
-                    if (key.isConnectable()) {
-                        channel = (SocketChannel) key.channel();
-
-                        if (channel.isConnectionPending()) {
-                            // finished tcp connected
-                            channel.finishConnect();
-                        }
-
-                        byte[] filenameBytes = filename.getBytes();
-
-                        // int 4 bytes(oper type), int 4 bytes(filename length), filename.length
-                        ByteBuffer readFileRequest = ByteBuffer.allocate(8 + filenameBytes.length);
-                        // oper type data
-                        readFileRequest.putInt(NetworkRequest.REQUEST_READ_FILE);
-                        // filename length data
-                        readFileRequest.putInt(filenameBytes.length);
-                        // filename data
-                        readFileRequest.put(filenameBytes);
-                        readFileRequest.flip();
-
-                        int sentData = channel.write(readFileRequest);
-                        System.out.println("already send:" + sentData + " bytes data to" + hostname + "'s" + nioPort + "port");
-
-                        channel.register(selector, SelectionKey.OP_READ);
-                    } else if (key.isReadable()) {
-                        channel = (SocketChannel) key.channel();
-
-                        if (fileLength == null) {
-                            if (fileLengthBuffer == null) {
-                                fileLengthBuffer = ByteBuffer.allocate(8);
-                            }
-                            channel.read(fileLengthBuffer);
-                            if (!fileLengthBuffer.hasRemaining()) {
-                                fileLengthBuffer.rewind();
-                                fileLength = fileLengthBuffer.getLong();
-                            }
-                        }
-
-                        if (fileLength != null) {
-                            if (fileBuffer == null) {
-                                fileBuffer = ByteBuffer.allocate(Integer.parseInt(String.valueOf(fileLength)));
-                            }
-                            channel.read(fileBuffer);
-                            if (!fileBuffer.hasRemaining()) {
-                                fileBuffer.rewind();
-                                file = fileBuffer.array();
-                                reading = false;
-                            }
-                        }
-
-                    }
-                }
-            }
-            return file;
-        } catch (Exception e) {
-            throw e;
-        } finally {
-            if (channel != null) {
-                try {
-                    channel.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            if (selector != null) {
-                try {
-                    selector.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        return request;
     }
-
 
 }

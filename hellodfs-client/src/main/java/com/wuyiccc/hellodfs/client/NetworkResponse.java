@@ -13,9 +13,26 @@ public class NetworkResponse {
     private String requestId;
     private String hostname;
     private String ip;
+    private ByteBuffer lengthBuffer;
     private ByteBuffer buffer;
     private Boolean error;
+    private Boolean finished;
 
+    public ByteBuffer getLengthBuffer() {
+        return lengthBuffer;
+    }
+
+    public void setLengthBuffer(ByteBuffer lengthBuffer) {
+        this.lengthBuffer = lengthBuffer;
+    }
+
+    public Boolean getFinished() {
+        return finished;
+    }
+
+    public void setFinished(Boolean finished) {
+        this.finished = finished;
+    }
 
     public String getIp() {
         return ip;
@@ -63,8 +80,11 @@ public class NetworkResponse {
         return "NetworkResponse{" +
                 "requestId='" + requestId + '\'' +
                 ", hostname='" + hostname + '\'' +
+                ", ip='" + ip + '\'' +
+                ", lengthBuffer=" + lengthBuffer +
                 ", buffer=" + buffer +
                 ", error=" + error +
+                ", finished=" + finished +
                 '}';
     }
 }

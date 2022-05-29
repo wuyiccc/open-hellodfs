@@ -19,11 +19,6 @@ public interface FileSystem {
 
     /**
      * upload file
-     *
-     * @param file
-     * @param filename
-     * @param fileSize
-     * @throws Exception
      */
     Boolean upload(FileInfo fileInfo, ResponseCallback callback) throws Exception;
 

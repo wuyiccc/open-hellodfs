@@ -71,6 +71,9 @@ public class NetworkManager {
      */
     private Map<String, NetworkRequest> toSendRequests;
 
+
+    private Map<String, NetworkResponse> unfinishedResponses;
+
     private Map<String, NetworkResponse> finishedResponses;
 
     public NetworkManager() {
@@ -86,6 +89,7 @@ public class NetworkManager {
         this.waitingRequests = new ConcurrentHashMap<>();
         this.toSendRequests = new ConcurrentHashMap<>();
         this.finishedResponses = new ConcurrentHashMap<>();
+        this.unfinishedResponses = new ConcurrentHashMap<>();
 
         new NetworkPollThread().start();
         new RequestTimeoutCheckThread().start();
@@ -153,6 +157,7 @@ public class NetworkManager {
         private void tryConnect() {
             Host host = null;
             SocketChannel channel = null;
+
             while ((host = waitingConnectHosts.poll()) != null) {
                 try {
                     channel = SocketChannel.open();
@@ -217,7 +222,7 @@ public class NetworkManager {
             }
         }
 
-        private void finishConnect(SelectionKey key, SocketChannel channel) throws Exception {
+        private void finishConnect(SelectionKey key, SocketChannel channel) {
 
             InetSocketAddress remoteAddress = null;
 
@@ -279,6 +284,7 @@ public class NetworkManager {
                     response.setRequestId(request.getId());
                     response.setIp(request.getIp());
                     response.setError(true);
+                    response.setFinished(true);
 
                     if (request.getNeedResponse()) {
                         finishedResponses.put(request.getId(), response);
@@ -301,7 +307,13 @@ public class NetworkManager {
             NetworkResponse response = null;
 
             if (request.getRequestType().equals(NetworkRequest.REQUEST_SEND_FILE)) {
-                response = readSendFileResponse(request.getId(), hostname, channel);
+                response = getSendFileResponse(request.getId(), hostname, channel);
+            } else if (request.getRequestType().equals(NetworkRequest.REQUEST_READ_FILE)) {
+                response = getReadFileResponse(request.getId(), hostname, channel);
+            }
+
+            if (!response.getFinished()) {
+                return;
             }
 
             key.interestOps(key.interestOps() & ~SelectionKey.OP_READ);
@@ -316,7 +328,7 @@ public class NetworkManager {
             }
         }
 
-        private NetworkResponse readSendFileResponse(String requestId, String hostname, SocketChannel channel) throws Exception {
+        private NetworkResponse getSendFileResponse(String requestId, String hostname, SocketChannel channel) throws Exception {
             ByteBuffer buffer = ByteBuffer.allocate(1024);
             channel.read(buffer);
             buffer.flip();
@@ -326,9 +338,71 @@ public class NetworkManager {
             response.setHostname(hostname);
             response.setBuffer(buffer);
             response.setError(false);
+            response.setFinished(true);
 
             return response;
         }
+    }
+
+    private NetworkResponse getReadFileResponse(String requestId, String hostname, SocketChannel channel) throws Exception {
+        NetworkResponse response = null;
+
+        if (!unfinishedResponses.containsKey(hostname)) {
+            response = new NetworkResponse();
+            response.setRequestId(requestId);
+            response.setHostname(hostname);
+            response.setError(false);
+            response.setFinished(false);
+        } else {
+            response = unfinishedResponses.get(hostname);
+        }
+
+        Long fileLength = null;
+
+        // read file length data
+        if (response.getBuffer() == null) {
+            ByteBuffer lengthBuffer = null;
+
+            if (response.getLengthBuffer() == null) {
+                lengthBuffer = ByteBuffer.allocate(NetworkRequest.FILE_LENGTH);
+                response.setLengthBuffer(lengthBuffer);
+            } else {
+                lengthBuffer = response.getLengthBuffer();
+            }
+
+            channel.read(lengthBuffer);
+
+            if (!lengthBuffer.hasRemaining()) {
+                lengthBuffer.rewind();
+                fileLength = lengthBuffer.getLong();
+            } else {
+                unfinishedResponses.put(hostname, response);
+            }
+        }
+
+        // read file data
+        if (fileLength != null || response.getBuffer() != null) {
+            ByteBuffer buffer = null;
+
+            if (response.getBuffer() == null) {
+                buffer = ByteBuffer.allocate(Integer.parseInt(String.valueOf(fileLength)));
+                response.setBuffer(buffer);
+            } else {
+                buffer = response.getBuffer();
+            }
+
+            channel.read(buffer);
+
+            if (!buffer.hasRemaining()) {
+                buffer.rewind();
+                response.setFinished(true);
+                unfinishedResponses.remove(hostname);
+            } else {
+                unfinishedResponses.put(hostname, response);
+            }
+        }
+
+        return response;
     }
 
 
@@ -350,6 +424,7 @@ public class NetworkManager {
                             response.setIp(request.getIp());
                             response.setRequestId(request.getId());
                             response.setError(true);
+                            response.setFinished(true);
 
                             if (request.getNeedResponse()) {
                                 finishedResponses.put(request.getId(), response);
