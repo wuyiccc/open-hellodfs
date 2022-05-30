@@ -1,6 +1,6 @@
 <template>
 	<view class="text-main">
-		hello, world
+    <text class="iconfont icon-file-b-" style="font-size: 100rpx;"></text>
 	</view>
 </template>
 

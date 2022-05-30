@@ -20,4 +20,6 @@
   @import url("/common/common.css");
   /* 引入free全局样式库 */
   @import url("/common/free.css");
+  /* 引入图标库 */
+  @import url("/common/icon.css");
 </style>
