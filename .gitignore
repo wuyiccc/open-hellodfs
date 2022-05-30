@@ -33,3 +33,14 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### hbuilderx
+/hellodfs-web/hellodfs-admin/.idea
+/hellodfs-web/hellodfs-admin/node_modules/
+/hellodfs-web/hellodfs-admin/unpackage/
+/hellodfs-web/hellodfs-admin/packages/lib
+/hellodfs-web/hellodfs-admin/temps/example_temps/
+/hellodfs-web/hellodfs-admin/dist/
+/hellodfs-web/hellodfs-admin/.hbuilderx/
+/hellodfs-web/hellodfs-admin/.project
+/hellodfs-web/hellodfs-admin/.DS_Store
