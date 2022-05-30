@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="text-main">
 		hello, world
 	</view>
 </template>

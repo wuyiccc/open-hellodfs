@@ -14,4 +14,10 @@
 
 <style>
 	/*每个页面公共css */
+  /* 引入官方样式库 */
+  @import url("/common/uni.css");
+  /* 引入公共样式库 */
+  @import url("/common/common.css");
+  /* 引入free全局样式库 */
+  @import url("/common/free.css");
 </style>
