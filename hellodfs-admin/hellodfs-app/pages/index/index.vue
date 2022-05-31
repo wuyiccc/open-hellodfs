@@ -1,5 +1,5 @@
 <template>
-	<view>
+  <view>
 
     <!--导航栏-->
     <nav-bar>
@@ -14,35 +14,67 @@
       </template>
     </nav-bar>
 
+    <!--搜索栏-->
     <view class="px-3 py-2">
       <view class="position-relative">
-        <view style="height: 70rpx; width: 70rpx; position: absolute; top: 0; left: 0;" class="flex align-center justify-center">
+        <view style="height: 70rpx; width: 70rpx; position: absolute; top: 0; left: 0;"
+              class="flex align-center justify-center">
           <text class="iconfont icon-sousuo text-light-muted"></text>
         </view>
-        <input style="height: 70rpx; padding-left: 70rpx;" type="text" class="bg-light font-md rounded-circle" placeholder="搜索hellodfs文件"/>
+        <input style="height: 70rpx; padding-left: 70rpx;" type="text" class="bg-light font-md rounded-circle"
+               placeholder="搜索hellodfs文件"/>
       </view>
     </view>
 
+    <!--文件列表-->
+    <f-list v-for="(item,index) in list" :key="index"
+            :item="item" :index="index"></f-list>
 
-	</view>
+  </view>
 </template>
 
 <script>
 
-	import NavBar from "../../components/common/nav-bar";
-  export default {
-    components: {NavBar},
-    data() {
-			return {
-			}
-		},
-		onLoad() {
+import NavBar from "../../components/common/nav-bar";
+import FList from "../../components/common/f-list";
 
-		},
-		methods: {
+export default {
+  components: {FList, NavBar},
+  data() {
+    return {
+      list: [{
+        type: "dir",
+        name: "学习笔记",
+        create_time: "2022-06-01 08:00",
+        checked: false
+      }, {
+        type: "image",
+        name: "程潇.jpg",
+        create_time: "2022-06-01 08:00",
+        checked: false
+      }, {
+        type: "video",
+        name: "学习视频.mp4",
+        create_time: "2022-06-01 08:00",
+        checked: false,
+      }, {
+        type: "text",
+        name: "临时笔记.txt",
+        create_time: "2022-06-01 08:00",
+        checked: false
+      }, {
+        type: "none",
+        name: "软件压缩.rar",
+        create_time: "2022-06-01 08:00",
+        checked: false
+      }]
+    }
+  },
+  onLoad() {
 
-		}
-	}
+  },
+  methods: {}
+}
 </script>
 
 <style>
