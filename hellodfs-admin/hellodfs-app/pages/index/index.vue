@@ -3,15 +3,27 @@
 
     <!--导航栏-->
     <nav-bar>
-      <text slot="left" class="font-md ml-3">首页</text>
-      <template slot="right">
-        <view style="width: 60rpx; height: 60rpx" class="flex align-center justify-center bg-light rounded-circle mr-3">
-          <text class="iconfont icon-zengjia"></text>
-        </view>
-        <view style="width: 60rpx; height: 60rpx" class="flex align-center justify-center bg-light rounded-circle mr-3">
-          <text class="iconfont icon-gengduo"></text>
-        </view>
+      <template v-if="checkCount === 0">
+        <text slot="left" class="font-md ml-3">首页</text>
+        <template slot="right">
+          <view style="width: 60rpx; height: 60rpx"
+                class="flex align-center justify-center bg-light rounded-circle mr-3">
+            <text class="iconfont icon-zengjia"></text>
+          </view>
+          <view style="width: 60rpx; height: 60rpx"
+                class="flex align-center justify-center bg-light rounded-circle mr-3">
+            <text class="iconfont icon-gengduo"></text>
+          </view>
+        </template>
       </template>
+
+      <template v-else>
+        <view slot="left" class="font-md ml-3 text-primary">取消</view>
+        <text class="font-md font-weight-bold">已选中{{checkCount}}个</text>
+        <view slot="right" class="font-md mr-3 text-primary">全选</view>
+      </template>
+
+
     </nav-bar>
 
     <!--搜索栏-->
@@ -72,6 +84,14 @@ export default {
   },
   onLoad() {
 
+  },
+  computed: {
+    checkList() {
+      return this.list.filter(item => item.checked);
+    },
+    checkCount() {
+      return this.checkList.length;
+    }
   },
   methods: {
     select(e) {
