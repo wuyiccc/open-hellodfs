@@ -28,7 +28,7 @@
 
     <!--文件列表-->
     <f-list v-for="(item,index) in list" :key="index"
-            :item="item" :index="index"></f-list>
+            :item="item" :index="index" @select="select"></f-list>
 
   </view>
 </template>
@@ -73,7 +73,11 @@ export default {
   onLoad() {
 
   },
-  methods: {}
+  methods: {
+    select(e) {
+      this.list[e.index].checked = e.value;
+    }
+  }
 }
 </script>
 
