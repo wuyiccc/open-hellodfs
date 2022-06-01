@@ -42,6 +42,21 @@
     <f-list v-for="(item,index) in list" :key="index"
             :item="item" :index="index" @select="select"></f-list>
 
+    <!--底部操作栏-->
+    <view v-if="checkCount > 0">
+      <!--占位-->
+      <view style="height: 115rpx;"></view>
+      <view style="height: 115rpx;" class="flex align-stretch bg-primary text-white fixed-bottom">
+        <view class="flex-1 flex flex-column align-center justify-center" style="line-height: 1.5;" v-for="(item, index) in actions" :key="index"
+              hover-class="bg-hover-primary">
+          <text class="iconfont" :class="item.icon"></text>
+          {{item.name}}
+        </view>
+
+      </view>
+
+    </view>
+
   </view>
 </template>
 
@@ -56,30 +71,75 @@ export default {
     return {
       list: [{
         type: "dir",
-        name: "学习笔记",
+        name: "学习笔记1",
         create_time: "2022-06-01 08:00",
         checked: false
-      }, {
-        type: "image",
-        name: "程潇.jpg",
-        create_time: "2022-06-01 08:00",
-        checked: false
-      }, {
-        type: "video",
-        name: "学习视频.mp4",
-        create_time: "2022-06-01 08:00",
-        checked: false,
-      }, {
-        type: "text",
-        name: "临时笔记.txt",
-        create_time: "2022-06-01 08:00",
-        checked: false
-      }, {
-        type: "none",
-        name: "软件压缩.rar",
-        create_time: "2022-06-01 08:00",
-        checked: false
-      }]
+      },
+        {
+          type: "dir",
+          name: "学习笔记2",
+          create_time: "2022-06-01 08:00",
+          checked: false
+        },
+        {
+          type: "dir",
+          name: "学习笔记3",
+          create_time: "2022-06-01 08:00",
+          checked: false
+        },
+        {
+          type: "dir",
+          name: "学习笔记4",
+          create_time: "2022-06-01 08:00",
+          checked: false
+        },
+        {
+          type: "dir",
+          name: "学习笔记5",
+          create_time: "2022-06-01 08:00",
+          checked: false
+        },
+        {
+          type: "dir",
+          name: "学习笔记6",
+          create_time: "2022-06-01 08:00",
+          checked: false
+        },
+        {
+          type: "image",
+          name: "程潇1.jpg",
+          create_time: "2022-06-01 08:00",
+          checked: false
+        },
+        {
+          type: "image",
+          name: "程潇2.jpg",
+          create_time: "2022-06-01 08:00",
+          checked: false
+        },
+        {
+          type: "video",
+          name: "学习视频.mp4",
+          create_time: "2022-06-01 08:00",
+          checked: false,
+        },
+        {
+          type: "video",
+          name: "学习视频2.mp4",
+          create_time: "2022-06-01 08:00",
+          checked: false,
+        },
+        {
+          type: "text",
+          name: "临时笔记.txt",
+          create_time: "2022-06-01 08:00",
+          checked: false
+        }, {
+          type: "none",
+          name: "软件压缩.rar",
+          create_time: "2022-06-01 08:00",
+          checked: false
+        }]
     }
   },
   onLoad() {
@@ -91,6 +151,31 @@ export default {
     },
     checkCount() {
       return this.checkList.length;
+    },
+    actions() {
+      if (this.checkCount > 1) {
+        return [{
+          icon: "icon-xiazai",
+          name: "下载"
+        }, {
+          icon: "icon-shanchu",
+          name: "删除"
+        }]
+      }
+
+      return [{
+        icon: "icon-xiazai",
+        name: "下载"
+      }, {
+        icon: "icon-fenxiang-1",
+        name: "分享"
+      }, {
+        icon: "icon-shanchu",
+        name: "删除"
+      }, {
+        icon: "icon-chongmingming",
+        name: "重命名"
+      }]
     }
   },
   methods: {
