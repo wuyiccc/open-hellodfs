@@ -47,15 +47,19 @@
       <!--占位-->
       <view style="height: 115rpx;"></view>
       <view style="height: 115rpx;" class="flex align-stretch bg-primary text-white fixed-bottom">
-        <view class="flex-1 flex flex-column align-center justify-center" style="line-height: 1.5;" v-for="(item, index) in actions" :key="index"
-              hover-class="bg-hover-primary">
+        <view class="flex-1 flex flex-column align-center justify-center" style="line-height: 1.5;"
+              v-for="(item, index) in actions" :key="index"
+              hover-class="bg-hover-primary" @click="handleBottomEvent(item)">
           <text class="iconfont" :class="item.icon"></text>
-          {{item.name}}
+          {{ item.name }}
         </view>
 
       </view>
-
     </view>
+
+    <f-dialog ref="dialog">
+      是否删除选用的文件?
+    </f-dialog>
 
   </view>
 </template>
@@ -64,9 +68,10 @@
 
 import NavBar from "../../components/common/nav-bar";
 import FList from "../../components/common/f-list";
+import FDialog from "../../components/common/f-dialog";
 
 export default {
-  components: {FList, NavBar},
+  components: {FDialog, FList, NavBar},
   data() {
     return {
       list: [{
@@ -186,6 +191,17 @@ export default {
       this.list.forEach(item => {
         item.checked = checked;
       })
+    },
+    handleBottomEvent(item) {
+      switch (item.name) {
+        case "删除":
+          this.$refs.dialog.open((close) => {
+            close();
+          })
+          break;
+        default:
+          break
+      }
     }
   }
 }
