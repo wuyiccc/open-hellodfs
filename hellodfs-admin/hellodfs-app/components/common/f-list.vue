@@ -1,5 +1,5 @@
 <template>
-  <view class="p-3 flex align-center border-bottom border-light-secondary">
+  <view class="p-3 flex align-center border-bottom border-light-secondary" hover-class="bg-light" @click="$emit('click')">
     <!--文件图标-->
     <text class="iconfont" :class="iconClass" style="font-size: 60rpx;"></text>
 

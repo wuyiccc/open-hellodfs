@@ -6,12 +6,12 @@
       <template v-if="checkCount === 0">
         <text slot="left" class="font-md ml-3">首页</text>
         <template slot="right">
-          <view style="width: 60rpx; height: 60rpx"
+          <view style="width: 60rpx; height: 60rpx" hover-class="bg-hover-light"
                 class="flex align-center justify-center bg-light rounded-circle mr-3" @tap="openAddDialog">
             <text class="iconfont icon-zengjia"></text>
           </view>
           <view style="width: 60rpx; height: 60rpx"
-                class="flex align-center justify-center bg-light rounded-circle mr-3">
+                class="flex align-center justify-center bg-light rounded-circle mr-3" hover-class="bg-hover-light">
             <text class="iconfont icon-gengduo"></text>
           </view>
         </template>
@@ -40,7 +40,7 @@
 
     <!--文件列表-->
     <f-list v-for="(item,index) in list" :key="index"
-            :item="item" :index="index" @select="select"></f-list>
+            :item="item" :index="index" @select="select" @click="doEvent(item)"></f-list>
 
     <!--底部操作栏-->
     <view v-if="checkCount > 0">
@@ -69,7 +69,8 @@
 
     <!-- 新建文件夹 -->
     <f-dialog ref="newdir">
-      <input type="text" v-model="newdirname" class="flex-1 bg-light rounded px-2" style="height: 95rpx;" placeholder="新建文件夹名称"/>
+      <input type="text" v-model="newdirname" class="flex-1 bg-light rounded px-2" style="height: 95rpx;"
+             placeholder="新建文件夹名称"/>
     </f-dialog>
 
     <!--添加操作条-->
@@ -140,12 +141,14 @@ export default {
         {
           type: "image",
           name: "程潇1.jpg",
+          data: "/static/chengxiao1.jpg",
           create_time: "2022-06-01 08:00",
           checked: false
         },
         {
           type: "image",
           name: "程潇2.jpg",
+          data: "/static/chengxiao2.jpg",
           create_time: "2022-06-01 08:00",
           checked: false
         },
@@ -228,6 +231,23 @@ export default {
     }
   },
   methods: {
+    // 列表点击事件处理
+    doEvent(item) {
+      switch (item.type) {
+        // 预览图片
+        case 'image':
+          let images = this.list.filter(item => {
+            return item.type === 'image'
+          })
+          uni.previewImage({
+            current: item.data,
+            urls: images.map(item => item.data)
+          })
+          break;
+        default:
+          break;
+      }
+    },
     select(e) {
       this.list[e.index].checked = e.value;
     },
