@@ -67,11 +67,18 @@
              placeholder="重命名"/>
     </f-dialog>
 
+    <!-- 新建文件夹 -->
+    <f-dialog ref="newdir">
+      <input type="text" v-model="newdirname" class="flex-1 bg-light rounded px-2" style="height: 95rpx;" placeholder="新建文件夹名称"/>
+    </f-dialog>
+
     <!--添加操作条-->
     <uni-popup ref="add" type="bottom">
       <view class="bg-white flex" style="height: 200rpx;">
-        <view class="flex-1 flex align-center justify-center flex-column" hover-class="bg-light" v-for="(item,index) in addList" :key="index">
-          <text style="width: 110rpx;height: 110rpx;" class="rounded-circle bg-light iconfont flex align-center justify-center"
+        <view class="flex-1 flex align-center justify-center flex-column" hover-class="bg-light"
+              v-for="(item,index) in addList" :key="index" @tap="handleAddEvent(item)">
+          <text style="width: 110rpx;height: 110rpx;"
+                class="rounded-circle bg-light iconfont flex align-center justify-center"
                 :class="item.icon + ' ' + item.color"></text>
           <text class="font text-muted">{{ item.name }}</text>
         </view>
@@ -93,6 +100,7 @@ export default {
   data() {
     return {
       renameValue: "",
+      newdirname: "",
       list: [{
         type: "dir",
         name: "学习笔记1",
@@ -260,6 +268,35 @@ export default {
     // 打开添加操作条
     openAddDialog() {
       this.$refs.add.open();
+    },
+    handleAddEvent(item) {
+      this.$refs.add.close()
+      switch (item.name) {
+        case "新建文件夹":
+          this.$refs.newdir.open((close) => {
+            if (this.newdirname == '') {
+              return uni.showToast({
+                title: '文件夹名称不能为空',
+                icon: 'none'
+              });
+            }
+            // 请求服务器
+            this.list.push({
+              type: "dir",
+              name: this.newdirname,
+              create_time: "2022-06-01 08:00",
+              checked: false
+            })
+            uni.showToast({
+              title: '新建文件夹成功',
+              icon: 'none'
+            });
+            close()
+          })
+          break;
+        default:
+          break;
+      }
     }
   }
 }
