@@ -155,12 +155,14 @@ export default {
         {
           type: "video",
           name: "学习视频.mp4",
+          data: "https://wuyiccc.oss-cn-hangzhou.aliyuncs.com/VID_20220529_233701.mp4",
           create_time: "2022-06-01 08:00",
           checked: false,
         },
         {
           type: "video",
           name: "学习视频2.mp4",
+          data: "https://wuyiccc.oss-cn-hangzhou.aliyuncs.com/VID_20220529_233701.mp4",
           create_time: "2022-06-01 08:00",
           checked: false,
         },
@@ -234,7 +236,7 @@ export default {
     // 列表点击事件处理
     doEvent(item) {
       switch (item.type) {
-        // 预览图片
+          // 预览图片
         case 'image':
           let images = this.list.filter(item => {
             return item.type === 'image'
@@ -243,6 +245,12 @@ export default {
             current: item.data,
             urls: images.map(item => item.data)
           })
+          break;
+        case 'video':
+          console.log("hello")
+          uni.navigateTo({
+            url: '../video/video?url='+item.data + '&title='+item.name,
+          });
           break;
         default:
           break;
