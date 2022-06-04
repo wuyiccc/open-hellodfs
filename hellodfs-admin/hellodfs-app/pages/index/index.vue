@@ -11,7 +11,8 @@
             <text class="iconfont icon-zengjia"></text>
           </view>
           <view style="width: 60rpx; height: 60rpx"
-                class="flex align-center justify-center bg-light rounded-circle mr-3" hover-class="bg-hover-light">
+                class="flex align-center justify-center bg-light rounded-circle mr-3" hover-class="bg-hover-light"
+                @click="openSortDialog">
             <text class="iconfont icon-gengduo"></text>
           </view>
         </template>
@@ -86,6 +87,18 @@
       </view>
     </uni-popup>
 
+    <!-- 排序框 -->
+    <uni-popup ref="sort" type="bottom">
+      <view class="bg-white">
+        <view v-for="(item,index) in sortOptions" :key="index"
+              class="flex align-center justify-center py-3 font border-bottom border-light-secondary"
+              :class="index === sortIndex ? 'text-main' : 'text-dark'" hover-class="bg-light"
+              @click="changeSort(index)">
+          {{ item.name }}
+        </view>
+      </view>
+    </uni-popup>
+
   </view>
 </template>
 
@@ -100,6 +113,14 @@ export default {
   components: {UniPopup, FDialog, FList, NavBar},
   data() {
     return {
+
+      sortIndex: 0,
+      sortOptions: [{
+        name: "按名称排序"
+      }, {
+        name: "按时间排序"
+      }],
+
       renameValue: "",
       newdirname: "",
       list: [{
@@ -233,6 +254,11 @@ export default {
     }
   },
   methods: {
+    // 切换排序
+    changeSort(index) {
+      this.sortIndex = index
+      this.$refs.sort.close()
+    },
     // 列表点击事件处理
     doEvent(item) {
       switch (item.type) {
@@ -249,7 +275,7 @@ export default {
         case 'video':
           console.log("hello")
           uni.navigateTo({
-            url: '../video/video?url='+item.data + '&title='+item.name,
+            url: '../video/video?url=' + item.data + '&title=' + item.name,
           });
           break;
         default:
@@ -296,6 +322,9 @@ export default {
     // 打开添加操作条
     openAddDialog() {
       this.$refs.add.open();
+    },
+    openSortDialog() {
+      this.$refs.sort.open()
     },
     handleAddEvent(item) {
       this.$refs.add.close()
