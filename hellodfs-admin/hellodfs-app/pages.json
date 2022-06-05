@@ -11,7 +11,19 @@
     {
       "path": "pages/list/list",
       "style": {
-        "navigationBarTitleText": "传输列表"
+        "navigationBarTitleText": "传输列表",
+        "app-plus":{
+          "titleNView":{
+            "buttons":[{
+              "color":"#333333",
+              "colorPressed":"#009CFF",
+              "float":"right",
+              "fontSize":"22px",
+              "fontSrc":"/static/iconfont.ttf",
+              "text":"\ue64a"
+            }]
+          }
+        }
       }
     },
     {
@@ -28,8 +40,8 @@
   "globalStyle": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "hellodfs",
-    "navigationBarBackgroundColor": "#F8F8F8",
-    "backgroundColor": "#F8F8F8"
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "backgroundColor": "#FFFFFF"
   },
   "tabBar": {
     "backgroundColor": "#FFFFFF",
