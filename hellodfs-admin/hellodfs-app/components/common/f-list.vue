@@ -1,22 +1,32 @@
 <template>
-  <view class="p-3 flex align-center border-bottom border-light-secondary" hover-class="bg-light" @click="$emit('click')">
-    <!--文件图标-->
-    <text class="iconfont" :class="iconClass" style="font-size: 60rpx;"></text>
 
-    <!--文件名称+时间-->
-    <view class="flex flex-column ml-3" style="line-height: 1.2;">
-      <text class="font-md">{{ item.name }}</text>
-      <text class="font-sm text-muted">{{ item.create_time }}</text>
+  <view>
+    <view class="p-3 flex align-center border-bottom border-light-secondary" hover-class="bg-light"
+          @click="$emit('click')">
+      <!--文件图标-->
+      <text class="iconfont" :class="iconClass" style="font-size: 60rpx;"></text>
+
+      <!--文件名称+时间-->
+      <view class="flex flex-column ml-3" style="line-height: 1.2;">
+        <text class="font-md">{{ item.name }}</text>
+        <text class="font-sm text-muted">{{ item.create_time }}</text>
+      </view>
+
+      <!--文件选中标识-->
+      <view v-if="showRight" class="ml-auto">
+        <slot>
+          <view class="flex align-center justify-center" style="width: 70rpx; height: 70rpx;" @click.stop="select">
+            <text v-if="!item.checked" style="height: 25rpx;width: 25rpx;" class="rounded-circle border"></text>
+            <text v-else style="font-size: 40rpx;" class="iconfont icon-xuanze-yixuan text-primary"></text>
+          </view>
+        </slot>
+      </view>
     </view>
 
-    <!--文件选中标识-->
-    <view class="ml-auto flex align-center justify-center" style="width: 70rpx; height: 70rpx;" @click.stop="select">
-      <text v-if="!item.checked" style="height: 25rpx;width: 25rpx;" class="rounded-circle border"></text>
-      <text v-else style="font-size: 40rpx;" class="iconfont icon-xuanze-yixuan text-primary"></text>
-    </view>
-
-
+    <slot name="bottom"></slot>
   </view>
+
+
 </template>
 
 <script>
@@ -48,7 +58,11 @@ export default {
   name: "f-list",
   props: {
     item: Object,
-    index: [Number, String]
+    index: [Number, String],
+    showRight: {
+      type: Boolean,
+      default: true
+    }
   },
   computed: {
     iconClass() {
