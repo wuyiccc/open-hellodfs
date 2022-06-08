@@ -29,7 +29,7 @@
     {
       "path": "pages/my/my",
       "style": {
-        "navigationBarTitleText": "我的个人中心"
+        "navigationBarTitleText": "个人中心"
       }
     },
     {
