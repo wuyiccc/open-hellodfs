@@ -35,12 +35,12 @@ build/
 .vscode/
 
 ### hbuilderx
-/hellodfs-admin/hellodfs-app/.idea
-/hellodfs-admin/hellodfs-app/node_modules/
-/hellodfs-admin/hellodfs-app/unpackage/
-/hellodfs-admin/hellodfs-app/packages/lib
-/hellodfs-admin/hellodfs-app/temps/example_temps/
-/hellodfs-admin/hellodfs-app/dist/
-/hellodfs-admin/hellodfs-app/.hbuilderx/
-/hellodfs-admin/hellodfs-app/.project
-/hellodfs-admin/hellodfs-app/.DS_Store
+/hellodfs-admin/hellodfs-admin-app/.idea
+/hellodfs-admin/hellodfs-admin-app/node_modules/
+/hellodfs-admin/hellodfs-admin-app/unpackage/
+/hellodfs-admin/hellodfs-admin-app/packages/lib
+/hellodfs-admin/hellodfs-admin-app/temps/example_temps/
+/hellodfs-admin/hellodfs-admin-app/dist/
+/hellodfs-admin/hellodfs-admin-app/.hbuilderx/
+/hellodfs-admin/hellodfs-admin-app/.project
+/hellodfs-admin/hellodfs-admin-app/.DS_Store
