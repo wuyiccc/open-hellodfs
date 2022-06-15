@@ -18,8 +18,6 @@ target/
 *.iws
 *.iml
 *.ipr
-#wantyou-user/src/main/resources/application-local.yml
-#wantyou-user/src/main/resources/logback-local.xml
 
 ### NetBeans ###
 /nbproject/private/
@@ -44,3 +42,9 @@ build/
 /hellodfs-admin-all/hellodfs-admin-app/.hbuilderx/
 /hellodfs-admin-all/hellodfs-admin-app/.project
 /hellodfs-admin-all/hellodfs-admin-app/.DS_Store
+
+### hellodfs-admin-app
+/hellodfs-admin-all/hellodfs-admin/.idea
+/hellodfs-admin-all/hellodfs-admin/.iws
+/hellodfs-admin-all/hellodfs-admin/.iml
+/hellodfs-admin-all/hellodfs-admin/.ipr
