@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration>
+    <!-- 控制台输出设置 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+            <pattern>%white(%d{yyyy-MM-dd HH:mm:ss.SSS}) %green([%thread]) %cyan(%-5level) %yellow(%logger) %magenta(-) %black(%msg%n)</pattern>
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+
+    <!--debug(打印最多) info warn error(只打印error)-->
+    <root level="info">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>
