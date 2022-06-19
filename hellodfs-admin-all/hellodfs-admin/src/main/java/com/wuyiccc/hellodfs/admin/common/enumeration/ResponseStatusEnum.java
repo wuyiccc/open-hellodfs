@@ -12,6 +12,7 @@ public enum ResponseStatusEnum {
      * 操作成功
      */
     SUCCESS(200, true, "操作成功！"),
+
     /**
      * 操作失败
      */
@@ -26,9 +27,10 @@ public enum ResponseStatusEnum {
      * 会话失效
      */
     TICKET_INVALID(502, false, "会话失效，请重新登录！"),
-    SYSTEM_UNKNOWN_ERROR(561, false, "服务器未知错误"),
-    FILE_MAX_SIZE_ERROR(513, false, "文件上传大小超出限制"),
-    SYSTEM_DATE_PARSER_ERROR(550, false, "系统错误，日期解析出错！"),
+    SYSTEM_UNKNOWN_ERROR(503, false, "服务器未知错误"),
+    FILE_MAX_SIZE_ERROR(504, false, "文件上传大小超出限制"),
+    SYSTEM_DATE_PARSER_ERROR(505, false, "系统错误，日期解析出错！"),
+    USER_EXISTS(506, false, "用户已存在")
     ;
 
     /**

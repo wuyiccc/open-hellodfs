@@ -18,7 +18,7 @@ spring:
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://192.168.137.134:3306/hellodfs-admin?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=GMT%2B8
+    url: jdbc:mysql://192.168.137.129:3306/hellodfs-admin?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=GMT%2B8
     username: root
     password: 123
     hikari:
@@ -30,7 +30,10 @@ spring:
       pool-name: DataSourceHikariCP
       max-lifetime: 1800000
       connection-test-query: SELECT 1
-
+  redis:
+    database: 0
+    host: 192.168.137.129
+    port: 6379
 
 # tkmybatis配置
 mapper:

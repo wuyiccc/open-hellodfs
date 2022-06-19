@@ -84,6 +84,12 @@
             <version>1.2.12</version>
         </dependency>
 
+        <!-- 引入 redis 依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
         <!--用于网络请求-->
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
@@ -95,6 +101,12 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <!--利用spring-security的加密函数-->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
         </dependency>
 
     </dependencies>
