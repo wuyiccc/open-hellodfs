@@ -48,3 +48,4 @@ build/
 /hellodfs-admin-all/hellodfs-admin/.iws
 /hellodfs-admin-all/hellodfs-admin/.iml
 /hellodfs-admin-all/hellodfs-admin/.ipr
+/hellodfs-admin-all/hellodfs-admin/src/main/resources/aliyun.properties
