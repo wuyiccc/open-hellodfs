@@ -16,3 +16,17 @@ CREATE TABLE IF NOT EXISTS `user` (
     `created_time` datetime COMMENT '创建时间',
     `updated_time` datetime COMMENT '更新时间'
     );
+
+CREATE TABLE IF NOT EXISTS `file` (
+    `id` varchar(255) NOT NULL PRIMARY KEY,
+    `name` varchar(255) COMMENT '文件名',
+    `ext` varchar(255) COMMENT '文件扩展名',
+    `md` varchar(255) COMMENT '文件MD5',
+    `file_id` varchar(255) COMMENT '目录id',
+    `user_id` varchar(255) COMMENT '用户id',
+    `size` int(11) COMMENT '文件大小 kb',
+    `url` varchar(255) COMMENT '图片真实url',
+    `dir` varchar(1) COMMENT '是否为文件夹',
+    `created_time` datetime COMMENT '创建时间',
+    `updated_time` datetime COMMENT '更新时间'
+    );
