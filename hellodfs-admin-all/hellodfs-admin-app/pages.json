@@ -1,6 +1,14 @@
 {
   "pages": [
     {
+      "path": "pages/login/login",
+      "style": {
+        "app-plus": {
+          "titleNView": false
+        }
+      }
+    },
+    {
       "path": "pages/index/index",
       "style": {
         "app-plus": {
@@ -12,16 +20,18 @@
       "path": "pages/list/list",
       "style": {
         "navigationBarTitleText": "传输列表",
-        "app-plus":{
-          "titleNView":{
-            "buttons":[{
-              "color":"#333333",
-              "colorPressed":"#009CFF",
-              "float":"right",
-              "fontSize":"22px",
-              "fontSrc":"/static/iconfont.ttf",
-              "text":"\ue64a"
-            }]
+        "app-plus": {
+          "titleNView": {
+            "buttons": [
+              {
+                "color": "#333333",
+                "colorPressed": "#009CFF",
+                "float": "right",
+                "fontSize": "22px",
+                "fontSrc": "/static/iconfont.ttf",
+                "text": "\ue64a"
+              }
+            ]
           }
         }
       }
