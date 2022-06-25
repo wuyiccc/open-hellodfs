@@ -3,8 +3,16 @@ import App from './App'
 // #ifndef VUE3
 import Vue from 'vue'
 Vue.config.productionTip = false
+
+import $H from './common/request.js';
+Vue.prototype.$H = $H
+
+import store from './store/index.js';
+Vue.prototype.store = store
+
 App.mpType = 'app'
 const app = new Vue({
+    store,
     ...App
 })
 app.$mount()
