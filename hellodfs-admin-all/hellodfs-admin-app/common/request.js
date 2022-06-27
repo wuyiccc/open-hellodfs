@@ -1,8 +1,9 @@
 // import $store from '@/store/index.js';
+// TODO(wuyiccc): 与后端交互的逻辑
 export default {
     // 全局配置
     common: {
-        baseUrl: "http://127.0.0.1:7001",
+        baseUrl: "http://192.168.43.105:7001",
         header: {
             'Content-Type': 'application/json;charset=UTF-8',
         },
@@ -21,6 +22,7 @@ export default {
         options.dataType = options.dataType || this.common.dataType
         options.token = options.token === true ? true : this.common.token
 
+        console.log("333");
         // 请求
         return new Promise((res, rej) => {
             // 请求之前验证...
@@ -85,6 +87,7 @@ export default {
     },
     // post请求
     post(url, data = {}, options = {}) {
+        console.log("mmm")
         options.url = url
         options.data = data
         options.method = 'POST'
