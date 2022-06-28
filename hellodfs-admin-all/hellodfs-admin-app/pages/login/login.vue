@@ -1,5 +1,10 @@
 <template>
   <view>
+
+    <view v-if="show" class="position-fixed top-0 left-0 right-0 bottom-0 flex align-center justify-center bg-light" style="z-index: 100;">
+      <text class="font text-muted">加载中...</text>
+    </view>
+
     <view style="height: 44px;"></view>
     <view class="flex align-center justify-center font-lg text-muted" style="margin-top: 100rpx;margin-bottom: 80rpx;">欢迎使用hellodfs</view>
 
@@ -32,6 +37,19 @@ export default {
         repassword: ""
       }
     }
+  },
+  onLoad() {
+    this.show = true
+    if(!this.$store.state.token){
+      uni.showToast({
+        title: '请先登录',
+        icon: 'none'
+      });
+      return this.show = false
+    }
+    uni.switchTab({
+      url:'../index/index'
+    })
   },
   methods: {
     changeType() {
