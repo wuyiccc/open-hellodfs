@@ -25,7 +25,9 @@
     <!--分隔栏-->
     <view class="bg-light" style="height: 20rpx;"></view>
 
-    <uni-list-item title="其他设置"></uni-list-item>
+    <navigator url="../setting/setting">
+      <uni-list-item title="其他设置"></uni-list-item>
+    </navigator>
   </view>
 
 </template>

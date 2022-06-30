@@ -45,6 +45,12 @@
     {
       "path": "pages/video/video",
       "style": {}
+    },
+    {
+      "path": "pages/setting/setting",
+      "style": {
+        "navigationBarTitleText": "设置"
+      }
     }
   ],
   "globalStyle": {
