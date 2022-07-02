@@ -123,81 +123,7 @@ export default {
 
       renameValue: "",
       newdirname: "",
-      list: [{
-        type: "dir",
-        name: "学习笔记1",
-        create_time: "2022-06-01 08:00",
-        checked: false
-      },
-        {
-          type: "dir",
-          name: "学习笔记2",
-          create_time: "2022-06-01 08:00",
-          checked: false
-        },
-        {
-          type: "dir",
-          name: "学习笔记3",
-          create_time: "2022-06-01 08:00",
-          checked: false
-        },
-        {
-          type: "dir",
-          name: "学习笔记4",
-          create_time: "2022-06-01 08:00",
-          checked: false
-        },
-        {
-          type: "dir",
-          name: "学习笔记5",
-          create_time: "2022-06-01 08:00",
-          checked: false
-        },
-        {
-          type: "dir",
-          name: "学习笔记6",
-          create_time: "2022-06-01 08:00",
-          checked: false
-        },
-        {
-          type: "image",
-          name: "程潇1.jpg",
-          data: "/static/chengxiao1.jpg",
-          create_time: "2022-06-01 08:00",
-          checked: false
-        },
-        {
-          type: "image",
-          name: "程潇2.jpg",
-          data: "/static/chengxiao2.jpg",
-          create_time: "2022-06-01 08:00",
-          checked: false
-        },
-        {
-          type: "video",
-          name: "学习视频.mp4",
-          data: "https://wuyiccc.oss-cn-hangzhou.aliyuncs.com/VID_20220529_233701.mp4",
-          create_time: "2022-06-01 08:00",
-          checked: false,
-        },
-        {
-          type: "video",
-          name: "学习视频2.mp4",
-          data: "https://wuyiccc.oss-cn-hangzhou.aliyuncs.com/VID_20220529_233701.mp4",
-          create_time: "2022-06-01 08:00",
-          checked: false,
-        },
-        {
-          type: "text",
-          name: "临时笔记.txt",
-          create_time: "2022-06-01 08:00",
-          checked: false
-        }, {
-          type: "none",
-          name: "软件压缩.rar",
-          create_time: "2022-06-01 08:00",
-          checked: false
-        }],
+      list: [],
       addList: [{
         icon: "icon-file-b-6",
         color: "text-success",
@@ -218,7 +144,7 @@ export default {
     }
   },
   onLoad() {
-
+    this.getData()
   },
   computed: {
     checkList() {
@@ -254,6 +180,28 @@ export default {
     }
   },
   methods: {
+    formatList(list){
+      return list.map(item=>{
+        let type = 'none'
+        if(item.isdir === 1){
+          type = 'dir'
+        } else {
+          type = (item.ext.split('/'))[0] || 'none'
+        }
+        return {
+          type,
+          checked:false,
+          ...item
+        }
+      })
+    },
+    getData(){
+      this.$H.get('/file?file_id=0&orderby=name',{
+        token:true
+      }).then(res=>{
+        this.list = this.formatList(res)
+      })
+    },
     // 切换排序
     changeSort(index) {
       this.sortIndex = index
