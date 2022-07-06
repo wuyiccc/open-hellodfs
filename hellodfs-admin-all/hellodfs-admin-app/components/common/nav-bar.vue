@@ -12,9 +12,9 @@
           <slot name="left"></slot>
         </view>
 
-        <view class="flex-1 flex justify-center">
-          <slot></slot>
-        </view>
+<!--        <view class="flex-1 flex justify-center">-->
+<!--          <slot></slot>-->
+<!--        </view>-->
 
         <view class="flex-1 flex justify-end">
           <slot name="right"></slot>
