@@ -126,9 +126,11 @@ export default {
       dirs: [],
       sortIndex: 0,
       sortOptions: [{
-        name: "按名称排序"
+        name: "按名称排序",
+        key: "name"
       }, {
-        name: "按时间排序"
+        name: "按时间排序",
+        key: "created_time"
       }],
 
       renameValue: "",
@@ -225,7 +227,8 @@ export default {
       })
     },
     getData(){
-      this.$H.get(`/file?file_id=${this.file_id}&orderby=name`,{
+      let orderby = this.sortOptions[this.sortIndex].key
+      this.$H.get(`/file?file_id=${this.file_id}&orderby=${orderby}`,{
         token:true
       }).then(res=>{
         this.list = this.formatList(res)
@@ -234,6 +237,7 @@ export default {
     // 切换排序
     changeSort(index) {
       this.sortIndex = index
+      this.getData()
       this.$refs.sort.close()
     },
     // 列表点击事件处理
