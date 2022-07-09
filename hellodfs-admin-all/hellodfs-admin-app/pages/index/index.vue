@@ -158,7 +158,7 @@ export default {
   },
   onLoad() {
     let dirs = uni.getStorageSync('dirs')
-    if(dirs){
+    if (dirs) {
       this.dirs = JSON.parse(dirs)
     }
     this.getData()
@@ -195,42 +195,42 @@ export default {
         name: "重命名"
       }]
     },
-    file_id(){
+    file_id() {
       let l = this.dirs.length
-      if(l === 0){
+      if (l === 0) {
         return 0
       }
-      return this.dirs[l-1].id
+      return this.dirs[l - 1].id
     },
-    current(){
+    current() {
       let l = this.dirs.length
-      if(l === 0){
+      if (l === 0) {
         return false
       }
-      return this.dirs[l-1]
+      return this.dirs[l - 1]
     }
   },
   methods: {
-    formatList(list){
-      return list.map(item=>{
+    formatList(list) {
+      return list.map(item => {
         let type = 'none'
-        if(item.isdir === 1){
+        if (item.isdir === 1) {
           type = 'dir'
         } else {
           type = (item.ext.split('/'))[0] || 'none'
         }
         return {
           type,
-          checked:false,
+          checked: false,
           ...item
         }
       })
     },
-    getData(){
+    getData() {
       let orderby = this.sortOptions[this.sortIndex].key
-      this.$H.get(`/file?file_id=${this.file_id}&orderby=${orderby}`,{
-        token:true
-      }).then(res=>{
+      this.$H.get(`/file?file_id=${this.file_id}&orderby=${orderby}`, {
+        token: true
+      }).then(res => {
         this.list = this.formatList(res)
       })
     },
@@ -261,13 +261,13 @@ export default {
           break;
         default:
           this.dirs.push({
-            id:item.id,
-            name:item.name
+            id: item.id,
+            name: item.name
           })
           this.getData()
           uni.setStorage({
-            key:"dirs",
-            data:JSON.stringify(this.dirs)
+            key: "dirs",
+            data: JSON.stringify(this.dirs)
           })
           break;
       }
@@ -328,17 +328,18 @@ export default {
               });
             }
             // 请求服务器
-            this.list.push({
-              type: "dir",
-              name: this.newdirname,
-              create_time: "2022-06-01 08:00",
-              checked: false
+            this.$H.post('/file/createdir', {
+              file_id: this.file_id,
+              name: this.newdirname
+            }, {token: true}).then(res => {
+              this.getData()
+              uni.showToast({
+                title: '新建文件夹成功',
+                icon: 'none'
+              });
             })
-            uni.showToast({
-              title: '新建文件夹成功',
-              icon: 'none'
-            });
             close()
+            this.newdirname = ''
           })
           break;
         default:
@@ -346,12 +347,12 @@ export default {
       }
     },
     // 返回上一个目录
-    backUp(){
+    backUp() {
       this.dirs.pop()
       this.getData()
       uni.setStorage({
-        key:"dirs",
-        data:JSON.stringify(this.dirs)
+        key: "dirs",
+        data: JSON.stringify(this.dirs)
       })
     }
   }
