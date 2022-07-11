@@ -302,7 +302,16 @@ export default {
                 icon: "none"
               });
             }
-            this.checkList[0].name = this.renameValue;
+            this.$H.post('/file/rename',{
+              id:this.checkList[0].id,
+              name:this.renameValue
+            },{ token:true }).then(res=>{
+              this.checkList[0].name = this.renameValue
+              uni.showToast({
+                title: '重命名成功',
+                icon: 'none'
+              });
+            })
             close();
           })
         default:
