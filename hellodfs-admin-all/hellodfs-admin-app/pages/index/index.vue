@@ -44,7 +44,7 @@
               class="flex align-center justify-center">
           <text class="iconfont icon-sousuo text-light-muted"></text>
         </view>
-        <input style="height: 70rpx; padding-left: 70rpx;" type="text" class="bg-light font-md rounded-circle"
+        <input style="height: 70rpx; padding-left: 70rpx;" type="text" class="bg-light font-md rounded-circle" @input="search"
                placeholder="搜索hellodfs文件"/>
       </view>
     </view>
@@ -283,13 +283,27 @@ export default {
     handleBottomEvent(item) {
       switch (item.name) {
         case "删除":
-          this.$refs.delete.open((close) => {
-            this.list = this.list.filter(item => !item.checked);
-            close();
-            uni.showToast({
-              title: "删除成功",
-              icon: "none"
+          this.$refs.delete.open((close)=>{
+            uni.showLoading({
+              title: '删除中...',
+              mask: false
             });
+            let ids = (this.checkList.map(item=>item.id)).join(',')
+            this.$H.post('/file/delete',{
+              ids
+            },{ token:true }).then(res=>{
+              this.getData()
+              uni.showToast({
+                title: '删除成功',
+                icon: 'none'
+              });
+              uni.hideLoading()
+            }).catch(err=>{
+              uni.hideLoading()
+            })
+            close()
+            // this.list = this.list.filter(item=>!item.checked)
+
           })
           break;
         case "重命名":
@@ -362,6 +376,17 @@ export default {
       uni.setStorage({
         key: "dirs",
         data: JSON.stringify(this.dirs)
+      })
+    },
+    search(e){
+      if(e.detail.value == ''){
+        return this.getData()
+      }
+
+      this.$H.get('/file/search?keyword='+e.detail.value,{
+        token:true
+      }).then(res=>{
+        this.list = this.formatList(res.rows)
       })
     }
   }
