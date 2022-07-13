@@ -7,7 +7,7 @@
       <text class="iconfont" :class="iconClass" style="font-size: 60rpx;"></text>
 
       <!--文件名称+时间-->
-      <view class="flex flex-column ml-3" style="line-height: 1.2;">
+      <view class="flex flex-column ml-3" style="line-height: 1.2; max-width: 500rpx">
         <text class="font-md text-ellipsis">{{ item.name }}</text>
         <text class="font-sm text-muted">{{ item.created_time }}</text>
       </view>

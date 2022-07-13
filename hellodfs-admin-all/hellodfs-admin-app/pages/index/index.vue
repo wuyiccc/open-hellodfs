@@ -256,7 +256,7 @@ export default {
         case 'video':
           console.log("hello")
           uni.navigateTo({
-            url: '../video/video?url=' + item.data + '&title=' + item.name,
+            url: '../video/video?url=' + item.url + '&title=' + item.name,
           });
           break;
         default:
@@ -376,6 +376,25 @@ export default {
     handleAddEvent(item) {
       this.$refs.add.close()
       switch (item.name) {
+        case "上传视频":
+          uni.chooseVideo({
+            count:1,
+            success: (res) => {
+              let name = ''
+              let size = 0
+              // #ifndef H5
+              name = res.tempFilePath.substring(res.tempFilePath.lastIndexOf('/') + 1)
+              size = res.size
+              // #endif
+              this.upload({
+                path:res.tempFilePath,
+                name,
+                type:"video",
+                size
+              })
+            }
+          })
+          break;
         case "上传图片":
           uni.chooseImage({
             count:9,
