@@ -11,9 +11,30 @@ import $H from '../common/request.js';
 export default new Vuex.Store({
     state:{
         user:null,
-        token:null
+        token:null,
+        uploadList: []
     },
     actions:{
+        // 创建一个上传任务
+        createUploadJob({ state },obj){
+            state.uploadList.unshift(obj)
+            uni.setStorage({
+                key:"uploadList_"+state.user.id,
+                data:JSON.stringify(state.uploadList)
+            })
+        },
+        // 更新上传任务进度
+        updateUploadJob({ state },obj){
+            let i = state.uploadList.findIndex(item=>item.key === obj.key)
+            if(i !== -1){
+                state.uploadList[i].progress = obj.progress
+                state.uploadList[i].status = obj.status
+                uni.setStorage({
+                    key:"uploadList_"+state.user.id,
+                    data:JSON.stringify(state.uploadList)
+                })
+            }
+        },
         // TODO(wuyiccc): 退出登录
         logout({ state }){
             $H.post('/logout',{},{

@@ -250,7 +250,7 @@ export default {
           })
           uni.previewImage({
             current: item.data,
-            urls: images.map(item => item.data)
+            urls: images.map(item => item.url)
           })
           break;
         case 'video':
@@ -339,9 +339,53 @@ export default {
     openSortDialog() {
       this.$refs.sort.open()
     },
+    // 生成唯一ID
+    genID(length) {
+      return Number(Math.random().toString().substr(3, length) + Date.now()).toString(36);
+    },
+    // 上传
+    upload(file,type){
+      let t = type
+      const key = this.genID(8)
+
+      let obj = {
+        name:file.name,
+        type:t,
+        size:file.size,
+        key,
+        progress:0,
+        status:true,
+        created_time:(new Date).getTime()
+      }
+      // 创建上传任务
+      this.$store.dispatch('createUploadJob',obj)
+      // 上传
+      this.$H.upload('/upload?file_id='+this.file_id,{
+        filePath:file.path
+      },(p)=>{
+        // 更新上传任务进度
+        this.$store.dispatch('updateUploadJob',{
+          status:true,
+          progress:p,
+          key
+        })
+      }).then(res=>{
+        this.getData()
+      })
+    },
     handleAddEvent(item) {
       this.$refs.add.close()
       switch (item.name) {
+        case "上传图片":
+          uni.chooseImage({
+            count:9,
+            success: (res) => {
+              res.tempFiles.forEach(item=>{
+                this.upload(item,'image')
+              })
+            }
+          })
+          break;
         case "新建文件夹":
           this.$refs.newdir.open((close) => {
             if (this.newdirname == '') {
