@@ -44,7 +44,8 @@
               class="flex align-center justify-center">
           <text class="iconfont icon-sousuo text-light-muted"></text>
         </view>
-        <input style="height: 70rpx; padding-left: 70rpx;" type="text" class="bg-light font-md rounded-circle" @input="search"
+        <input style="height: 70rpx; padding-left: 70rpx;" type="text" class="bg-light font-md rounded-circle"
+               @input="search"
                placeholder="搜索hellodfs文件"/>
       </view>
     </view>
@@ -283,22 +284,22 @@ export default {
     handleBottomEvent(item) {
       switch (item.name) {
         case "删除":
-          this.$refs.delete.open((close)=>{
+          this.$refs.delete.open((close) => {
             uni.showLoading({
               title: '删除中...',
               mask: false
             });
-            let ids = (this.checkList.map(item=>item.id)).join(',')
-            this.$H.post('/file/delete',{
+            let ids = (this.checkList.map(item => item.id)).join(',')
+            this.$H.post('/file/delete', {
               ids
-            },{ token:true }).then(res=>{
+            }, {token: true}).then(res => {
               this.getData()
               uni.showToast({
                 title: '删除成功',
                 icon: 'none'
               });
               uni.hideLoading()
-            }).catch(err=>{
+            }).catch(err => {
               uni.hideLoading()
             })
             close()
@@ -316,10 +317,10 @@ export default {
                 icon: "none"
               });
             }
-            this.$H.post('/file/rename',{
-              id:this.checkList[0].id,
-              name:this.renameValue
-            },{ token:true }).then(res=>{
+            this.$H.post('/file/rename', {
+              id: this.checkList[0].id,
+              name: this.renameValue
+            }, {token: true}).then(res => {
               this.checkList[0].name = this.renameValue
               uni.showToast({
                 title: '重命名成功',
@@ -328,10 +329,66 @@ export default {
             })
             close();
           })
+        case '下载':
+          this.download()
+          break;
         default:
           break
       }
     },
+
+    download() {
+      this.checkList.forEach(item => {
+        if (item.isdir === 0) {
+          const key = this.genID(8)
+
+          let obj = {
+            name: item.name,
+            type: item.type,
+            size: item.size,
+            key,
+            progress: 0,
+            status: true,
+            created_time: (new Date).getTime()
+          }
+
+          // 创建下载任务
+          this.$store.dispatch('createDownLoadJob', obj)
+
+          let url = item.url
+
+          let d = uni.downloadFile({
+            url,
+            success: (res) => {
+              if (res.statusCode === 200) {
+                console.log('下载成功', res);
+                // #ifdef H5
+                uni.saveFile({
+                  tempFilePath: item.tempFilePath
+                })
+                // #endif
+              }
+            }
+          })
+
+          d.onProgressUpdate((res) => {
+            this.$store.dispatch('updateDownLoadJob', {
+              progress: res.progress,
+              status: true,
+              key
+            })
+          })
+        }
+      })
+
+      uni.showToast({
+        title: '已加入下载任务',
+        icon: 'none'
+      });
+
+      this.handleCheckAll(false)
+    },
+
     // 打开添加操作条
     openAddDialog() {
       this.$refs.add.open();
@@ -344,32 +401,32 @@ export default {
       return Number(Math.random().toString().substr(3, length) + Date.now()).toString(36);
     },
     // 上传
-    upload(file,type){
+    upload(file, type) {
       let t = type
       const key = this.genID(8)
 
       let obj = {
-        name:file.name,
-        type:t,
-        size:file.size,
+        name: file.name,
+        type: t,
+        size: file.size,
         key,
-        progress:0,
-        status:true,
-        created_time:(new Date).getTime()
+        progress: 0,
+        status: true,
+        created_time: (new Date).getTime()
       }
       // 创建上传任务
-      this.$store.dispatch('createUploadJob',obj)
+      this.$store.dispatch('createUploadJob', obj)
       // 上传
-      this.$H.upload('/upload?file_id='+this.file_id,{
-        filePath:file.path
-      },(p)=>{
+      this.$H.upload('/upload?file_id=' + this.file_id, {
+        filePath: file.path
+      }, (p) => {
         // 更新上传任务进度
-        this.$store.dispatch('updateUploadJob',{
-          status:true,
-          progress:p,
+        this.$store.dispatch('updateUploadJob', {
+          status: true,
+          progress: p,
           key
         })
-      }).then(res=>{
+      }).then(res => {
         this.getData()
       })
     },
@@ -378,7 +435,7 @@ export default {
       switch (item.name) {
         case "上传视频":
           uni.chooseVideo({
-            count:1,
+            count: 1,
             success: (res) => {
               let name = ''
               let size = 0
@@ -387,9 +444,9 @@ export default {
               size = res.size
               // #endif
               this.upload({
-                path:res.tempFilePath,
+                path: res.tempFilePath,
                 name,
-                type:"video",
+                type: "video",
                 size
               })
             }
@@ -397,10 +454,10 @@ export default {
           break;
         case "上传图片":
           uni.chooseImage({
-            count:9,
+            count: 9,
             success: (res) => {
-              res.tempFiles.forEach(item=>{
-                this.upload(item,'image')
+              res.tempFiles.forEach(item => {
+                this.upload(item, 'image')
               })
             }
           })
@@ -441,14 +498,14 @@ export default {
         data: JSON.stringify(this.dirs)
       })
     },
-    search(e){
-      if(e.detail.value == ''){
+    search(e) {
+      if (e.detail.value == '') {
         return this.getData()
       }
 
-      this.$H.get('/file/search?keyword='+e.detail.value,{
-        token:true
-      }).then(res=>{
+      this.$H.get('/file/search?keyword=' + e.detail.value, {
+        token: true
+      }).then(res => {
         this.list = this.formatList(res.rows)
       })
     }
