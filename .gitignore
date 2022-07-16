@@ -49,3 +49,9 @@ build/
 /hellodfs-admin-all/hellodfs-admin/.iml
 /hellodfs-admin-all/hellodfs-admin/.ipr
 /hellodfs-admin-all/hellodfs-admin/src/main/resources/aliyun.properties
+
+### netty-demo
+/netty-demo/.idea
+/netty-demo/*.iws
+/netty-demo/*.iml
+/netty-demo/*.ipr
