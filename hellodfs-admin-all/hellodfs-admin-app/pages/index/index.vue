@@ -405,8 +405,14 @@ export default {
       let t = type
       const key = this.genID(8)
 
+      let name = file.name
+
+      if(!name){
+        name = file.path.substring(file.path.lastIndexOf('/') + 1)
+      }
+
       let obj = {
-        name: file.name,
+        name,
         type: t,
         size: file.size,
         key,
