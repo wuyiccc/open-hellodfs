@@ -1,4 +1,4 @@
-package com.wuyiccc.netty.demo.nio.action.onethread;
+package com.wuyiccc.netty.demo.nio.socketaction.onethread;
 
 import java.io.InputStreamReader;
 import java.io.OutputStream;

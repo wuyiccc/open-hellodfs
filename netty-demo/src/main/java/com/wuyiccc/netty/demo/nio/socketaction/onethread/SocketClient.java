@@ -1,6 +1,5 @@
-package com.wuyiccc.netty.demo.nio.action.onethread;
+package com.wuyiccc.netty.demo.nio.socketaction.onethread;
 
-import javax.xml.soap.SAAJMetaFactory;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
