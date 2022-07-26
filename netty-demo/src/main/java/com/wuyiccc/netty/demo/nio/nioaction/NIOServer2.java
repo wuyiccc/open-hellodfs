@@ -1,7 +1,7 @@
 package com.wuyiccc.netty.demo.nio.nioaction;
 
 import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.SelectionKey;
@@ -31,7 +31,8 @@ public class NIOServer2 {
     private static ExecutorService threadPool;
 
     public static void main(String[] args) {
-        // TODO()
+        init();
+        listen();
     }
 
     private static void init() {
@@ -44,6 +45,7 @@ public class NIOServer2 {
             serverSocketChannel = ServerSocketChannel.open();
             // NIO支持非阻塞的
             serverSocketChannel.configureBlocking(false);
+            serverSocketChannel.socket().bind(new InetSocketAddress(9000), 100);
             // 仅仅关注ServerSocketChannel接收到的OP_ACCEPT连接请求
             serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
         } catch (Exception e) {
@@ -53,7 +55,7 @@ public class NIOServer2 {
         requestQueue = new LinkedBlockingDeque<>(500);
         threadPool = Executors.newFixedThreadPool(10);
         for (int i = 0; i < 10; i++) {
-            // TODO(新建线程)
+            threadPool.submit(new Worker());
         }
 
     }
