@@ -69,10 +69,49 @@ public class NIOServer2 {
                     SelectionKey key = keysIterator.next();
                     // 每个SelectionKey相当于是一个请求
                     keysIterator.remove();
-                    requestQueue.offer(key);
+                    handleRequest(key);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    private static void handleRequest(SelectionKey key) throws IOException {
+
+        SocketChannel channel = null;
+
+        try {
+            // 如果是连接请求
+            if (key.isAcceptable()) {
+                ServerSocketChannel serverSocketChannel = (ServerSocketChannel) key.channel();
+                // 调用accept方法, 进行TCP三次握手
+                channel = serverSocketChannel.accept();
+                // 如果三次握手成功之后, 就可以获取一个建立好TCP连接的SocketChannel
+                // 这个SocketChannel大概可以理解为一个Socket, 是跟客户端进行连接的, 这个SocketChannel就是连通到那个Socket上去, 负责进行网络数据的读写
+                channel.configureBlocking(false);
+                // 将该SocketChannel注册到Selector中, 仅监听OP_READ请求
+                channel.register(selector, SelectionKey.OP_READ);
+            } else if (key.isReadable()) {
+                channel = (SocketChannel) key.channel();
+                // 清空缓存
+                readBuffer.clear();
+                int count = channel.read(readBuffer);
+                if (count > 0) {
+                    readBuffer.flip();
+                    CharBuffer charBuffer = decoder.decode(readBuffer);
+                    String request = charBuffer.toString();
+                    System.out.println("服务端接收请求: " + request);
+                    channel.write(encoder.encode(CharBuffer.wrap("收到".toCharArray())));
+                } else {
+                    channel.close();
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (channel != null) {
+                channel.close();
             }
         }
     }
