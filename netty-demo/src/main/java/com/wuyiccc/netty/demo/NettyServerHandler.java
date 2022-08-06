@@ -2,8 +2,8 @@ package com.wuyiccc.netty.demo;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelHandlerAdapter;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 
 import java.nio.charset.StandardCharsets;
 
@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
  * @author wuyiccc
  * @date 2022/6/28 21:29
  */
-public class NettyServerHandler extends ChannelHandlerAdapter {
+public class NettyServerHandler extends ChannelInboundHandlerAdapter {
 
 
     @Override
